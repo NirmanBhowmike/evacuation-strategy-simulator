@@ -1,0 +1,26 @@
+# Node / package artifacts
+node_modules/
+dist/
+build/
+.vite/
+coverage/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+
+# Operating system
+.DS_Store
+Thumbs.db
+
+# IDE-local settings
+.vscode/
+
+# Temporary files
+*.tmp
+*.temp
