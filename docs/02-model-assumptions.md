@@ -148,3 +148,133 @@ It is not intended for:
 - exact representation of a particular real building
 
 Status: Locked
+## A-014: Navigation Representation
+
+The building will use a weighted navigation graph for tactical routing decisions.
+
+Status: Locked
+
+The graph will remain separate from the 3D rendering representation.
+
+## A-015: Core Path Solver
+
+Dijkstra's algorithm will be used as the primary path solver.
+
+Status: Locked
+
+Reason:
+The building graph is expected to be moderate in size and requires transparent, deterministic weighted-path calculations.
+
+## A-016: Nearest-Exit Baseline
+
+Nearest Exit will select the exit with minimum Euclidean distance from the occupant.
+
+Status: Locked
+
+Purpose:
+Provide a deliberately simple geometric baseline.
+
+## A-017: Static Shortest-Path Baseline
+
+Static Shortest Path will minimize total network distance.
+
+Status: Locked
+
+The strategy may recompute if its route becomes physically impossible, but it will not adapt merely because another route becomes faster.
+
+## A-018: Congestion-Aware Route Cost
+
+Congestion-aware routing will primarily use estimated remaining evacuation time.
+
+Edge travel time:
+
+T_e = L_e / v(rho_e)
+
+Bottleneck queue delay:
+
+T_queue = N_q / Q
+
+Status: Locked concept
+
+Exact implementation details will be validated computationally.
+
+## A-019: Hazard-Aware Routing
+
+Hazard-aware routing will exclude or penalize route segments according to current hazard conditions.
+
+Status: Provisional
+
+Exact rules:
+Research Pass 3.
+
+## A-020: Adaptive Hybrid Strategy
+
+Adaptive routing will combine:
+
+- route feasibility
+- hazard information
+- congestion-adjusted travel time
+- bottleneck queues
+- rerouting inertia
+
+Status: Architecture locked
+
+## A-021: Decision Opportunities
+
+Routine adaptive route reevaluation will primarily occur at decision nodes.
+
+Status: Locked
+
+Immediate reevaluation will occur when:
+
+- an exit becomes unavailable
+- the current route becomes blocked
+- the current route becomes unacceptable due to a hazard
+
+## A-022: Rerouting Threshold
+
+Voluntary rerouting will require a minimum relative improvement:
+
+I = (C_current - C_alternative) / C_current
+
+A route switch occurs when:
+
+I >= theta
+
+Status: Mechanism locked; theta not frozen
+
+Candidate development values:
+
+0.00
+0.10
+0.20
+0.30
+
+## A-023: Current-State Information
+
+Routing strategies may use only information available at the current simulation time.
+
+Future disruption states will not be available to the strategy before they occur.
+
+Status: Locked
+
+## A-024: Routing Interpretation
+
+Dynamic strategies represent evacuation-guidance policies using system-level situational information.
+
+They are not intended as complete predictive models of unaided human exit-choice behavior.
+
+Status: Locked
+
+## A-025: Decision Logging
+
+Significant initial route choices, route reviews, and reroutes will be recorded in structured decision logs.
+
+Status: Locked
+
+Purpose:
+
+- reproducibility
+- debugging
+- experimental analysis
+- interactive explanation

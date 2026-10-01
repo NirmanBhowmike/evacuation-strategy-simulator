@@ -32,18 +32,18 @@ Phase 1 — Research Model Specification
   - [x] Personal spacing / collision approach
   - [~] Numerical timestep - provisional; convergence test required
   - [x] Movement-model validation targets
-- [ ] Research Pass 2: Navigation and route-choice model
-  - [ ] Navigation-graph structure
-  - [ ] Shortest-path baseline
-  - [ ] Nearest-exit baseline
-  - [ ] Congestion-aware routing
-  - [ ] Hazard-aware routing
-  - [ ] Adaptive hybrid routing
-  - [ ] Route-cost formulation
-  - [ ] Information available to agents
-  - [ ] Route update frequency
-  - [ ] Rerouting thresholds
-  - [ ] Rerouting hysteresis / switching penalty
+- - [x] Research Pass 2: Navigation and route-choice model
+  - [x] Navigation-graph structure
+  - [x] Shortest-path baseline
+  - [x] Nearest-exit baseline
+  - [x] Congestion-aware routing
+  - [~] Hazard-aware routing - routing structure defined; hazard rules require Pass 3
+  - [x] Adaptive hybrid routing architecture
+  - [x] Route-cost formulation
+  - [x] Information available to agents
+  - [x] Route update mechanism - decision-node and event based
+  - [~] Rerouting threshold - tuning procedure defined; value not frozen
+  - [x] Rerouting hysteresis / switching approach
 - [ ] Research Pass 3: Hazard and disruption model
   - [ ] Hazard representation
   - [ ] Hazard growth/expansion

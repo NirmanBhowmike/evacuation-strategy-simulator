@@ -177,3 +177,345 @@ Some parameters remain provisional until numerical and sensitivity testing:
 - density-cell length
 - bottleneck specific flow
 - exact local overlap-resolution implementation
+# Research Pass 2: Navigation, Route Choice, and Adaptive Rerouting
+
+## 1. Research Focus
+
+Research Pass 2 defines how evacuation guidance strategies select exits, calculate routes, respond to congestion, and reconsider decisions when building conditions change.
+
+The routing policies are treated primarily as evacuation-guidance strategies rather than complete models of unaided human behavior. Actual human exit choice can depend on familiarity, visibility, social influence, and other behavioral factors that are outside the primary scope of this experiment.
+
+## 2. Navigation Graph
+
+The building will be represented as a weighted graph:
+
+G = (V, E)
+
+Nodes may represent:
+
+- room or zone portals
+- corridor junctions
+- doors
+- bottlenecks
+- exits
+- major decision points
+
+Edges represent traversable corridor or connector segments.
+
+Each edge will maintain at least:
+
+- length
+- usable width
+- current density
+- estimated walking speed
+- estimated travel time
+- hazard state
+- blocked/unblocked state
+
+The graph will represent routing logic independently from the 3D rendering geometry.
+
+## 3. Core Pathfinding Algorithm
+
+Dijkstra's algorithm will be used as the primary path solver.
+
+Reasons:
+
+- deterministic behavior
+- transparent implementation
+- supports positive weighted edges
+- straightforward independent validation
+- the same solver can support multiple strategies by changing edge costs
+
+A more complicated search algorithm is not required for the expected graph size.
+
+## 4. Nearest-Exit Baseline
+
+The Nearest-Exit strategy selects the exit with minimum Euclidean distance from the occupant's current position:
+
+e* = argmin d_euclidean(x_i, e)
+
+After the target exit is selected, the occupant follows a network path to that exit.
+
+This strategy does not consider:
+
+- congestion
+- queue delay
+- hazard
+- exit capacity
+
+Purpose:
+Provide a deliberately simple geometric baseline.
+
+## 5. Static Shortest-Path Baseline
+
+The Static Shortest-Path strategy selects the route with minimum network distance:
+
+P* = argmin sum(L_e)
+
+where L_e is the length of edge e.
+
+This strategy considers building topology but ignores:
+
+- congestion
+- queue delay
+- hazard cost
+- production of alternative routes based on changing conditions
+
+If the existing route becomes physically impossible because an exit or edge becomes unavailable, route recovery is permitted. This prevents the baseline from remaining on an impossible path.
+
+## 6. Congestion-Aware Routing
+
+Congestion-aware routing will minimize estimated remaining travel time rather than geometric distance.
+
+For an edge:
+
+T_e(t) = L_e / v(rho_e(t))
+
+where:
+
+L_e = edge length
+rho_e = current edge density
+v(rho_e) = density-adjusted walking speed
+
+For a bottleneck:
+
+T_queue = N_q / Q
+
+where:
+
+N_q = estimated queue size
+Q = bottleneck service capacity
+
+The approximate route cost becomes:
+
+C_route = sum(T_e) + sum(T_queue)
+
+This produces an interpretable quantity:
+
+Estimated remaining evacuation time.
+
+Arbitrary congestion weights should be avoided when a physically interpretable travel-time estimate can be used.
+
+## 7. Hazard-Aware Routing
+
+Hazard-aware routing will treat currently unsafe or unavailable route segments as restricted according to the hazard rules defined in Research Pass 3.
+
+The initial concept is:
+
+E_safe(t) = E - E_unavailable(t)
+
+Then the strategy selects the shortest feasible route through the currently safe graph.
+
+Exact hazard severity thresholds and route-availability rules are not yet frozen.
+
+## 8. Adaptive Hybrid Routing
+
+The Adaptive Hybrid strategy will combine:
+
+- current route feasibility
+- hazard information
+- congestion-adjusted travel time
+- bottleneck queue delay
+- route-switching inertia
+
+The strategy will not automatically switch whenever another route is slightly better.
+
+Instead, it will compare the estimated remaining cost of the current route against alternatives and change routes only when the improvement is sufficiently meaningful or the current route becomes invalid.
+
+## 9. Route Reevaluation
+
+Normal route reevaluation will occur primarily at decision points such as:
+
+- corridor junctions
+- doors
+- major route intersections
+- transitions between building zones
+
+This reduces unnecessary repeated calculations and makes route decisions easier to interpret.
+
+Immediate reevaluation will occur when:
+
+- the current exit becomes unavailable
+- the current route becomes blocked
+- a newly active hazard makes the current route unacceptable
+
+Congestion alone will normally trigger evaluation at a decision opportunity rather than force an immediate route change.
+
+## 10. Rerouting Inertia
+
+Let:
+
+C_current = estimated remaining cost of the current route
+
+C_alt = estimated remaining cost of the best alternative route
+
+Relative improvement is:
+
+I = (C_current - C_alt) / C_current
+
+A voluntary reroute occurs only when:
+
+I >= theta
+
+where theta is the rerouting-improvement threshold.
+
+The purpose of theta is to prevent unstable route switching when alternatives differ only slightly.
+
+## 11. Threshold Development
+
+The rerouting threshold will not be selected arbitrarily.
+
+Candidate development values:
+
+theta = 0.00
+theta = 0.10
+theta = 0.20
+theta = 0.30
+
+These candidate values will be evaluated using development scenarios only.
+
+The selected threshold will be frozen before holdout evaluation.
+
+Selection should consider:
+
+- evacuation performance
+- hazard exposure
+- number of reroutes
+- exit target changes
+- route reversals
+- stability
+
+## 12. Information Available to Strategies
+
+All strategies will operate from the same current WorldState, but each strategy may use only the information defined for that policy.
+
+Nearest Exit:
+- current position
+- exit positions
+
+Static Shortest Path:
+- network geometry
+- route feasibility
+
+Congestion-Aware:
+- network geometry
+- current density
+- queue conditions
+- current exit availability
+
+Hazard-Aware:
+- network geometry
+- current hazard state
+- current route availability
+
+Adaptive Hybrid:
+- network geometry
+- density
+- queue conditions
+- hazard state
+- exit availability
+- current route
+- decision history
+
+## 13. No Future Knowledge
+
+Routing policies may use only information available at the current simulation time.
+
+Example:
+
+If an exit will become blocked at t = 40 s, a strategy operating at t = 20 s cannot use that future information.
+
+This prevents the routing engine from behaving as an oracle.
+
+## 14. Guidance-System Interpretation
+
+Dynamic routing strategies are interpreted as system-level evacuation-guidance policies with access to simulated situational information.
+
+The model does not claim that unaided occupants possess perfect knowledge of:
+
+- hidden congestion
+- remote exit queues
+- hazards outside their observable environment
+- future disruptions
+
+This distinction will remain explicit in the final report.
+
+## 15. Decision Trace
+
+Every significant route decision should produce a structured record containing fields such as:
+
+- decision ID
+- agent ID
+- simulation time
+- decision node
+- strategy
+- current target exit
+- current estimated cost
+- best alternative exit
+- alternative estimated cost
+- relative improvement
+- rerouting threshold
+- trigger
+- action
+- reason code
+
+This information supports:
+
+- debugging
+- reproducibility
+- research analysis
+- live explanation during the 3D demonstration
+
+## 16. Decision Reason Codes
+
+Initial reason codes:
+
+- INITIAL_ROUTE
+- NEAREST_EXIT
+- STATIC_SHORTEST
+- CONGESTION_IMPROVEMENT
+- HAZARD_AVOIDANCE
+- EXIT_UNAVAILABLE
+- ROUTE_BLOCKED
+- DECISION_NODE_REVIEW
+- REROUTE_THRESHOLD_MET
+- REROUTE_THRESHOLD_NOT_MET
+- NO_FEASIBLE_ALTERNATIVE
+
+## 17. Route-Stability Metrics
+
+In addition to evacuation outcomes, the adaptive strategy should record:
+
+- reroutes per occupant
+- percentage of occupants rerouted
+- exit target changes
+- route reversal events
+
+A route reversal is a pattern such as:
+
+Exit A -> Exit B -> Exit A
+
+These metrics will help distinguish useful adaptation from unstable decision changing.
+
+## 18. Validation Requirements
+
+Routing validation should include:
+
+- known shortest-path graphs
+- nearest-exit versus shortest-path disagreement cases
+- congestion-induced route changes
+- rerouting-threshold tests
+- forced blockage rerouting
+- unavailable-exit tests
+- unreachable-state tests
+- deterministic repeated calculations
+- decision-log verification
+
+## Status
+
+Research Pass 2 is substantively complete.
+
+Items intentionally remaining provisional:
+
+- exact hazard-aware routing rules, pending Research Pass 3
+- final rerouting threshold, pending development-scenario tuning
