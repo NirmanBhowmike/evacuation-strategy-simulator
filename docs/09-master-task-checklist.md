@@ -1,0 +1,242 @@
+Master Project Checklist — Current Status
+Phase 0 — Project Infrastructure
+- [x] Final project direction established
+- [x] Research-oriented 3D evacuation simulator selected
+- [x] Digital-twin requirement removed
+- [x] Fictional first-floor academic/engineering building concept selected
+- [x] Quality prioritized over original October 15 target
+- [x] Git installed and configured
+- [x] Node.js LTS installed
+- [x] npm configured
+- [x] VS Code updated
+- [x] ESLint installed
+- [x] Prettier installed
+- [x] Local project folder created
+- [x] Local Git repository initialized
+- [x] Private GitHub repository created
+- [x] Local repository connected to GitHub
+- [x] Documentation structure created
+- [x] Initial project documentation populated
+- [x] .gitignore created
+- [x] First Git commit completed
+- [x] First GitHub push completed
+- [x] Working tree verified clean
+Phase 1 — Research Model Specification
+- [~] Research Pass 1: Pedestrian movement and flow model
+  - [ ] Free-flow walking speed
+  - [ ] Inter-person variability / speed distribution
+  - [ ] Speed-density relationship
+  - [ ] Local pedestrian-density calculation
+  - [ ] Corridor flow treatment
+  - [ ] Door/bottleneck capacity
+  - [ ] Personal spacing / collision avoidance
+  - [ ] Numerical timestep
+  - [ ] Movement-model validation targets
+- [ ] Research Pass 2: Navigation and route-choice model
+  - [ ] Navigation-graph structure
+  - [ ] Shortest-path baseline
+  - [ ] Nearest-exit baseline
+  - [ ] Congestion-aware routing
+  - [ ] Hazard-aware routing
+  - [ ] Adaptive hybrid routing
+  - [ ] Route-cost formulation
+  - [ ] Information available to agents
+  - [ ] Route update frequency
+  - [ ] Rerouting thresholds
+  - [ ] Rerouting hysteresis / switching penalty
+- [ ] Research Pass 3: Hazard and disruption model
+  - [ ] Hazard representation
+  - [ ] Hazard growth/expansion
+  - [ ] Hazard exposure metric
+  - [ ] Exit blocking
+  - [ ] Corridor blocking
+  - [ ] Dynamic disruption timing
+  - [ ] Explicit statement that fire/smoke physics are not modeled
+- [ ] Research Pass 4: Experimental methodology
+  - [ ] Independent variables
+  - [ ] Factor levels
+  - [ ] Dependent variables
+  - [ ] Occupancy conditions
+  - [ ] Disruption conditions
+  - [ ] Random-seed strategy
+  - [ ] Number of replications
+  - [ ] Development scenarios
+  - [ ] Holdout scenarios
+  - [ ] Sensitivity-analysis plan
+  - [ ] Statistical-analysis plan
+  - [ ] Stopping / termination rules
+- [ ] Update 01-research-basis.md
+- [ ] Update 02-model-assumptions.md
+- [ ] Update 03-decision-log.md
+- [ ] Complete 08-research-model-specification.md
+- [ ] Freeze Research Model Specification v1.0
+Phase 2 — Core Research Engine
+- [ ] Initialize TypeScript project
+- [ ] Configure testing framework
+- [ ] Define scenario data schema
+- [ ] Implement seeded random-number generator
+- [ ] Implement deterministic simulation clock
+- [ ] Implement building/environment representation
+- [ ] Implement navigation graph
+- [ ] Implement exits and spawn zones
+- [ ] Implement agent-state model
+- [ ] Implement pedestrian movement
+- [ ] Implement density calculation
+- [ ] Implement congestion effects
+- [ ] Implement bottleneck behavior
+- [ ] Implement hazard field
+- [ ] Implement dynamic disruptions
+- [ ] Implement evacuation-state handling
+- [ ] Implement simulation termination conditions
+- [ ] Implement metrics engine
+- [ ] Separate rendering completely from simulation logic
+Phase 3 — Routing Strategy Engine
+- [ ] Define common strategy interface
+- [ ] Implement Shortest Path
+- [ ] Implement Nearest Exit
+- [ ] Implement Congestion-Aware
+- [ ] Implement Hazard-Aware
+- [ ] Implement Adaptive Hybrid
+- [ ] Implement rerouting-event logging
+- [ ] Implement Decision Trace / explanation data
+- [ ] Verify every strategy independently
+- [ ] Prevent unfair strategy-specific access to information
+Phase 4 — Experiment Engine
+- [ ] Headless simulation mode
+- [ ] Batch experiment runner
+- [ ] Scenario IDs
+- [ ] Parameter-set IDs
+- [ ] Random-seed logging
+- [ ] Software/commit-version logging
+- [ ] CSV export
+- [ ] JSON configuration export
+- [ ] Experiment registry integration
+- [ ] Automatic metric aggregation
+- [ ] Exact same-scenario replay across strategies
+Phase 5 — Verification and Validation
+- [ ] Single-agent analytical tests
+- [ ] Known shortest-path graph tests
+- [ ] Blocked-edge tests
+- [ ] Unreachable-agent tests
+- [ ] Same-seed reproducibility
+- [ ] Density-speed sanity tests
+- [ ] Bottleneck-flow tests
+- [ ] Zero-hazard exposure tests
+- [ ] Routing-response tests
+- [ ] Adaptive rerouting tests
+- [ ] Visual vs headless-result consistency
+- [ ] Independent Python/reference validation where useful
+- [ ] Boundary-condition tests
+- [ ] Performance/stress tests
+- [ ] Document all validation results in 05-validation-log.md
+Phase 6 — Building and 3D Visualization
+- [ ] Finalize original fictional building layout
+- [ ] Design geometry to create meaningful routing tradeoffs
+- [ ] Main corridor
+- [ ] Secondary corridors
+- [ ] Multiple wings
+- [ ] Four exits
+- [ ] Narrow bottleneck
+- [ ] Wider alternative route
+- [ ] Central/open collaboration area
+- [ ] 12–18 major room/lab zones
+- [ ] Convert same building definition into 3D geometry
+- [ ] Three.js / React Three Fiber integration
+- [ ] Agent rendering
+- [ ] Cutaway/transparent wall approach
+- [ ] Exit visualization
+- [ ] Congestion visualization
+- [ ] Hazard visualization
+- [ ] Route visualization
+- [ ] Rerouting visual indication
+- [ ] Camera/navigation controls
+- [ ] Professional academic/research visual design
+Phase 7 — Interactive Application
+- [ ] Start
+- [ ] Pause
+- [ ] Reset
+- [ ] Simulation-speed control
+- [ ] Strategy selector
+- [ ] Occupancy selector
+- [ ] Block Exit control
+- [ ] Block Corridor control
+- [ ] Activate Hazard control
+- [ ] Live evacuation metrics
+- [ ] Strategy state display
+- [ ] Decision Trace panel
+- [ ] Select individual agent
+- [ ] Show original route
+- [ ] Show new route
+- [ ] Show rerouting reason
+- [ ] Exact Scenario Replay
+- [ ] Strategy Comparison view
+- [ ] Experiment Results view
+Phase 8 — Formal Research Experiments
+- [ ] Complete development runs
+- [ ] Tune adaptive strategy only on development scenarios
+- [ ] Freeze adaptive algorithm
+- [ ] Record frozen commit/version
+- [ ] Run complete formal experiment matrix
+- [ ] Run required replications
+- [ ] Run holdout scenarios
+- [ ] Run sensitivity analyses
+- [ ] Preserve raw results
+- [ ] Perform statistical analysis
+- [ ] Calculate confidence intervals
+- [ ] Calculate effect sizes where appropriate
+- [ ] Investigate strategy × occupancy interaction
+- [ ] Investigate strategy × disruption interaction
+- [ ] Investigate strategy × building-layout interaction
+- [ ] Interpret negative or conditional findings honestly
+Phase 9 — Deployment
+- [ ] Production build
+- [ ] Local presentation build
+- [ ] Local performance test
+- [ ] Public web deployment
+- [ ] Cross-browser testing
+- [ ] Test on another computer
+- [ ] Test without internet for local demo
+- [ ] Create presentation backup
+- [ ] Freeze stable release
+Phase 10 — Documentation and Academic Output
+- [ ] Keep research basis current
+- [ ] Keep assumptions current
+- [ ] Keep decision log current
+- [ ] Keep development log current
+- [ ] Keep validation log current
+- [ ] Keep experiment registry current
+- [ ] Keep time log current
+- [ ] Record AI-assisted work honestly
+- [ ] Record planning hours
+- [ ] Record coding hours
+- [ ] Record testing hours
+- [ ] Record failed/revised approaches
+- [ ] Record approximate final LOC
+- [ ] Document software architecture
+- [ ] Document limitations
+- [ ] Document future research pathway
+- [ ] Compile final project report
+Phase 11 — Presentation
+- [ ] Select one clear research story
+- [ ] Select strongest experiment result
+- [ ] Prepare ≤3 slides
+- [ ] Prefer approximately 2 slides if sufficient
+- [ ] Build 7-minute presentation flow
+- [ ] Prepare fixed-vs-adaptive same-scenario demo
+- [ ] Prepare live disruption demonstration
+- [ ] Prepare results visualization
+- [ ] Rehearse timing
+- [ ] Prepare local demo fallback
+- [ ] Prepare live-site fallback
+- [ ] Prepare screenshots/video emergency backup
+- [ ] Final rehearsal
+Phase 12 — Final Project Archive
+- [ ] Final clean Git status
+- [ ] Final GitHub push
+- [ ] Tag stable release
+- [ ] Archive formal experiment configuration
+- [ ] Archive raw data
+- [ ] Archive analyzed results
+- [ ] Archive presentation
+- [ ] Archive final report
+- [ ] Preserve reproducibility instructions
