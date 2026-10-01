@@ -22,16 +22,16 @@ Phase 0 — Project Infrastructure
 - [x] First GitHub push completed
 - [x] Working tree verified clean
 Phase 1 — Research Model Specification
-- [~] Research Pass 1: Pedestrian movement and flow model
-  - [ ] Free-flow walking speed
-  - [ ] Inter-person variability / speed distribution
-  - [ ] Speed-density relationship
-  - [ ] Local pedestrian-density calculation
-  - [ ] Corridor flow treatment
-  - [ ] Door/bottleneck capacity
-  - [ ] Personal spacing / collision avoidance
-  - [ ] Numerical timestep
-  - [ ] Movement-model validation targets
+-- [x] Research Pass 1: Pedestrian movement and flow model
+  - [x] Free-flow walking speed
+  - [x] Inter-person variability / speed distribution
+  - [x] Speed-density relationship
+  - [x] Local pedestrian-density calculation
+  - [x] Corridor flow treatment
+  - [x] Door/bottleneck capacity
+  - [x] Personal spacing / collision approach
+  - [~] Numerical timestep - provisional; convergence test required
+  - [x] Movement-model validation targets
 - [ ] Research Pass 2: Navigation and route-choice model
   - [ ] Navigation-graph structure
   - [ ] Shortest-path baseline

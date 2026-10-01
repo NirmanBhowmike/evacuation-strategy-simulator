@@ -1,20 +1,71 @@
-# Decision Log
+### D-004
+Use a hybrid individual-agent and graph-routing model rather than a full Social Force Model.
 
-Records important methodological, architectural, and implementation decisions.
+Reason:
+The principal research variable is routing strategy. A highly parameterized microscopic force model would introduce additional calibration uncertainty and could obscure routing effects.
 
-## Initial Decisions
+Date:
+Research Pass 1
 
-### D-001
-The research engine will be developed before the 3D visualization.
+### D-005
+Use the Weidmann fundamental diagram as the baseline pedestrian density-speed relationship.
 
-Reason: experimental validity should not depend on graphical implementation.
+Reason:
+It is a widely established pedestrian-flow benchmark and provides a transparent relationship among density, speed, and jam conditions.
 
-### D-002
-The building geometry will be a research simulation environment inspired by realistic institutional layouts. It will not be represented as an exact digital replica of a specific real building.
+Caution:
+It will be treated as a baseline model, not as a universally valid pedestrian law.
 
-Reason: the research concerns routing behavior and experimental comparison rather than architectural reconstruction.
+Date:
+Research Pass 1
 
-### D-003
-Fixed and adaptive strategies will be evaluated using identical scenario conditions and random seeds wherever applicable.
+### D-006
+Control pre-evacuation delay at zero seconds in the primary experiment.
 
-Reason: this supports controlled comparison between strategies.
+Reason:
+This isolates routing and movement behavior from response-time variability.
+
+Date:
+Research Pass 1
+
+### D-007
+Model hazards as dynamic routing-risk and route-availability conditions rather than simulate physical fire or smoke.
+
+Reason:
+Fire and smoke modeling would substantially expand the project scope and would require additional physical validation unrelated to the primary routing research question.
+
+Date:
+Research Pass 1
+
+### D-008
+Use sensitivity analysis for uncertain pedestrian-flow parameters instead of presenting one value as universally correct.
+
+Initial sensitivity targets include:
+
+- bottleneck specific flow
+- density-cell length
+- simulation timestep
+
+Date:
+Research Pass 1
+
+### D-009
+Require timestep convergence testing before freezing the simulation timestep.
+
+Nominal candidate:
+0.05 s
+
+Comparison values:
+0.025 s and 0.10 s
+
+Date:
+Research Pass 1
+
+### D-010
+Formal stochastic experiments will use recorded seeds and identical seed sets when strategies are compared.
+
+Reason:
+This allows controlled paired comparison and reproducibility.
+
+Date:
+Research Pass 1
