@@ -1,6 +1,6 @@
 # Research Model Specification
 
-Version: 0.7
+Version: 0.85
 Status: PROVISIONAL
 Phase: Research definition
 
@@ -202,14 +202,29 @@ C_route = sum(T_e) + sum(T_queue)
 
 # 14. Routing Strategy 4: Hazard-Aware
 
-Primary objective:
-Find a feasible route that avoids currently unacceptable hazard conditions.
+# 14. Routing Strategy 4: Hazard-Aware
 
-Exact hazard penalties and route-unavailability rules:
-Research Pass 3.
+Hazard states:
 
-Status:
-Partially defined.
+CLEAR
+RISK
+BLOCKED
+
+Hazard-Aware routing uses a safety-first lexicographic objective.
+
+For path P:
+
+H(P) = predicted time through currently known RISK regions
+
+T(P) = estimated travel time
+
+Decision order:
+
+1. remove routes containing BLOCKED segments
+2. minimize H(P)
+3. among equally safe alternatives, minimize T(P)
+
+Hazard exposure is not converted to travel time using an arbitrary numerical weight.
 
 # 15. Routing Strategy 5: Adaptive Hybrid
 
@@ -222,6 +237,15 @@ Adaptive routing combines:
 - current target
 - decision history
 - route-switching inertia
+
+Safety-response priority:
+
+1. check route feasibility
+2. reduce predicted hazard exposure when a safer feasible alternative exists
+3. if safety is equivalent, compare congestion-adjusted travel time
+4. apply normal rerouting inertia to time-only improvements
+
+A safety-improving reroute is not required to satisfy the normal time-improvement threshold.
 
 # 16. Route Reevaluation
 
@@ -354,14 +378,57 @@ Planned:
 
 # 23. Hazard Model
 
-Representation:
-Abstract dynamic spatial risk and route availability.
+# 23. Hazard and Disruption Model
 
-Physical fire/smoke simulation:
+Hazard states:
+
+CLEAR
+RISK
+BLOCKED
+
+CLEAR:
+Normal traversal.
+
+RISK:
+Traversal remains possible and exposure time accumulates.
+
+BLOCKED:
+Traversal is prohibited and the affected edge or region is removed from feasible routing.
+
+Hazard evolution:
+Deterministic scheduled scenario events.
+
+Supported events:
+
+HAZARD_ACTIVATE
+HAZARD_EXPAND
+CORRIDOR_BLOCK
+EXIT_BLOCK
+
+Individual hazard exposure:
+
+H_i = integral I_risk,i(t) dt
+
+Unit:
+seconds
+
+Population hazard exposure:
+
+H_total = sum(H_i)
+
+Unit:
+person-seconds
+
+Hazard exposure is a simulation metric and does not represent injury, toxicity, or physiological tenability.
+
+Physical fire and smoke simulation:
 Not included.
 
-Exact hazard severity and blocking logic:
-Research Pass 3.
+Future hazard knowledge:
+Prohibited.
+
+Exact event timing and location:
+Research Pass 4.
 
 # 24. Randomness
 
@@ -408,7 +475,14 @@ Required tests include:
 - hazard-free zero-exposure test
 - strategy decision-log correctness
 - visual/headless consistency
-
+- zero-hazard exposure test
+- known-duration hazard exposure test
+- activation-while-occupied test
+- blocked-corridor exclusion test
+- blocked-exit forced-reroute test
+- safety-first route-choice test
+- all-routes-blocked UNREACHABLE test
+- disruption-sequence reproducibility test
 # 27. Known Scope Limitations
 
 The initial model does not attempt to reproduce:
@@ -427,19 +501,19 @@ The initial model does not attempt to reproduce:
 
 # 28. Remaining Research Before v1.0
 
-Research Pass 3:
-Hazard and disruption model
-
 Research Pass 4:
-Experimental design, replication, metrics, and statistical analysis
+Experimental design, factor levels, replication strategy, metrics, holdout design, and statistical analysis.
 
-Still provisional from earlier passes:
+Still provisional:
 
 - simulation timestep
-- exact density-cell length
-- exact bottleneck capacity parameter
+- density-cell length
+- bottleneck-capacity parameter
 - local overlap-resolution implementation
-- exact adaptive rerouting threshold
-- exact hazard-routing rules
+- adaptive rerouting threshold
+- exact hazard locations
+- exact disruption activation times
+- formal occupancy levels
+- replication/convergence criteria
 
-Version 1.0 must not be frozen until these items are resolved or explicitly classified as sensitivity parameters.
+Version 1.0 must not be frozen until these items are resolved or explicitly retained as sensitivity factors.

@@ -278,3 +278,122 @@ Purpose:
 - debugging
 - experimental analysis
 - interactive explanation
+
+## A-026: Hazard Representation
+
+Hazard conditions will use three discrete states:
+
+CLEAR
+RISK
+BLOCKED
+
+Status: Locked
+
+Reason:
+This provides transparent route-risk and route-availability behavior without claiming unsupported physical fire severity.
+
+## A-027: Physical Hazard Modeling
+
+The simulator will not model:
+
+- fire spread
+- smoke transport
+- heat
+- toxic gas concentration
+- visibility
+- physiological tenability
+- injury probability
+
+Status: Locked
+
+## A-028: Hazard Evolution
+
+Hazards will change through deterministic scheduled scenario events.
+
+Status: Locked
+
+Exact event times:
+Research Pass 4.
+
+## A-029: Hazard Exposure
+
+Individual exposure will be measured as time spent in RISK regions.
+
+Unit:
+seconds
+
+Population exposure will be measured in:
+
+person-seconds
+
+Status: Locked
+
+The metric is not interpreted as injury or toxicity.
+
+## A-030: Hazard-Aware Route Priority
+
+Hazard-aware routing will:
+
+1. exclude BLOCKED routes
+2. minimize currently predicted RISK exposure
+3. among similarly safe alternatives, minimize travel time
+
+Status: Locked
+
+## A-031: Adaptive Safety Priority
+
+The Adaptive Hybrid strategy may reroute for a meaningful reduction in hazard exposure even when the alternative route does not satisfy the normal time-improvement threshold.
+
+Status: Locked
+
+## A-032: Supported Dynamic Events
+
+Research Model v1.0 will support:
+
+- HAZARD_ACTIVATE
+- HAZARD_EXPAND
+- CORRIDOR_BLOCK
+- EXIT_BLOCK
+
+Status: Locked
+
+## A-033: Corridor Blocking
+
+A blocked corridor becomes non-traversable in the navigation graph.
+
+Affected routes trigger immediate reevaluation.
+
+Status: Locked
+
+## A-034: Exit Blocking
+
+A blocked exit becomes unavailable immediately.
+
+Agents targeting that exit trigger immediate reevaluation.
+
+Status: Locked
+
+## A-035: Hazard Activation
+
+RISK regions remain traversable unless separately transitioned to BLOCKED.
+
+Status: Locked
+
+This permits experiments involving travel-time versus exposure tradeoffs.
+
+## A-036: Hazard Knowledge
+
+Agents and routing policies may use only currently active hazard information.
+
+Future scheduled hazard events remain unknown.
+
+Status: Locked
+
+## A-037: Hazard Scenario Timing
+
+Exact hazard activation and disruption times will be treated as experimental scenario parameters.
+
+Status: Provisional
+
+Final values:
+Research Pass 4.

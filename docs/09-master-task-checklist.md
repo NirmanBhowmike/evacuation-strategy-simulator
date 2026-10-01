@@ -44,14 +44,13 @@ Phase 1 — Research Model Specification
   - [x] Route update mechanism - decision-node and event based
   - [~] Rerouting threshold - tuning procedure defined; value not frozen
   - [x] Rerouting hysteresis / switching approach
-- [ ] Research Pass 3: Hazard and disruption model
-  - [ ] Hazard representation
-  - [ ] Hazard growth/expansion
-  - [ ] Hazard exposure metric
-  - [ ] Exit blocking
-  - [ ] Corridor blocking
-  - [ ] Dynamic disruption timing
-  - [ ] Explicit statement that fire/smoke physics are not modeled
+- - [x] Research Pass 3: Hazard and disruption model
+  - [x] Hazard representation
+  - [x] Hazard growth/expansion mechanism
+  - [x] Hazard exposure metric
+  - [x] Exit blocking
+  - [x] Corridor blocking
+  - [~] Dynamic disruption timing - mechanism defined; exact timings require Pass 4
 - [ ] Research Pass 4: Experimental methodology
   - [ ] Independent variables
   - [ ] Factor levels

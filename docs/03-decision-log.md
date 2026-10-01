@@ -186,3 +186,112 @@ Adaptive routing should be evaluated not only for evacuation performance but als
 
 Date:
 Research Pass 2
+
+### D-022
+Represent hazards using CLEAR, RISK, and BLOCKED states.
+
+Reason:
+A discrete state model supports controlled routing experiments without implying unsupported fire or smoke physics.
+
+Date:
+Research Pass 3
+
+### D-023
+Do not implement physical fire, smoke, toxicity, or tenability calculations in Research Model v1.0.
+
+Reason:
+These require separate physical modeling and validation and are outside the routing research scope.
+
+Date:
+Research Pass 3
+
+### D-024
+Measure hazard exposure as time spent in RISK regions.
+
+Individual unit:
+seconds
+
+Population unit:
+person-seconds
+
+Reason:
+This creates an interpretable simulation metric without implying physiological harm.
+
+Date:
+Research Pass 3
+
+### D-025
+Use safety-first hazard-aware route selection.
+
+Decision order:
+
+1. exclude blocked routes
+2. minimize predicted hazard exposure
+3. minimize travel time among similarly safe alternatives
+
+Reason:
+This avoids selecting an arbitrary numerical weight between hazard and time.
+
+Date:
+Research Pass 3
+
+### D-026
+Allow Adaptive Hybrid routing to override normal time-based rerouting inertia when an alternative meaningfully reduces hazard exposure.
+
+Reason:
+Safety response and congestion optimization should not be governed by the same switching threshold.
+
+Date:
+Research Pass 3
+
+### D-027
+Use deterministic scheduled disruption events.
+
+Initial event types:
+
+HAZARD_ACTIVATE
+HAZARD_EXPAND
+CORRIDOR_BLOCK
+EXIT_BLOCK
+
+Reason:
+Competing strategies must experience identical environmental changes.
+
+Date:
+Research Pass 3
+
+### D-028
+Blocked exits and blocked route segments trigger immediate forced route reevaluation.
+
+Reason:
+The current route is no longer feasible.
+
+Date:
+Research Pass 3
+
+### D-029
+Hazard activation triggers reevaluation for occupants whose planned routes intersect the newly risky region.
+
+Reason:
+This enables dynamic safety response without automatically treating all hazardous regions as physically impassable.
+
+Date:
+Research Pass 3
+
+### D-030
+Do not provide routing strategies with knowledge of future hazard or disruption events.
+
+Reason:
+Research Model v1.0 evaluates reactive routing using current situational information.
+
+Date:
+Research Pass 3
+
+### D-031
+Treat exact hazard timing and placement as experimental factors rather than physical constants.
+
+Reason:
+The project does not contain a validated fire-development model.
+
+Date:
+Research Pass 3

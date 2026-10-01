@@ -519,3 +519,222 @@ Items intentionally remaining provisional:
 
 - exact hazard-aware routing rules, pending Research Pass 3
 - final rerouting threshold, pending development-scenario tuning
+
+# Research Pass 3: Hazard and Disruption Model
+
+## 1. Research Focus
+
+Research Pass 3 defines how changing hazardous conditions and route disruptions will be represented in the evacuation simulator.
+
+The simulator will model changes in route risk and route availability. It will not attempt to reproduce physical fire growth, smoke transport, heat, toxicity, visibility loss, or injury probability.
+
+The purpose is to create controlled dynamic conditions for evaluating evacuation-routing strategies.
+
+## 2. Hazard State Representation
+
+Each affected region or route segment may occupy one of three states:
+
+CLEAR
+RISK
+BLOCKED
+
+CLEAR:
+Normal traversal is permitted.
+
+RISK:
+Traversal remains possible, but time spent in the region contributes to simulated hazard exposure. Hazard-aware strategies attempt to avoid these regions when safer alternatives exist.
+
+BLOCKED:
+Traversal is no longer permitted. The affected route segment is removed from feasible route calculations.
+
+This discrete representation avoids creating unsupported physical hazard-severity values.
+
+## 3. Hazard Geometry
+
+Hazards will be represented spatially using defined regions associated with the building geometry and navigation graph.
+
+A hazard may affect:
+
+- a room
+- corridor segment
+- junction
+- doorway
+- multiple connected regions
+
+The graphical hazard representation and navigation-state changes must be driven by the same underlying simulation state.
+
+## 4. Hazard Activation and Expansion
+
+Hazard evolution will occur through deterministic scheduled events.
+
+Example:
+
+t = 0 s
+Hazard inactive
+
+t = 20 s
+Initial region becomes RISK
+
+t = 35 s
+Additional region becomes RISK
+
+t = 50 s
+Core route segment becomes BLOCKED
+
+These times represent controlled experimental scenario settings. They are not claims about real fire-development rates.
+
+## 5. Hazard Exposure
+
+For occupant i:
+
+H_i = integral I_risk,i(t) dt
+
+where I_risk,i(t) equals 1 while the occupant is inside a RISK region and 0 otherwise.
+
+Individual hazard exposure is therefore measured in:
+
+seconds
+
+Population hazard exposure is:
+
+H_total = sum(H_i)
+
+with units:
+
+person-seconds
+
+This is a simulation exposure measure only. It does not represent injury probability, toxicity, Fractional Effective Dose, or physiological harm.
+
+## 6. Hazard-Aware Route Selection
+
+Hazard-aware routing will use a safety-first decision rule.
+
+For each feasible path:
+
+H(P) = predicted exposure to currently known RISK regions
+
+T(P) = estimated travel time
+
+The routing decision will:
+
+1. remove BLOCKED paths
+2. minimize predicted hazard exposure
+3. among alternatives with equivalent exposure, minimize estimated travel time
+
+This avoids introducing an arbitrary numerical conversion between hazard exposure and travel time.
+
+## 7. Adaptive Hybrid Hazard Response
+
+The Adaptive Hybrid strategy will use the following decision priority:
+
+1. Determine whether the current route remains feasible.
+2. Determine whether an alternative reduces current predicted hazard exposure.
+3. If safety is equivalent, compare congestion-adjusted evacuation time.
+4. Apply normal rerouting inertia to time-only improvements.
+
+A meaningful safety improvement does not need to satisfy the normal time-improvement threshold.
+
+## 8. Disruption Event Types
+
+Research Model v1.0 will support four primary disruption events:
+
+HAZARD_ACTIVATE
+HAZARD_EXPAND
+CORRIDOR_BLOCK
+EXIT_BLOCK
+
+Each event will contain information such as:
+
+- event ID
+- event type
+- activation time
+- target region, edge, or exit
+- scenario ID
+
+## 9. Exit Blocking
+
+When an EXIT_BLOCK event occurs:
+
+- the exit becomes unavailable
+- it is removed from feasible routing
+- occupants currently targeting the exit receive an immediate forced route reevaluation
+
+## 10. Corridor Blocking
+
+When a CORRIDOR_BLOCK event occurs:
+
+- the associated graph edge becomes non-traversable
+- newly calculated routes cannot use the edge
+- occupants whose current routes contain the blocked edge receive immediate reevaluation
+
+## 11. Hazard Activation
+
+When a hazard changes a region from CLEAR to RISK:
+
+- the region remains traversable
+- hazard exposure begins accumulating
+- occupants whose current routes pass through the region reevaluate their routes
+
+This permits direct comparison between shorter risky routes and longer clear alternatives.
+
+## 12. Hazard Expansion
+
+Hazard expansion will occur through scheduled transitions such as:
+
+CLEAR -> RISK
+
+or:
+
+RISK -> BLOCKED
+
+Expansion will be deterministic within a scenario so that competing routing strategies face identical environmental conditions.
+
+## 13. No Predictive Hazard Knowledge
+
+Routing strategies may use only the currently active hazard state.
+
+If a corridor is scheduled to become BLOCKED at t = 40 s, a strategy operating at t = 30 s cannot use that future event unless the experimental design explicitly introduces predictive information in a later study.
+
+Research Model v1.0 will therefore evaluate reactive guidance rather than perfect-forecast routing.
+
+## 14. Initial Scenario Families
+
+The formal experiment is expected to include scenario families such as:
+
+H0: no hazard or disruption
+
+H1: dynamic hazard only
+
+H2: exit or corridor blockage
+
+H3: combined hazard and blockage
+
+Exact hazard locations, activation times, occupancy levels, and scenario combinations will be finalized during Research Pass 4.
+
+## 15. Validation Requirements
+
+Hazard and disruption validation should include:
+
+- zero hazard produces zero exposure
+- known five-second RISK exposure produces approximately five seconds of individual exposure
+- exposure begins at hazard activation time
+- BLOCKED edges cannot appear in newly calculated routes
+- blocked exits cause immediate target reevaluation
+- Hazard-Aware prefers a zero-exposure route over a risky alternative when available
+- if all routes contain risk, Hazard-Aware minimizes predicted exposure
+- if all routes become impossible, the occupant receives an UNREACHABLE state
+- same scenario and seed reproduce the same disruption sequence
+
+## Status
+
+Research Pass 3 is substantively complete.
+
+Remaining experimental decisions:
+
+- exact hazard locations
+- exact activation times
+- exact expansion timing
+- disruption combinations
+- scenario factor levels
+
+These will be established in Research Pass 4.
