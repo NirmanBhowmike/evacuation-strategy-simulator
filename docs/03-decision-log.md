@@ -295,3 +295,125 @@ The project does not contain a validated fire-development model.
 
 Date:
 Research Pass 3
+
+### D-032
+Use low, medium, and high occupancy regimes defined by observed congestion behavior rather than arbitrary population counts.
+
+Reason:
+The same occupant count can represent different congestion severity in different building geometries.
+
+Date:
+Research Pass 4
+
+### D-033
+Use a separate development layout and holdout layout.
+
+Reason:
+The adaptive strategy should be evaluated on geometry that was not used during parameter tuning.
+
+Date:
+Research Pass 4
+
+### D-034
+Generate immutable ScenarioInstances before applying routing strategies.
+
+Reason:
+This ensures competing strategies experience identical stochastic inputs and supports paired comparisons.
+
+Date:
+Research Pass 4
+
+### D-035
+Use a minimum initial replication count of 40 per experimental cell, followed by convergence testing.
+
+Reason:
+Different evacuation metrics may converge at different rates. A fixed small replication count is not assumed sufficient.
+
+Date:
+Research Pass 4
+
+### D-036
+Add additional replications in batches of 10 when convergence criteria are not met.
+
+Date:
+Research Pass 4
+
+### D-037
+Do not use total evacuation time as the only convergence indicator.
+
+Additional indicators include density, exit utilization, queue exposure, and hazard exposure where applicable.
+
+Date:
+Research Pass 4
+
+### D-038
+Use total evacuation time and population hazard exposure as co-primary outcomes where hazard is present.
+
+Reason:
+The project evaluates both evacuation performance and safety-oriented exposure.
+
+Date:
+Research Pass 4
+
+### D-039
+Treat P95 evacuation time as a key secondary outcome.
+
+Reason:
+P95 represents the slower tail of occupants without relying exclusively on the final evacuating individual.
+
+Date:
+Research Pass 4
+
+### D-040
+Tune the adaptive rerouting threshold only on Layout A development scenarios.
+
+Reason:
+Holdout evaluation must remain independent from algorithm tuning.
+
+Date:
+Research Pass 4
+
+### D-041
+Freeze the adaptive strategy, parameter set, and software commit before holdout testing.
+
+Reason:
+Poor holdout performance should be reported as a result rather than corrected through hidden retuning.
+
+Date:
+Research Pass 4
+
+### D-042
+Use matched scenario comparisons across strategies.
+
+Reason:
+Every strategy should face identical occupant configurations and environmental events.
+
+Date:
+Research Pass 4
+
+### D-043
+Use factorial analysis to investigate strategy interactions with occupancy and disruption conditions.
+
+Reason:
+Overall averages can hide important condition-dependent strategy behavior.
+
+Date:
+Research Pass 4
+
+### D-044
+Separate primary, secondary, and diagnostic metrics.
+
+Reason:
+The analysis should focus on research outcomes rather than treat every logged variable as equally important.
+
+Date:
+Research Pass 4
+
+### D-045
+Use explicit EVACUATED, UNREACHABLE, and TIMEOUT run states.
+
+Reason:
+Failed or impossible evacuations must not be silently incorporated as successful outcomes.
+
+Date:
+Research Pass 4

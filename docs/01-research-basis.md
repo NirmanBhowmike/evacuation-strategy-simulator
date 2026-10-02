@@ -738,3 +738,324 @@ Remaining experimental decisions:
 - scenario factor levels
 
 These will be established in Research Pass 4.
+
+# Research Pass 4: Experimental Methodology
+
+## 1. Purpose
+
+Research Pass 4 defines the formal experimental design used to compare evacuation-routing strategies.
+
+The experiment is designed around controlled simulation, reproducible scenario instances, paired strategy comparisons, convergence-based replication, development/holdout separation, and explicit statistical analysis.
+
+## 2. Primary Experimental Factors
+
+Three primary factors will be investigated:
+
+Routing Strategy:
+1. Nearest Exit
+2. Static Shortest Path
+3. Congestion-Aware
+4. Hazard-Aware
+5. Adaptive Hybrid
+
+Occupancy Condition:
+1. Low
+2. Medium
+3. High
+
+Disruption Condition:
+1. D0 - No disruption
+2. D1 - Dynamic hazard
+3. D2 - Exit blockage
+4. D3 - Corridor blockage
+5. D4 - Combined hazard and blockage
+
+This produces:
+
+5 x 3 x 5 = 75 experimental cells
+
+before replication.
+
+## 3. Occupancy Conditions
+
+Low, medium, and high occupancy will represent different congestion regimes rather than arbitrary round population counts.
+
+The exact occupant counts will be calibrated after Layout A and the core simulation engine exist.
+
+Target interpretation:
+
+Low:
+Mostly free movement with little sustained queuing.
+
+Medium:
+Observable local congestion and intermittent bottleneck queues.
+
+High:
+Sustained bottleneck congestion without placing most of the facility near jam density.
+
+Exact counts will be frozen before formal strategy comparison.
+
+## 4. Development and Holdout Layouts
+
+Layout A will be used for:
+
+- development
+- debugging
+- occupancy calibration
+- adaptive-threshold tuning
+- visualization development
+- sensitivity testing
+
+Layout B will be reserved as a holdout simulation layout.
+
+Layout B will differ meaningfully in:
+
+- corridor topology
+- exit relationships
+- bottleneck locations
+- alternative routes
+- disruption locations
+
+The adaptive algorithm will be frozen before holdout evaluation.
+
+## 5. Scenario Instances and Randomness
+
+A seed will generate an immutable ScenarioInstance before a routing strategy is applied.
+
+A ScenarioInstance will contain items such as:
+
+- occupant starting positions
+- occupant desired walking speeds
+- relevant stochastic occupant attributes
+- disruption schedule
+- hazard schedule
+- layout configuration
+
+The same ScenarioInstance will then be supplied to every competing routing strategy.
+
+This produces paired comparisons and avoids divergence caused by different strategies consuming random-number streams differently.
+
+## 6. Replication Strategy
+
+Formal stochastic scenarios will begin with a minimum of:
+
+n_min = 40
+
+ScenarioInstances per experimental cell.
+
+After the initial 40 runs, convergence will be evaluated.
+
+If convergence criteria are not met, additional runs will be added in batches of:
+
+10
+
+until the required stability is reached or an explicit computational stopping rule is invoked.
+
+The project will therefore use convergence-based replication rather than assuming that one fixed replication count is universally sufficient.
+
+## 7. Convergence Assessment
+
+Convergence should not be judged from total evacuation time alone.
+
+The assessment will consider at least:
+
+- total evacuation time
+- 95th-percentile evacuation time
+- maximum local density
+- exit utilization
+- queue exposure
+- hazard exposure when applicable
+
+For primary continuous time outcomes, the initial project criterion will target a 95% confidence-interval half-width no greater than approximately 5% of the estimated mean.
+
+Near-zero outcomes such as hazard exposure may require an absolute or batch-stability criterion rather than a relative percentage criterion.
+
+These thresholds are project acceptance criteria rather than universal evacuation-model standards.
+
+## 8. Primary Outcomes
+
+Co-primary outcomes:
+
+Total Evacuation Time
+
+TET = max(T_i)
+
+Population Hazard Exposure
+
+H_total = sum(H_i)
+
+Hazard exposure is only a co-primary outcome for scenarios containing active hazard conditions.
+
+## 9. Key Secondary Outcomes
+
+- 95th-percentile occupant evacuation time
+- maximum local pedestrian density
+- queue exposure
+- evacuation completion rate
+- number of unreachable occupants
+
+## 10. Diagnostic Outcomes
+
+- mean travel distance
+- exit utilization
+- reroutes per occupant
+- percentage of occupants rerouted
+- exit target changes
+- route reversal events
+- strategy computation time
+
+Diagnostic outcomes will be used to explain why strategies behave differently rather than being treated as equally important primary endpoints.
+
+## 11. Normalized Disruption Timing
+
+Exact disruption timing will be established relative to baseline evacuation dynamics rather than treated as a physical fire-development prediction.
+
+Example scenario design may use normalized times such as:
+
+25% of baseline evacuation timescale:
+hazard activation
+
+40%:
+hazard expansion
+
+55%:
+selected route or exit disruption
+
+Exact values will be frozen before formal experiments.
+
+These percentages are experimental design parameters and do not represent real fire-growth constants.
+
+## 12. Adaptive Threshold Tuning
+
+Candidate rerouting thresholds:
+
+theta = 0.00
+theta = 0.10
+theta = 0.20
+theta = 0.30
+
+Threshold tuning will use Layout A development scenarios only.
+
+Selection will consider:
+
+1. hazard exposure
+2. evacuation performance
+3. routing stability
+
+The threshold will be frozen before Layout B holdout evaluation.
+
+Holdout results will not be used to retune the algorithm.
+
+## 13. Model Freeze
+
+Before holdout evaluation, the project will record:
+
+- adaptive threshold
+- parameter-set version
+- Git commit
+- routing algorithm version
+- experiment configuration
+
+After the freeze, algorithm changes motivated by holdout performance will require a new version and separate experiment rather than retroactive tuning.
+
+## 14. Statistical Comparison
+
+Because strategies receive the same ScenarioInstances, strategy outcomes are paired by scenario.
+
+Analysis will emphasize:
+
+- paired differences
+- percentage differences
+- confidence intervals
+- effect sizes
+
+The main factorial structure is:
+
+Strategy x Occupancy x Disruption
+
+Important interactions include:
+
+Strategy x Occupancy
+
+and:
+
+Strategy x Disruption
+
+A mixed-effects or related blocked-analysis framework may be used so that ScenarioInstance/seed is treated as a matched block rather than as unrelated independent data.
+
+Skewed or count outcomes may use bootstrap confidence intervals or suitable generalized statistical models.
+
+## 15. Termination Conditions
+
+A simulation normally terminates when every occupant is either:
+
+EVACUATED
+
+or:
+
+UNREACHABLE
+
+A large defensive runtime ceiling will also be implemented to identify simulation failures or pathological states.
+
+A timeout will be recorded explicitly as:
+
+TIMEOUT
+
+Remaining occupants will not be silently counted as evacuated.
+
+## 16. Formal Run Record
+
+Each formal simulation run should record at least:
+
+- experiment ID
+- ScenarioInstance ID
+- layout ID
+- occupancy condition
+- disruption condition
+- routing strategy
+- random seed
+- software Git commit
+- parameter-set version
+- adaptive threshold
+- total evacuation time
+- P95 evacuation time
+- hazard exposure
+- maximum density
+- queue exposure
+- completion rate
+- unreachable count
+- reroutes
+- route reversals
+- exit utilization
+- computation time
+- run status
+
+## 17. Minimum Formal Experiment Size
+
+The initial design contains:
+
+5 routing strategies
+x 3 occupancy levels
+x 5 disruption conditions
+= 75 cells
+
+At a minimum of 40 ScenarioInstances per cell:
+
+75 x 40 = 3000 formal simulation runs
+
+Additional runs may be required when convergence criteria are not satisfied.
+
+## Status
+
+Research Pass 4 is substantively complete.
+
+The following values remain calibration- or validation-gated:
+
+- exact low/medium/high occupant counts
+- final simulation timestep
+- final density-cell length
+- final bottleneck-capacity setting
+- final adaptive rerouting threshold
+- exact disruption timings and locations
+
+The procedures for resolving these parameters are now defined.

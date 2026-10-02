@@ -397,3 +397,128 @@ Status: Provisional
 
 Final values:
 Research Pass 4.
+
+## A-038: Experimental Factor Structure
+
+The primary formal experiment will use:
+
+5 routing strategies
+3 occupancy conditions
+5 disruption conditions
+
+Status: Locked framework
+
+## A-039: Occupancy Levels
+
+Occupancy will use low, medium, and high congestion regimes.
+
+Exact occupant counts will be calibrated using Layout A after the movement engine is operational.
+
+Status: Calibration-gated
+
+## A-040: Development Layout
+
+Layout A will be used for development, debugging, calibration, and adaptive-threshold tuning.
+
+Status: Locked
+
+## A-041: Holdout Layout
+
+Layout B will be reserved for holdout simulation evaluation and will not be used to tune the adaptive strategy.
+
+Status: Locked
+
+## A-042: Scenario Instances
+
+A random seed will generate an immutable ScenarioInstance before routing strategies are executed.
+
+All competing strategies will receive the same ScenarioInstance.
+
+Status: Locked
+
+## A-043: Formal Replications
+
+Each formal experimental cell will initially use at least 40 ScenarioInstances.
+
+Additional runs will be added in batches of 10 if convergence criteria are not met.
+
+Status: Locked procedure
+
+## A-044: Convergence
+
+Replication sufficiency will be evaluated from multiple outputs rather than total evacuation time alone.
+
+Status: Locked procedure
+
+Initial convergence outcomes include:
+
+- TET
+- P95 evacuation time
+- maximum density
+- exit utilization
+- queue exposure
+- hazard exposure when applicable
+
+## A-045: Primary Outcomes
+
+Co-primary outcomes:
+
+- total evacuation time
+- population hazard exposure for hazard scenarios
+
+Status: Locked
+
+## A-046: Secondary Outcomes
+
+Key secondary outcomes include:
+
+- P95 evacuation time
+- maximum local density
+- queue exposure
+- completion rate
+- unreachable count
+
+Status: Locked
+
+## A-047: Adaptive Threshold Development
+
+Candidate thresholds:
+
+0.00
+0.10
+0.20
+0.30
+
+The threshold will be selected using Layout A development scenarios only.
+
+Status: Locked procedure; final value calibration-gated
+
+## A-048: Holdout Integrity
+
+The adaptive algorithm and selected threshold will be frozen before Layout B holdout evaluation.
+
+Holdout performance will not be used to retroactively retune the frozen model.
+
+Status: Locked
+
+## A-049: Disruption Timing
+
+Exact disruption timing will be defined relative to baseline evacuation behavior rather than presented as real fire-development timing.
+
+Status: Experimental calibration-gated
+
+## A-050: Statistical Pairing
+
+Routing strategies will be compared using matched ScenarioInstances.
+
+ScenarioInstance/seed will therefore act as an experimental block.
+
+Status: Locked
+
+## A-051: Simulation Termination
+
+Normal termination occurs when every occupant is EVACUATED or UNREACHABLE.
+
+Defensive runtime ceilings will produce an explicit TIMEOUT status.
+
+Status: Locked

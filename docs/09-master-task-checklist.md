@@ -51,24 +51,24 @@ Phase 1 — Research Model Specification
   - [x] Exit blocking
   - [x] Corridor blocking
   - [~] Dynamic disruption timing - mechanism defined; exact timings require Pass 4
-- [ ] Research Pass 4: Experimental methodology
-  - [ ] Independent variables
-  - [ ] Factor levels
-  - [ ] Dependent variables
-  - [ ] Occupancy conditions
-  - [ ] Disruption conditions
-  - [ ] Random-seed strategy
-  - [ ] Number of replications
-  - [ ] Development scenarios
-  - [ ] Holdout scenarios
-  - [ ] Sensitivity-analysis plan
-  - [ ] Statistical-analysis plan
-  - [ ] Stopping / termination rules
-- [ ] Update 01-research-basis.md
-- [ ] Update 02-model-assumptions.md
-- [ ] Update 03-decision-log.md
-- [ ] Complete 08-research-model-specification.md
-- [ ] Freeze Research Model Specification v1.0
+- - [x] Research Pass 4: Experimental methodology
+  - [x] Independent variables
+  - [x] Factor-level framework
+  - [x] Dependent variables
+  - [~] Occupancy conditions - regime definitions fixed; exact counts require calibration
+  - [x] Disruption conditions
+  - [x] Random-seed / ScenarioInstance strategy
+  - [x] Replication and convergence method
+  - [x] Development scenarios
+  - [x] Holdout methodology
+  - [x] Sensitivity-analysis plan
+  - [x] Statistical-analysis framework
+  - [x] Stopping / termination rules
+- - [x] Update `01-research-basis.md`
+- [x] Update `02-model-assumptions.md`
+- [x] Update `03-decision-log.md`
+- [x] Complete `08-research-model-specification.md`
+- [x] Freeze Research Model Specification v1.0
 Phase 2 — Core Research Engine
 - [ ] Initialize TypeScript project
 - [ ] Configure testing framework
