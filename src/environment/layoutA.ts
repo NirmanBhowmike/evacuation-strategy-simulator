@@ -65,7 +65,7 @@ function polygonZone(
  * The broad spatial organization is inspired by the reference
  * floor-plan image supplied during project development.
  *
- * It is NOT an architectural reproduction of a real facility.
+ * It is not an architectural reproduction of a real facility.
  * No real building name, room numbers, labels, logos, or exact
  * dimensions are used.
  */
@@ -83,8 +83,6 @@ export const layoutA: BuildingEnvironment = {
 
     /**
      * Dominant east-west circulation spine.
-     * This gives the building the long horizontal character
-     * visible in the reference floor plan.
      */
     rectangularZone(
       "corridor-main-spine",
@@ -96,7 +94,7 @@ export const layoutA: BuildingEnvironment = {
     ),
 
     /**
-     * West-central corridor serving the atrium and western wing.
+     * West-central corridor serving the western wing and atrium.
      */
     rectangularZone(
       "corridor-west-central",
@@ -109,7 +107,6 @@ export const layoutA: BuildingEnvironment = {
 
     /**
      * Angled northwest connector.
-     * This helps create the irregular western geometry.
      */
     polygonZone(
       "corridor-northwest-link",
@@ -125,7 +122,7 @@ export const layoutA: BuildingEnvironment = {
     ),
 
     /**
-     * Central north-south circulation route.
+     * Central north-south route.
      */
     rectangularZone(
       "corridor-central-vertical",
@@ -149,7 +146,7 @@ export const layoutA: BuildingEnvironment = {
     ),
 
     /**
-     * Upper eastern horizontal connection.
+     * Wider upper east-west alternative route.
      */
     rectangularZone(
       "corridor-east-upper",
@@ -163,20 +160,20 @@ export const layoutA: BuildingEnvironment = {
     /**
      * Deliberately narrow connector.
      *
-     * This is useful experimentally because it can become
-     * a congestion bottleneck despite providing a short route.
+     * This provides a shorter but lower-capacity alternative
+     * between the central and eastern portions of the building.
      */
     rectangularZone(
       "corridor-east-bottleneck",
       "CORRIDOR",
-      52,
-      26,
-      6,
+      38.5,
+      29,
+      19.5,
       2,
     ),
 
     /**
-     * Southeast extension.
+     * Southeast circulation extension.
      */
     rectangularZone(
       "corridor-southeast",
@@ -204,9 +201,7 @@ export const layoutA: BuildingEnvironment = {
     // ============================================================
 
     /**
-     * Irregular west-central open zone.
-     * Inspired by the larger open/atrium character visible
-     * toward the western-central part of the reference plan.
+     * Irregular west-central open area.
      */
     polygonZone(
       "open-west-atrium",
@@ -221,7 +216,7 @@ export const layoutA: BuildingEnvironment = {
     ),
 
     /**
-     * Central collaboration / circulation zone.
+     * Central collaboration and circulation area.
      */
     rectangularZone(
       "open-central",
@@ -334,11 +329,6 @@ export const layoutA: BuildingEnvironment = {
     // CENTRAL ROOM CLUSTER
     // ============================================================
 
-    /**
-     * Several smaller rooms are grouped around the central
-     * circulation network to resemble the denser central room
-     * organization of the reference floor plan.
-     */
     rectangularZone(
       "room-central-01",
       "ROOM",
@@ -357,13 +347,17 @@ export const layoutA: BuildingEnvironment = {
       5.5,
     ),
 
+    /**
+     * These two rooms were shortened so the narrow connector
+     * physically passes between the central and eastern areas.
+     */
     rectangularZone(
       "room-central-03",
       "ROOM",
       38.5,
       26,
       5,
-      5,
+      3,
     ),
 
     rectangularZone(
@@ -372,7 +366,7 @@ export const layoutA: BuildingEnvironment = {
       43.5,
       26,
       5,
-      5,
+      3,
     ),
 
     rectangularZone(
@@ -389,10 +383,7 @@ export const layoutA: BuildingEnvironment = {
     // ============================================================
 
     /**
-     * Larger room/laboratory block on the eastern side.
-     *
-     * This helps reproduce the stronger building mass visible
-     * toward the right side of the supplied reference image.
+     * Large eastern room/laboratory block.
      */
     rectangularZone(
       "room-east-large-01",
@@ -444,11 +435,7 @@ export const layoutA: BuildingEnvironment = {
     ),
 
     /**
-     * Irregular far-east terminal mass.
-     *
-     * This prevents the overall footprint from becoming a simple
-     * rectangle and helps create the tapered/asymmetric character
-     * visible toward the end of the reference plan.
+     * Irregular terminal room mass on the far east side.
      */
     polygonZone(
       "room-far-east",
