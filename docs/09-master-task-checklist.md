@@ -84,7 +84,7 @@ Phase 2 — Core Research Engine
 - [x] Implement density calculation
 - [x] Implement congestion effects
 - [x] Implement bottleneck behavior
-- [ ] Implement hazard field
+- [x] Implement hazard field
 - [ ] Implement dynamic disruptions
 - [ ] Implement evacuation-state handling
 - [ ] Implement simulation termination conditions

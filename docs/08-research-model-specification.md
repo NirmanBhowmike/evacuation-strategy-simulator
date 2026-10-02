@@ -1,7 +1,7 @@
 # Research Model Specification
 
-Version: 0.85
-Status: PROVISIONAL
+Version: 1.0
+Status: IMPLEMENTATION-READY
 Phase: Research definition
 
 This document will become the authoritative Research Model Specification v1.0 before implementation of the formal research engine.
@@ -499,21 +499,201 @@ The initial model does not attempt to reproduce:
 - exact real-building geometry
 - complete unaided human exit-choice psychology
 
-# 28. Remaining Research Before v1.0
+# 28. Formal Experimental Design
 
-Research Pass 4:
-Experimental design, factor levels, replication strategy, metrics, holdout design, and statistical analysis.
+Primary factors:
 
-Still provisional:
+Routing Strategy:
+5 levels
 
-- simulation timestep
-- density-cell length
-- bottleneck-capacity parameter
-- local overlap-resolution implementation
-- adaptive rerouting threshold
-- exact hazard locations
-- exact disruption activation times
-- formal occupancy levels
-- replication/convergence criteria
+Occupancy:
+3 calibrated congestion regimes
 
-Version 1.0 must not be frozen until these items are resolved or explicitly retained as sensitivity factors.
+Disruption:
+5 conditions
+
+Total experimental cells:
+
+5 x 3 x 5 = 75
+
+Minimum ScenarioInstances per cell:
+
+40
+
+Minimum initial formal runs:
+
+75 x 40 = 3000
+
+Additional replications are added in batches of 10 when convergence criteria are not satisfied.
+
+# 29. Scenario Pairing
+
+A random seed generates an immutable ScenarioInstance before routing strategy execution.
+
+The same ScenarioInstance is supplied to every competing routing strategy.
+
+ScenarioInstances include:
+
+- occupant positions
+- desired walking speeds
+- stochastic occupant attributes
+- hazard schedule
+- disruption schedule
+- layout configuration
+
+# 30. Development and Holdout Design
+
+Layout A:
+Development, calibration, threshold tuning, and sensitivity analysis.
+
+Layout B:
+Holdout evaluation.
+
+Adaptive parameters must be frozen before Layout B is evaluated.
+
+# 31. Occupancy Calibration
+
+Low, medium, and high occupancy represent distinct congestion regimes.
+
+Exact occupant counts are calibration-gated and will be established using Layout A after implementation of the movement and bottleneck models.
+
+# 32. Adaptive Threshold Calibration
+
+Candidate values:
+
+theta = 0.00
+theta = 0.10
+theta = 0.20
+theta = 0.30
+
+Selection uses Layout A development scenarios only.
+
+Selection priorities:
+
+1. hazard exposure
+2. evacuation performance
+3. routing stability
+
+The selected value is frozen before holdout evaluation.
+
+# 33. Replication and Convergence
+
+Minimum initial replications:
+
+40 ScenarioInstances per cell
+
+Additional batch:
+
+10
+
+Convergence assessment considers:
+
+- total evacuation time
+- P95 evacuation time
+- maximum density
+- exit utilization
+- queue exposure
+- hazard exposure when applicable
+
+Primary continuous outcomes will initially target a 95% confidence-interval half-width approximately no greater than 5% of the estimated mean.
+
+Near-zero outcomes may require absolute or batch-stability criteria.
+
+# 34. Outcome Hierarchy
+
+Co-primary:
+
+- total evacuation time
+- population hazard exposure in hazard scenarios
+
+Key secondary:
+
+- P95 occupant evacuation time
+- maximum local density
+- queue exposure
+- evacuation completion rate
+- unreachable count
+
+Diagnostic:
+
+- mean travel distance
+- exit utilization
+- reroutes
+- percentage rerouted
+- exit target changes
+- route reversals
+- strategy computation time
+
+# 35. Statistical Framework
+
+Strategies are compared using matched ScenarioInstances.
+
+Primary factorial structure:
+
+Strategy x Occupancy x Disruption
+
+Important interactions:
+
+Strategy x Occupancy
+
+Strategy x Disruption
+
+Analysis should emphasize:
+
+- paired differences
+- confidence intervals
+- effect sizes
+- interaction effects
+
+ScenarioInstance/seed should be treated as a matched block.
+
+The exact statistical model may vary by outcome distribution.
+
+# 36. Simulation Termination
+
+Normal completion:
+
+All occupants are EVACUATED or UNREACHABLE.
+
+Defensive runtime ceiling:
+
+Produces explicit TIMEOUT status.
+
+Timeout occupants are not counted as evacuated.
+
+# 37. Validation-Gated Parameters
+
+Research Model Specification v1.0 freezes the model architecture and calibration procedures.
+
+The following parameters remain validation- or calibration-gated:
+
+- final simulation timestep
+- final density-cell length
+- final bottleneck-capacity parameter
+- exact local overlap-resolution behavior
+- exact low/medium/high occupancy counts
+- final adaptive rerouting threshold
+- exact disruption locations
+- exact normalized disruption timings
+
+These values must be resolved according to the procedures defined in this specification before formal experiments are executed.
+
+# 38. Version 1.0 Freeze Meaning
+
+Version 1.0 is implementation-ready.
+
+It freezes:
+
+- research scope
+- model architecture
+- routing strategy definitions
+- hazard representation
+- experimental structure
+- calibration procedures
+- validation requirements
+- reproducibility rules
+- outcome hierarchy
+
+It does not claim that implementation-dependent calibration values have already been validated.
+
+Any later methodological change must be recorded in the decision log and produce a new model-specification version.
