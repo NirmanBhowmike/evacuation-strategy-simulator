@@ -91,16 +91,18 @@ Phase 2 — Core Research Engine
 - [x] Implement metrics engine
 - [x] Separate rendering completely from simulation logic
 Phase 3 — Routing Strategy Engine
+Phase 3 – Routing Strategy Engine
+
 - [ ] Define common strategy interface
-- [ ] Implement Shortest Path
-- [ ] Implement Nearest Exit
-- [ ] Implement Congestion-Aware
-- [ ] Implement Hazard-Aware
-- [ ] Implement Adaptive Hybrid
+- [x] Implement Shortest Path
+- [x] Implement Nearest Exit
+- [x] Implement Congestion-Aware
+- [x] Implement Hazard-Aware
+- [x] Implement Adaptive Hybrid
 - [ ] Implement rerouting-event logging
 - [ ] Implement Decision Trace / explanation data
-- [ ] Verify every strategy independently
-- [ ] Prevent unfair strategy-specific access to information
+- [x] Verify every strategy independently
+- [ ] Prevent unfair strategy-specific access to future informationinformation
 Phase 4 — Experiment Engine
 - [ ] Headless simulation mode
 - [ ] Batch experiment runner
