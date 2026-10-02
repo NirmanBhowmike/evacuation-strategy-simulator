@@ -109,11 +109,11 @@ Phase 4 — Experiment Engine
 - [x] Scenario IDs
 - [x] Parameter-set IDs
 - [x] Random-seed logging
-- [ ] Software/commit-version logging
-- [ ] CSV export
-- [ ] JSON configuration export
-- [ ] Experiment registry integration
-- [ ] Automatic metric aggregation
+- [x] Software/commit-version logging
+- [x] CSV export
+- [x] JSON configuration export
+- [x] Experiment registry integration
+- [x] Automatic metric aggregation
 - [x] Exact same-scenario replay across strategies
 Phase 5 — Verification and Validation
 - [ ] Single-agent analytical tests
