@@ -70,8 +70,8 @@ Phase 1 — Research Model Specification
 - [x] Complete `08-research-model-specification.md`
 - [x] Freeze Research Model Specification v1.0
 Phase 2 — Core Research Engine
-- [ ] Initialize TypeScript project
-- [ ] Configure testing framework
+- - [x] Initialize TypeScript project
+- [x] Configure testing framework
 - [ ] Define scenario data schema
 - [ ] Implement seeded random-number generator
 - [ ] Implement deterministic simulation clock
