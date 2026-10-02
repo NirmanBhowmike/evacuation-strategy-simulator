@@ -116,11 +116,11 @@ Phase 4 — Experiment Engine
 - [x] Automatic metric aggregation
 - [x] Exact same-scenario replay across strategies
 Phase 5 — Verification and Validation
-- [ ] Single-agent analytical tests
-- [ ] Known shortest-path graph tests
-- [ ] Blocked-edge tests
-- [ ] Unreachable-agent tests
-- [ ] Same-seed reproducibility
+- [x] Single-agent analytical tests
+- [x] Known shortest-path graph tests
+- [x] Blocked-edge tests
+- [x] Unreachable-agent tests
+- [x] Same-seed reproducibility
 - [ ] Density-speed sanity tests
 - [ ] Bottleneck-flow tests
 - [ ] Zero-hazard exposure tests
