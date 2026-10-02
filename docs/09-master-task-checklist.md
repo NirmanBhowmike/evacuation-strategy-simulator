@@ -76,11 +76,11 @@ Phase 2 — Core Research Engine
 - [x] Implement deterministic ScenarioInstance generation
 - [x] Implement seeded random-number generator
 - [x] Implement deterministic simulation clock
-- [x] Implement building/environment representation- [x] Implement building/environment representation
+- [x] Implement building/environment representation
 - [x] Implement navigation graph
 - [x] Implement exits and spawn zones
-- [ ] Implement agent-state model
-- [ ] Implement pedestrian movement
+- [x] Implement agent-state model
+- [x] Implement pedestrian movement
 - [ ] Implement density calculation
 - [ ] Implement congestion effects
 - [ ] Implement bottleneck behavior
