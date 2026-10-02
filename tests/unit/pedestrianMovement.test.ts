@@ -178,7 +178,11 @@ describe("Pedestrian movement", () => {
       "edge-a-b",
     );
 
-    for (let i = 0; i < 20; i += 1) {
+    for (
+      let i = 0;
+      i < 20;
+      i += 1
+    ) {
       advanceAgentAlongCurrentEdge(
         first,
         graph,
@@ -290,7 +294,8 @@ describe("Pedestrian movement", () => {
     const graph = createGraph();
     const agent = createAgent();
 
-    agent.currentNodeId = "node-b";
+    agent.currentNodeId =
+      "node-b";
 
     agent.position = {
       x: 10,
@@ -322,7 +327,8 @@ describe("Pedestrian movement", () => {
     const graph = createGraph();
     const agent = createAgent();
 
-    agent.currentNodeId = "node-c";
+    agent.currentNodeId =
+      "node-c";
 
     agent.position = {
       x: 10,
@@ -340,7 +346,7 @@ describe("Pedestrian movement", () => {
     );
   });
 
-  it("rejects invalid movement timestep and speed values", () => {
+  it("rejects invalid movement timestep and negative speed values", () => {
     const graph = createGraph();
     const agent = createAgent();
 
@@ -365,10 +371,60 @@ describe("Pedestrian movement", () => {
         agent,
         graph,
         1,
-        0,
+        -1,
       ),
     ).toThrow(
-      /speed must be positive/,
+      /speed must be non-negative/,
     );
+  });
+
+  it("allows zero effective speed without moving the agent", () => {
+    const graph = createGraph();
+    const agent = createAgent();
+
+    beginEdgeTraversal(
+      agent,
+      graph,
+      "edge-a-b",
+    );
+
+    const result =
+      advanceAgentAlongCurrentEdge(
+        agent,
+        graph,
+        1,
+        0,
+      );
+
+    expect(
+      agent.position,
+    ).toEqual({
+      x: 0,
+      y: 0,
+    });
+
+    expect(
+      agent.currentNodeId,
+    ).toBe("node-a");
+
+    expect(
+      agent.currentEdgeId,
+    ).toBe("edge-a-b");
+
+    expect(
+      agent.distanceTraveledMeters,
+    ).toBe(0);
+
+    expect(
+      result.distanceMovedMeters,
+    ).toBe(0);
+
+    expect(
+      result.arrivedAtNodeId,
+    ).toBeNull();
+
+    expect(
+      result.unusedDistanceMeters,
+    ).toBe(0);
   });
 });

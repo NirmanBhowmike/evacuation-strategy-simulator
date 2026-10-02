@@ -13,9 +13,6 @@ export interface MovementStepResult {
   /**
    * Distance that could have been traveled during this timestep
    * after reaching the destination node.
-   *
-   * A later simulation-loop layer may use this remaining movement
-   * budget to continue onto another edge during the same timestep.
    */
   readonly unusedDistanceMeters: number;
 }
@@ -65,18 +62,30 @@ function getDestinationNode(
     );
   }
 
-  if (agent.currentNodeId === edge.from) {
-    return getNode(graph, edge.to);
+  if (
+    agent.currentNodeId ===
+    edge.from
+  ) {
+    return getNode(
+      graph,
+      edge.to,
+    );
   }
 
-  if (agent.currentNodeId === edge.to) {
+  if (
+    agent.currentNodeId ===
+    edge.to
+  ) {
     if (!edge.bidirectional) {
       throw new Error(
         `Agent ${agent.id} cannot traverse edge ${edge.id} in reverse.`,
       );
     }
 
-    return getNode(graph, edge.from);
+    return getNode(
+      graph,
+      edge.from,
+    );
   }
 
   throw new Error(
@@ -84,13 +93,6 @@ function getDestinationNode(
   );
 }
 
-/**
- * Begins traversal of a navigation edge.
- *
- * The agent remains associated with the source node until the
- * destination node is reached. currentEdgeId identifies the edge
- * currently being traversed.
- */
 export function beginEdgeTraversal(
   agent: AgentState,
   graph: NavigationGraph,
@@ -98,17 +100,22 @@ export function beginEdgeTraversal(
 ): void {
   if (agent.status !== "ACTIVE") {
     throw new Error(
-      `Only ACTIVE agents may begin edge traversal.`,
+      "Only ACTIVE agents may begin edge traversal.",
     );
   }
 
-  if (agent.currentEdgeId !== null) {
+  if (
+    agent.currentEdgeId !== null
+  ) {
     throw new Error(
       `Agent ${agent.id} is already traversing an edge.`,
     );
   }
 
-  const edge = getEdge(graph, edgeId);
+  const edge = getEdge(
+    graph,
+    edgeId,
+  );
 
   getDestinationNode(
     agent,
@@ -116,18 +123,20 @@ export function beginEdgeTraversal(
     graph,
   );
 
-  agent.currentEdgeId = edge.id;
+  agent.currentEdgeId =
+    edge.id;
 }
 
 /**
  * Advances one ACTIVE agent along its currently assigned edge.
  *
- * Movement distance is:
+ * Baseline movement:
  *
  * distance = speed × timestep
  *
- * This baseline implementation does not yet include density,
- * congestion, bottleneck capacity, hazards, or collision effects.
+ * Zero effective speed is valid and represents an agent that
+ * cannot advance during the current timestep because of
+ * congestion or another movement constraint.
  */
 export function advanceAgentAlongCurrentEdge(
   agent: AgentState,
@@ -137,7 +146,9 @@ export function advanceAgentAlongCurrentEdge(
     agent.desiredSpeedMps,
 ): MovementStepResult {
   if (
-    !Number.isFinite(deltaSeconds) ||
+    !Number.isFinite(
+      deltaSeconds,
+    ) ||
     deltaSeconds <= 0
   ) {
     throw new Error(
@@ -146,15 +157,19 @@ export function advanceAgentAlongCurrentEdge(
   }
 
   if (
-    !Number.isFinite(effectiveSpeedMps) ||
-    effectiveSpeedMps <= 0
+    !Number.isFinite(
+      effectiveSpeedMps,
+    ) ||
+    effectiveSpeedMps < 0
   ) {
     throw new Error(
-      "Movement speed must be positive and finite.",
+      "Movement speed must be non-negative and finite.",
     );
   }
 
-  if (agent.status !== "ACTIVE") {
+  if (
+    agent.status !== "ACTIVE"
+  ) {
     return {
       distanceMovedMeters: 0,
       arrivedAtNodeId: null,
@@ -162,10 +177,23 @@ export function advanceAgentAlongCurrentEdge(
     };
   }
 
-  if (agent.currentEdgeId === null) {
+  if (
+    agent.currentEdgeId ===
+    null
+  ) {
     throw new Error(
       `Agent ${agent.id} is not currently traversing an edge.`,
     );
+  }
+
+  if (
+    effectiveSpeedMps === 0
+  ) {
+    return {
+      distanceMovedMeters: 0,
+      arrivedAtNodeId: null,
+      unusedDistanceMeters: 0,
+    };
   }
 
   const edge = getEdge(
@@ -198,7 +226,8 @@ export function advanceAgentAlongCurrentEdge(
   const tolerance = 1e-9;
 
   if (
-    remainingDistance <= tolerance
+    remainingDistance <=
+    tolerance
   ) {
     agent.position = {
       x: destination.position.x,
@@ -208,7 +237,8 @@ export function advanceAgentAlongCurrentEdge(
     agent.currentNodeId =
       destination.id;
 
-    agent.currentEdgeId = null;
+    agent.currentEdgeId =
+      null;
 
     return {
       distanceMovedMeters: 0,
@@ -220,7 +250,8 @@ export function advanceAgentAlongCurrentEdge(
   }
 
   if (
-    movementBudget + tolerance >=
+    movementBudget +
+      tolerance >=
     remainingDistance
   ) {
     agent.position = {
@@ -234,7 +265,8 @@ export function advanceAgentAlongCurrentEdge(
     agent.currentNodeId =
       destination.id;
 
-    agent.currentEdgeId = null;
+    agent.currentEdgeId =
+      null;
 
     return {
       distanceMovedMeters:
