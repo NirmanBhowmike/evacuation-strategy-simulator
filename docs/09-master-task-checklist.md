@@ -89,7 +89,7 @@ Phase 2 — Core Research Engine
 - [x] Implement evacuation-state handling
 - [x] Implement simulation termination conditions
 - [x] Implement metrics engine
-- [ ] Separate rendering completely from simulation logic
+- [x] Separate rendering completely from simulation logic
 Phase 3 — Routing Strategy Engine
 - [ ] Define common strategy interface
 - [ ] Implement Shortest Path
