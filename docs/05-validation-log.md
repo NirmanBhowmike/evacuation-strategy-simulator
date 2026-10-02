@@ -8,28 +8,31 @@ The research engine is developed and tested independently from the future 3D ren
 
 As of October 2, 2026:
 
-- 40 test files passed
-- 330 tests passed
+- 45 test files passed
+- 343 tests passed
 - 0 tests failed
 - Core simulation engine tests are passing
 - Routing-strategy tests are passing
 - Headless simulation tests are passing
 - Experiment-engine tests are passing
-- Dedicated validation suites are passing
+- Numerical convergence tests are passing
+- Calibration regression tests are passing
+- Frozen Research Model v1.0 parameter-set regression tests are passing
 
 The dedicated Phase 5 validation tests are stored under:
 
 `tests/validation/`
 
-Current validation files:
+Key dedicated validation files include:
 
 - `coreEngineValidation.test.ts`
 - `behavioralModelValidation.test.ts`
 - `finalEngineValidation.test.ts`
-
-These validation tests are separate from the normal unit tests so that research-validation evidence can be identified independently.
-
----
+- `timestepConvergence.test.ts`
+- `congestionAwareStabilityRegression.test.ts`
+- `corridorBlockSegmentValidation.test.ts`
+- `adaptiveThresholdSelectionRegression.test.ts`
+- `researchParameterSetRegression.test.ts`
 
 ## 1. Single-Agent Analytical Validation
 
@@ -486,84 +489,22 @@ Result: Passed.
 
 Current automated test status:
 
-- Test files: 40 passed
-- Tests: 330 passed
+- Test files: 45 passed
+- Tests: 343 passed
 - Failed tests: 0
 
-Dedicated validation tests:
+The suite now includes regression coverage for:
 
-- Core engine validation: 5 tests
-- Behavioral-model validation: 5 tests
-- Final engine validation: 7 tests
-- Total dedicated Phase 5 validation tests: 17
-
-These operate in addition to the broader unit and integration test suite.
-
----## Occupancy Calibration
-
-### Purpose
-
-Determine LOW, MEDIUM, and HIGH occupancy levels from observed Layout A congestion behavior rather than assign arbitrary population counts.
-
-### Calibration Conditions
-
-The calibration used:
-
-- Layout A
-- Static Shortest Path
-- no dynamic disruption
-- desired speed = 1.34 m/s for all occupants
-- timestep = 0.05 s
-- density cell length = 1.0 m
-- specific bottleneck flow = 1.3 persons/(m*s)
-
-Candidate populations:
-
-- 12
-- 24
-- 36
-- 48
-- 60
-- 72
-- 96
-- 120
-
-### Key Results
-
-12 occupants:
-- completion rate = 1.00
-- maximum density = 2.286 persons/m²
-- queue exposure = 9.15 person-seconds
-
-36 occupants:
-- completion rate = 1.00
-- maximum density = 3.429 persons/m²
-- queue exposure = 42.75 person-seconds
-
-48 occupants:
-- completion rate = 1.00
-- maximum density = 4.571 persons/m²
-- queue exposure = 65.45 person-seconds
-
-60 occupants:
-- completion rate = 0.90
-- maximum density = 6.857 persons/m²
-- 6 occupants reached TIMEOUT
-
-### Decision
-
-Primary occupancy regimes:
-
-- LOW = 12 occupants
-- MEDIUM = 36 occupants
-- HIGH = 48 occupants
-
-Occupancies of 60 and above are retained for overload or stress testing rather than the primary experiment.
-
-### Interpretation
-
-The selected regimes create progressively stronger congestion while retaining complete evacuation in the baseline case. The transition between 48 and 60 occupants identifies a useful practical boundary because the 60-person case exceeds the current 5.4 persons/m² jam-density reference and begins producing unresolved occupants.
-
+- analytical engine behavior
+- routing algorithms
+- congestion and bottleneck behavior
+- hazard and blockage response
+- same-seed reproducibility
+- numerical timestep convergence
+- Congestion-Aware queue stability
+- selected corridor-block configuration
+- Adaptive Hybrid threshold selection
+- frozen Research Model v1.0 parameter set
 ## 18. Validation Items Still Open
 
 ### Visual vs Headless Result Consistency
@@ -572,53 +513,22 @@ Status: Pending.
 
 Reason:
 
-The 3D rendering layer has not yet been implemented. The visualization must later be verified against the same underlying simulation state to confirm that rendered agent positions, routes, hazards, exits, and events do not diverge from headless simulation results.
+The 3D rendering layer has not yet been implemented.
 
-This validation will be performed after the Phase 6 visualization layer exists.
+The future visualization must be driven by the same simulation state used by the headless research engine. Validation will confirm that rendered:
 
-### Numerical Timestep Convergence
+- agent positions
+- route selections
+- exit states
+- hazard states
+- corridor blockages
+- event timing
 
-Status: Pending.
+remain consistent with the corresponding headless simulation state.
 
-Current primary candidate timestep:
+This validation will be performed during the visualization phase.
 
-`0.05 s`
-
-Planned comparison:
-
-- 0.025 s
-- 0.05 s
-- 0.10 s
-
-The production timestep will be frozen only after convergence testing.
-
-### Occupancy Calibration
-
-Status: Pending.
-
-LOW, MEDIUM, and HIGH occupancy regimes have been conceptually defined. Exact occupant counts remain to be calibrated using the actual development building geometry and congestion response.
-
-### Dynamic Disruption Timing
-
-Status: Pending.
-
-The disruption-event mechanism is implemented and tested. Exact activation, expansion, corridor-blockage, and exit-blockage timings for the experimental scenario families remain to be frozen.
-
-### Adaptive Rerouting Threshold
-
-Status: Pending.
-
-Candidate values:
-
-- 0.00
-- 0.10
-- 0.20
-- 0.30
-
-The threshold will be tuned using development scenarios only. After selection, it will be frozen before holdout-layout evaluation.
-
----
-
+All primary research-engine calibration items required before visualization are now closed.
 ## 19. Validation Scope and Limitations
 
 The current validation establishes internal consistency, deterministic behavior, reference agreement for selected mathematical components, and correct implementation of the defined research model.

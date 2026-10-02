@@ -1,7 +1,13 @@
-import { layoutAExits } from "./layoutAExits";
+import {
+  layoutAExits,
+} from "./layoutAExits";
 
-import type { ZoneId } from "../types/environment";
-import type { ExitId } from "../types/exit";
+import type {
+  ZoneId,
+} from "../types/environment";
+import type {
+  ExitId,
+} from "../types/exit";
 
 import type {
   NavigationEdge,
@@ -10,10 +16,15 @@ import type {
   NavigationNodeId,
 } from "../types/navigation";
 
-function getExit(exitId: ExitId) {
-  const exit = layoutAExits.exits.find(
-    (candidate) => candidate.id === exitId,
-  );
+function getExit(
+  exitId: ExitId,
+) {
+  const exit =
+    layoutAExits.exits.find(
+      (candidate) =>
+        candidate.id ===
+        exitId,
+    );
 
   if (!exit) {
     throw new Error(
@@ -24,62 +35,102 @@ function getExit(exitId: ExitId) {
   return exit;
 }
 
-function exitNode(exitId: ExitId): NavigationNode {
-  const exit = getExit(exitId);
+function exitNode(
+  exitId: ExitId,
+): NavigationNode {
+  const exit =
+    getExit(
+      exitId,
+    );
 
   return {
-    id: exit.id,
-    type: "EXIT",
-    position: exit.position,
-    zoneId: exit.connectedZoneId,
+    id:
+      exit.id,
+
+    type:
+      "EXIT",
+
+    position:
+      exit.position,
+
+    zoneId:
+      exit.connectedZoneId,
   };
 }
 
-const nodes: readonly NavigationNode[] = [
+const nodes:
+  readonly NavigationNode[] =
+[
   // ============================================================
   // WESTERN AREA
   // ============================================================
 
-  exitNode("exit-west"),
+  exitNode(
+    "exit-west",
+  ),
 
   {
-    id: "west-junction",
-    type: "JUNCTION",
+    id:
+      "west-junction",
+
+    type:
+      "JUNCTION",
+
     position: {
       x: 15,
       y: 24.75,
     },
-    zoneId: "corridor-west-central",
+
+    zoneId:
+      "corridor-west-central",
   },
 
   {
-    id: "northwest-decision",
-    type: "DECISION_POINT",
+    id:
+      "northwest-decision",
+
+    type:
+      "DECISION_POINT",
+
     position: {
       x: 10,
       y: 30,
     },
-    zoneId: "corridor-northwest-link",
+
+    zoneId:
+      "corridor-northwest-link",
   },
 
   {
-    id: "west-atrium-decision",
-    type: "DECISION_POINT",
+    id:
+      "west-atrium-decision",
+
+    type:
+      "DECISION_POINT",
+
     position: {
       x: 20,
       y: 24.75,
     },
-    zoneId: "open-west-atrium",
+
+    zoneId:
+      "open-west-atrium",
   },
 
   {
-    id: "main-west",
-    type: "CONNECTOR",
+    id:
+      "main-west",
+
+    type:
+      "CONNECTOR",
+
     position: {
       x: 20,
       y: 18.75,
     },
-    zoneId: "corridor-main-spine",
+
+    zoneId:
+      "corridor-main-spine",
   },
 
   // ============================================================
@@ -87,45 +138,71 @@ const nodes: readonly NavigationNode[] = [
   // ============================================================
 
   {
-    id: "main-central",
-    type: "DECISION_POINT",
+    id:
+      "main-central",
+
+    type:
+      "DECISION_POINT",
+
     position: {
       x: 36.75,
       y: 18.75,
     },
-    zoneId: "corridor-main-spine",
+
+    zoneId:
+      "corridor-main-spine",
   },
 
-  exitNode("exit-south-central"),
+  exitNode(
+    "exit-south-central",
+  ),
 
   {
-    id: "main-mid",
-    type: "JUNCTION",
+    id:
+      "main-mid",
+
+    type:
+      "JUNCTION",
+
     position: {
       x: 48,
       y: 18.75,
     },
-    zoneId: "corridor-main-spine",
+
+    zoneId:
+      "corridor-main-spine",
   },
 
   {
-    id: "main-east",
-    type: "DECISION_POINT",
+    id:
+      "main-east",
+
+    type:
+      "DECISION_POINT",
+
     position: {
       x: 59.75,
       y: 18.75,
     },
-    zoneId: "corridor-main-spine",
+
+    zoneId:
+      "corridor-main-spine",
   },
 
   {
-    id: "main-east-end",
-    type: "CONNECTOR",
+    id:
+      "main-east-end",
+
+    type:
+      "CONNECTOR",
+
     position: {
       x: 72,
       y: 18.75,
     },
-    zoneId: "corridor-main-spine",
+
+    zoneId:
+      "corridor-main-spine",
   },
 
   // ============================================================
@@ -133,43 +210,67 @@ const nodes: readonly NavigationNode[] = [
   // ============================================================
 
   {
-    id: "central-lower",
-    type: "CONNECTOR",
+    id:
+      "central-lower",
+
+    type:
+      "CONNECTOR",
+
     position: {
       x: 36.75,
       y: 20.5,
     },
-    zoneId: "corridor-central-vertical",
+
+    zoneId:
+      "corridor-central-vertical",
   },
 
   {
-    id: "central-bottleneck-junction",
-    type: "DECISION_POINT",
+    id:
+      "central-bottleneck-junction",
+
+    type:
+      "DECISION_POINT",
+
     position: {
       x: 36.75,
       y: 30,
     },
-    zoneId: "corridor-central-vertical",
+
+    zoneId:
+      "corridor-central-vertical",
   },
 
   {
-    id: "central-upper",
-    type: "JUNCTION",
+    id:
+      "central-upper",
+
+    type:
+      "JUNCTION",
+
     position: {
       x: 36.75,
       y: 32.75,
     },
-    zoneId: "corridor-central-vertical",
+
+    zoneId:
+      "corridor-central-vertical",
   },
 
   {
-    id: "open-central-decision",
-    type: "DECISION_POINT",
+    id:
+      "open-central-decision",
+
+    type:
+      "DECISION_POINT",
+
     position: {
       x: 31,
       y: 30,
     },
-    zoneId: "open-central",
+
+    zoneId:
+      "open-central",
   },
 
   // ============================================================
@@ -177,33 +278,51 @@ const nodes: readonly NavigationNode[] = [
   // ============================================================
 
   {
-    id: "bottleneck-west",
-    type: "CONNECTOR",
+    id:
+      "bottleneck-west",
+
+    type:
+      "CONNECTOR",
+
     position: {
       x: 38.5,
       y: 30,
     },
-    zoneId: "corridor-east-bottleneck",
+
+    zoneId:
+      "corridor-east-bottleneck",
   },
 
   {
-    id: "bottleneck-east",
-    type: "CONNECTOR",
+    id:
+      "bottleneck-east",
+
+    type:
+      "CONNECTOR",
+
     position: {
       x: 58,
       y: 30,
     },
-    zoneId: "corridor-east-bottleneck",
+
+    zoneId:
+      "corridor-east-bottleneck",
   },
 
   {
-    id: "east-bottleneck-junction",
-    type: "DECISION_POINT",
+    id:
+      "east-bottleneck-junction",
+
+    type:
+      "DECISION_POINT",
+
     position: {
       x: 59.75,
       y: 30,
     },
-    zoneId: "corridor-east-vertical",
+
+    zoneId:
+      "corridor-east-vertical",
   },
 
   // ============================================================
@@ -211,23 +330,35 @@ const nodes: readonly NavigationNode[] = [
   // ============================================================
 
   {
-    id: "upper-west",
-    type: "CONNECTOR",
+    id:
+      "upper-west",
+
+    type:
+      "CONNECTOR",
+
     position: {
       x: 40,
       y: 32.75,
     },
-    zoneId: "corridor-east-upper",
+
+    zoneId:
+      "corridor-east-upper",
   },
 
   {
-    id: "upper-east",
-    type: "CONNECTOR",
+    id:
+      "upper-east",
+
+    type:
+      "CONNECTOR",
+
     position: {
       x: 59.75,
       y: 32.75,
     },
-    zoneId: "corridor-east-upper",
+
+    zoneId:
+      "corridor-east-upper",
   },
 
   // ============================================================
@@ -235,13 +366,19 @@ const nodes: readonly NavigationNode[] = [
   // ============================================================
 
   {
-    id: "east-lower",
-    type: "CONNECTOR",
+    id:
+      "east-lower",
+
+    type:
+      "CONNECTOR",
+
     position: {
       x: 59.75,
       y: 20.5,
     },
-    zoneId: "corridor-east-vertical",
+
+    zoneId:
+      "corridor-east-vertical",
   },
 
   // ============================================================
@@ -249,25 +386,39 @@ const nodes: readonly NavigationNode[] = [
   // ============================================================
 
   {
-    id: "far-east-main",
-    type: "DECISION_POINT",
+    id:
+      "far-east-main",
+
+    type:
+      "DECISION_POINT",
+
     position: {
       x: 73.75,
       y: 18.75,
     },
-    zoneId: "corridor-far-east",
+
+    zoneId:
+      "corridor-far-east",
   },
 
-  exitNode("exit-east"),
+  exitNode(
+    "exit-east",
+  ),
 
   {
-    id: "far-east-southeast-connector",
-    type: "CONNECTOR",
+    id:
+      "far-east-southeast-connector",
+
+    type:
+      "CONNECTOR",
+
     position: {
       x: 73.75,
       y: 16.5,
     },
-    zoneId: "corridor-far-east",
+
+    zoneId:
+      "corridor-far-east",
   },
 
   // ============================================================
@@ -275,41 +426,76 @@ const nodes: readonly NavigationNode[] = [
   // ============================================================
 
   {
-    id: "southeast-junction",
-    type: "JUNCTION",
+    id:
+      "southeast-junction",
+
+    type:
+      "JUNCTION",
+
     position: {
       x: 73.75,
       y: 14.75,
     },
-    zoneId: "corridor-southeast",
+
+    zoneId:
+      "corridor-southeast",
   },
 
   {
-    id: "southeast-mid",
-    type: "DECISION_POINT",
+    id:
+      "southeast-mid",
+
+    type:
+      "DECISION_POINT",
+
     position: {
       x: 68.5,
       y: 14.75,
     },
-    zoneId: "corridor-southeast",
+
+    zoneId:
+      "corridor-southeast",
   },
 
-  exitNode("exit-southeast"),
+  exitNode(
+    "exit-southeast",
+  ),
 ];
 
-const nodeById = new Map<NavigationNodeId, NavigationNode>(
-  nodes.map((node) => [node.id, node] as const),
-);
+const nodeById =
+  new Map<
+    NavigationNodeId,
+    NavigationNode
+  >(
+    nodes.map(
+      (node) =>
+        [
+          node.id,
+          node,
+        ] as const,
+    ),
+  );
 
 function edge(
   id: string,
-  from: NavigationNodeId,
-  to: NavigationNodeId,
-  widthMeters: number,
-  zoneId: ZoneId,
+  from:
+    NavigationNodeId,
+  to:
+    NavigationNodeId,
+  widthMeters:
+    number,
+  zoneId:
+    ZoneId,
 ): NavigationEdge {
-  const fromNode = nodeById.get(from);
-  const toNode = nodeById.get(to);
+  const fromNode =
+    nodeById.get(
+      from,
+    );
+
+  const toNode =
+    nodeById.get(
+      to,
+    );
 
   if (!fromNode) {
     throw new Error(
@@ -324,23 +510,38 @@ function edge(
   }
 
   const dx =
-    toNode.position.x - fromNode.position.x;
+    toNode.position.x -
+    fromNode.position.x;
 
   const dy =
-    toNode.position.y - fromNode.position.y;
+    toNode.position.y -
+    fromNode.position.y;
 
   return {
     id,
+
     from,
+
     to,
-    lengthMeters: Math.hypot(dx, dy),
+
+    lengthMeters:
+      Math.hypot(
+        dx,
+        dy,
+      ),
+
     widthMeters,
+
     zoneId,
-    bidirectional: true,
+
+    bidirectional:
+      true,
   };
 }
 
-const edges: readonly NavigationEdge[] = [
+const edges:
+  readonly NavigationEdge[] =
+[
   // ============================================================
   // WESTERN ROUTES
   // ============================================================
@@ -417,12 +618,19 @@ const edges: readonly NavigationEdge[] = [
     "corridor-main-spine",
   ),
 
+  /**
+   * Primary dynamic corridor-block target.
+   *
+   * Calibration selected this segment because blocking it at
+   * 6.65 s created a meaningful detour effect while preserving
+   * 100% evacuation completion and zero unreachable occupants.
+   */
   edge(
     "edge-main-east-end",
     "main-east",
     "main-east-end",
     3.5,
-    "corridor-main-spine",
+    "corridor-main-east-blockable",
   ),
 
   // ============================================================
@@ -594,8 +802,12 @@ const edges: readonly NavigationEdge[] = [
   ),
 ];
 
-export const layoutANavigationGraph: NavigationGraph = {
-  layoutId: "layout-a",
+export const layoutANavigationGraph:
+  NavigationGraph = {
+  layoutId:
+    "layout-a",
+
   nodes,
+
   edges,
 };

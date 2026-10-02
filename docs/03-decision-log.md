@@ -443,3 +443,35 @@ Failed or impossible evacuations must not be silently incorporated as successful
 
 Date:
 Research Pass 4
+
+### D-046
+
+Freeze the Adaptive Hybrid voluntary rerouting threshold at theta = 0.10.
+
+Calibration:
+
+Candidate values were:
+
+- 0.00
+- 0.10
+- 0.20
+- 0.30
+
+Controlled Layout A congestion scenarios were constructed without hazards or blocked routes so the normal relative-improvement threshold controlled the decision.
+
+Valid consequential cases produced predicted improvements of approximately 0.31%, 4.71%, and 8.73%.
+
+With theta = 0, the Adaptive Hybrid strategy accepted these switches. The resulting probe evacuation time was worse than when the current route was retained.
+
+Theta = 0.10, 0.20, and 0.30 all rejected the demonstrated harmful low-benefit switches.
+
+Decision:
+
+Select theta = 0.10 because it is the lowest candidate that eliminates the observed harmful switching while introducing the least additional rerouting inertia.
+
+The value is a development-calibrated research parameter rather than a claim of universal optimality.
+
+The threshold must remain frozen before Layout B holdout evaluation.
+
+Date:
+October 2, 2026

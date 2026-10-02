@@ -14,15 +14,32 @@ function rectangle(
   return {
     vertices: [
       { x, y },
-      { x: x + width, y },
-      { x: x + width, y: y + height },
-      { x, y: y + height },
+      {
+        x:
+          x + width,
+        y,
+      },
+      {
+        x:
+          x + width,
+        y:
+          y + height,
+      },
+      {
+        x,
+        y:
+          y + height,
+      },
     ],
   };
 }
 
 function polygon(
-  vertices: readonly { x: number; y: number }[],
+  vertices:
+    readonly {
+      x: number;
+      y: number;
+    }[],
 ): Polygon2D {
   return {
     vertices,
@@ -40,19 +57,32 @@ function rectangularZone(
   return {
     id,
     type,
-    polygon: rectangle(x, y, width, height),
+    polygon:
+      rectangle(
+        x,
+        y,
+        width,
+        height,
+      ),
   };
 }
 
 function polygonZone(
   id: string,
   type: ZoneType,
-  vertices: readonly { x: number; y: number }[],
+  vertices:
+    readonly {
+      x: number;
+      y: number;
+    }[],
 ): BuildingZone {
   return {
     id,
     type,
-    polygon: polygon(vertices),
+    polygon:
+      polygon(
+        vertices,
+      ),
   };
 }
 
@@ -69,21 +99,22 @@ function polygonZone(
  * No real building name, room numbers, labels, logos, or exact
  * dimensions are used.
  */
-export const layoutA: BuildingEnvironment = {
-  layoutId: "layout-a",
+export const layoutA:
+  BuildingEnvironment = {
+  layoutId:
+    "layout-a",
 
-  // All coordinates are expressed in meters.
-  widthMeters: 82,
-  heightMeters: 50,
+  widthMeters:
+    82,
+
+  heightMeters:
+    50,
 
   zones: [
     // ============================================================
     // PRIMARY EAST-WEST CIRCULATION
     // ============================================================
 
-    /**
-     * Dominant east-west circulation spine.
-     */
     rectangularZone(
       "corridor-main-spine",
       "CORRIDOR",
@@ -94,8 +125,27 @@ export const layoutA: BuildingEnvironment = {
     ),
 
     /**
-     * West-central corridor serving the western wing and atrium.
+     * Dedicated experimental sub-zone within the eastern portion
+     * of the main corridor.
+     *
+     * Only edge-main-east-end is assigned to this zone.
+     *
+     * A CORRIDOR_BLOCK event can therefore disable that segment
+     * without classifying the entire main corridor as blocked.
+     *
+     * The zone overlaps the parent physical corridor and should
+     * later be visualized as an event/control overlay rather than
+     * as a second physical floor surface.
      */
+    rectangularZone(
+      "corridor-main-east-blockable",
+      "CORRIDOR",
+      59.75,
+      17,
+      12.25,
+      3.5,
+    ),
+
     rectangularZone(
       "corridor-west-central",
       "CORRIDOR",
@@ -105,25 +155,37 @@ export const layoutA: BuildingEnvironment = {
       3.5,
     ),
 
-    /**
-     * Angled northwest connector.
-     */
     polygonZone(
       "corridor-northwest-link",
       "CORRIDOR",
       [
-        { x: 7, y: 32 },
-        { x: 10, y: 32 },
-        { x: 17, y: 27 },
-        { x: 17, y: 23 },
-        { x: 14, y: 23 },
-        { x: 7, y: 29 },
+        {
+          x: 7,
+          y: 32,
+        },
+        {
+          x: 10,
+          y: 32,
+        },
+        {
+          x: 17,
+          y: 27,
+        },
+        {
+          x: 17,
+          y: 23,
+        },
+        {
+          x: 14,
+          y: 23,
+        },
+        {
+          x: 7,
+          y: 29,
+        },
       ],
     ),
 
-    /**
-     * Central north-south route.
-     */
     rectangularZone(
       "corridor-central-vertical",
       "CORRIDOR",
@@ -133,9 +195,6 @@ export const layoutA: BuildingEnvironment = {
       14,
     ),
 
-    /**
-     * Eastern vertical circulation route.
-     */
     rectangularZone(
       "corridor-east-vertical",
       "CORRIDOR",
@@ -145,9 +204,6 @@ export const layoutA: BuildingEnvironment = {
       13,
     ),
 
-    /**
-     * Wider upper east-west alternative route.
-     */
     rectangularZone(
       "corridor-east-upper",
       "CORRIDOR",
@@ -157,12 +213,6 @@ export const layoutA: BuildingEnvironment = {
       3.5,
     ),
 
-    /**
-     * Deliberately narrow connector.
-     *
-     * This provides a shorter but lower-capacity alternative
-     * between the central and eastern portions of the building.
-     */
     rectangularZone(
       "corridor-east-bottleneck",
       "CORRIDOR",
@@ -172,9 +222,6 @@ export const layoutA: BuildingEnvironment = {
       2,
     ),
 
-    /**
-     * Southeast circulation extension.
-     */
     rectangularZone(
       "corridor-southeast",
       "CORRIDOR",
@@ -184,9 +231,6 @@ export const layoutA: BuildingEnvironment = {
       3.5,
     ),
 
-    /**
-     * Far-east terminal corridor.
-     */
     rectangularZone(
       "corridor-far-east",
       "CORRIDOR",
@@ -200,24 +244,33 @@ export const layoutA: BuildingEnvironment = {
     // OPEN / ATRIUM-LIKE AREAS
     // ============================================================
 
-    /**
-     * Irregular west-central open area.
-     */
     polygonZone(
       "open-west-atrium",
       "OPEN_AREA",
       [
-        { x: 14, y: 20.5 },
-        { x: 25, y: 20.5 },
-        { x: 25, y: 29 },
-        { x: 20, y: 31 },
-        { x: 14, y: 28 },
+        {
+          x: 14,
+          y: 20.5,
+        },
+        {
+          x: 25,
+          y: 20.5,
+        },
+        {
+          x: 25,
+          y: 29,
+        },
+        {
+          x: 20,
+          y: 31,
+        },
+        {
+          x: 14,
+          y: 28,
+        },
       ],
     ),
 
-    /**
-     * Central collaboration and circulation area.
-     */
     rectangularZone(
       "open-central",
       "OPEN_AREA",
@@ -235,11 +288,26 @@ export const layoutA: BuildingEnvironment = {
       "room-west-01",
       "ROOM",
       [
-        { x: 3, y: 38 },
-        { x: 9, y: 42 },
-        { x: 13, y: 38 },
-        { x: 10, y: 34 },
-        { x: 5, y: 34 },
+        {
+          x: 3,
+          y: 38,
+        },
+        {
+          x: 9,
+          y: 42,
+        },
+        {
+          x: 13,
+          y: 38,
+        },
+        {
+          x: 10,
+          y: 34,
+        },
+        {
+          x: 5,
+          y: 34,
+        },
       ],
     ),
 
@@ -247,11 +315,26 @@ export const layoutA: BuildingEnvironment = {
       "room-west-02",
       "ROOM",
       [
-        { x: 10, y: 43 },
-        { x: 17, y: 46 },
-        { x: 21, y: 42 },
-        { x: 16, y: 37 },
-        { x: 12, y: 38 },
+        {
+          x: 10,
+          y: 43,
+        },
+        {
+          x: 17,
+          y: 46,
+        },
+        {
+          x: 21,
+          y: 42,
+        },
+        {
+          x: 16,
+          y: 37,
+        },
+        {
+          x: 12,
+          y: 38,
+        },
       ],
     ),
 
@@ -259,11 +342,26 @@ export const layoutA: BuildingEnvironment = {
       "room-west-03",
       "ROOM",
       [
-        { x: 17, y: 36 },
-        { x: 24, y: 39 },
-        { x: 27, y: 35 },
-        { x: 22, y: 31 },
-        { x: 18, y: 32 },
+        {
+          x: 17,
+          y: 36,
+        },
+        {
+          x: 24,
+          y: 39,
+        },
+        {
+          x: 27,
+          y: 35,
+        },
+        {
+          x: 22,
+          y: 31,
+        },
+        {
+          x: 18,
+          y: 32,
+        },
       ],
     ),
 
@@ -347,10 +445,6 @@ export const layoutA: BuildingEnvironment = {
       5.5,
     ),
 
-    /**
-     * These two rooms were shortened so the narrow connector
-     * physically passes between the central and eastern areas.
-     */
     rectangularZone(
       "room-central-03",
       "ROOM",
@@ -382,9 +476,6 @@ export const layoutA: BuildingEnvironment = {
     // EASTERN WING
     // ============================================================
 
-    /**
-     * Large eastern room/laboratory block.
-     */
     rectangularZone(
       "room-east-large-01",
       "ROOM",
@@ -434,17 +525,26 @@ export const layoutA: BuildingEnvironment = {
       6,
     ),
 
-    /**
-     * Irregular terminal room mass on the far east side.
-     */
     polygonZone(
       "room-far-east",
       "ROOM",
       [
-        { x: 75.5, y: 16.5 },
-        { x: 81, y: 18 },
-        { x: 81, y: 27 },
-        { x: 75.5, y: 28.5 },
+        {
+          x: 75.5,
+          y: 16.5,
+        },
+        {
+          x: 81,
+          y: 18,
+        },
+        {
+          x: 81,
+          y: 27,
+        },
+        {
+          x: 75.5,
+          y: 28.5,
+        },
       ],
     ),
   ],

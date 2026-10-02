@@ -45,7 +45,7 @@ Phase 1 — Research Model Specification
   - [x] Route-cost formulation
   - [x] Information available to agents
   - [x] Route update mechanism - decision-node and event based
-  - [~] Rerouting threshold - tuning procedure defined; value not frozen
+  - [x] Rerouting threshold - theta = 0.10 frozen from Layout A development calibration; selected as the lowest candidate that suppressed all demonstrated harmful low-benefit voluntary reroutes
   - [x] Rerouting hysteresis / switching approach
 
 - [x] Research Pass 3: Hazard and disruption model
@@ -54,8 +54,7 @@ Phase 1 — Research Model Specification
   - [x] Hazard exposure metric
   - [x] Exit blocking
   - [x] Corridor blocking
-  - - [~] Dynamic disruption timing - EARLY = 6.65 s, MID = 13.25 s, and LATE = 19.90 s calibrated from the 26.50 s medium-occupancy baseline; corridor-block target still requires calibration
-
+  - [x] Dynamic disruption timing - formal five-condition disruption factor frozen: D0 no disruption; D1 main-spine hazard at 6.65 s; D2 south-central exit block at 13.25 s; D3 main-east corridor block at 6.65 s; D4 main-spine hazard at 6.65 s plus south-central exit block at 13.25 s
 - [x] Research Pass 4: Experimental methodology
   - [x] Independent variables
   - [x] Factor-level framework

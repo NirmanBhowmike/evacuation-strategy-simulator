@@ -29,8 +29,11 @@ import type {
 const OCCUPANT_COUNT =
   36;
 
+const BLOCKABLE_ZONE =
+  "corridor-main-east-blockable";
+
 const BLOCK_TIME_SECONDS =
-  13.25;
+  6.65;
 
 const STRATEGIES:
   readonly RoutingStrategyId[] =
@@ -42,15 +45,6 @@ const STRATEGIES:
   "ADAPTIVE_HYBRID",
 ];
 
-const CORRIDOR_TARGETS =
-[
-  "corridor-west-central",
-  "corridor-main-spine",
-  "corridor-east-vertical",
-  "corridor-far-east",
-  "corridor-east-bottleneck",
-] as const;
-
 function polygonCenter(
   zone: SpawnZone,
 ): Position2D {
@@ -58,7 +52,8 @@ function polygonCenter(
     zone.polygon.vertices;
 
   if (
-    vertices.length === 0
+    vertices.length ===
+    0
   ) {
     throw new Error(
       `Spawn zone ${zone.id} has no vertices.`,
@@ -96,19 +91,72 @@ function polygonCenter(
   };
 }
 
-function createScenario(
-  corridorTarget:
-    string | null,
-): ScenarioInstance {
+function createOccupants() {
   const spawnZones =
     layoutASpawnZones.zones;
 
+  if (
+    spawnZones.length ===
+    0
+  ) {
+    throw new Error(
+      "Layout A requires spawn zones.",
+    );
+  }
+
+  return Array.from(
+    {
+      length:
+        OCCUPANT_COUNT,
+    },
+    (
+      _,
+      index,
+    ) => {
+      const spawnZone =
+        spawnZones[
+          index %
+          spawnZones.length
+        ];
+
+      if (!spawnZone) {
+        throw new Error(
+          "Unable to select Layout A spawn zone.",
+        );
+      }
+
+      return {
+        id:
+          `agent-${String(
+            index + 1,
+          ).padStart(
+            4,
+            "0",
+          )}`,
+
+        spawnPosition:
+          polygonCenter(
+            spawnZone,
+          ),
+
+        desiredSpeedMps:
+          1.34,
+      };
+    },
+  );
+}
+
+function createScenario(
+  strategyId:
+    RoutingStrategyId,
+  blocked:
+    boolean,
+): ScenarioInstance {
   return {
     id:
-      corridorTarget ===
-      null
-        ? "corridor-target-baseline"
-        : `corridor-target-${corridorTarget}`,
+      blocked
+        ? `permanent-corridor-block-${strategyId}`
+        : `permanent-corridor-baseline-${strategyId}`,
 
     seed:
       1042,
@@ -117,58 +165,17 @@ function createScenario(
       "layout-a",
 
     parameterSetVersion:
-      "corridor-target-calibration-v1",
+      "corridor-block-permanent-v1",
 
     occupants:
-      Array.from(
-        {
-          length:
-            OCCUPANT_COUNT,
-        },
-        (
-          _,
-          index,
-        ) => {
-          const spawnZone =
-            spawnZones[
-              index %
-              spawnZones.length
-            ];
-
-          if (!spawnZone) {
-            throw new Error(
-              "Unable to select Layout A spawn zone.",
-            );
-          }
-
-          return {
-            id:
-              `agent-${String(
-                index + 1,
-              ).padStart(
-                4,
-                "0",
-              )}`,
-
-            spawnPosition:
-              polygonCenter(
-                spawnZone,
-              ),
-
-            desiredSpeedMps:
-              1.34,
-          };
-        },
-      ),
+      createOccupants(),
 
     disruptionSchedule:
-      corridorTarget ===
-      null
-        ? []
-        : [
+      blocked
+        ? [
             {
               id:
-                `block-${corridorTarget}`,
+                "block-main-east-segment",
 
               type:
                 "CORRIDOR_BLOCK",
@@ -177,190 +184,178 @@ function createScenario(
                 BLOCK_TIME_SECONDS,
 
               targetId:
-                corridorTarget,
+                BLOCKABLE_ZONE,
             },
-          ],
+          ]
+        : [],
   };
 }
 
 function runCase(
   strategyId:
     RoutingStrategyId,
-  target:
-    string | null,
+  blocked:
+    boolean,
 ) {
-  const result =
-    runHeadlessSimulation({
-      scenario:
-        createScenario(
-          target,
-        ),
-
-      environment:
-        layoutA,
-
-      graph:
-        layoutANavigationGraph,
-
-      exits:
-        layoutAExits,
-
-      spawnZones:
-        layoutASpawnZones,
-
-      configuration: {
+  return runHeadlessSimulation({
+    scenario:
+      createScenario(
         strategyId,
+        blocked,
+      ),
 
-        timestepSeconds:
-          0.05,
+    environment:
+      layoutA,
 
-        maximumSimulationTimeSeconds:
-          180,
+    graph:
+      layoutANavigationGraph,
 
-        densityCellLengthMeters:
-          1,
+    exits:
+      layoutAExits,
 
-        specificFlowPersonsPerMeterSecond:
-          1.3,
+    spawnZones:
+      layoutASpawnZones,
 
-        adaptiveRerouteThreshold:
-          0.20,
-      },
-    });
+    configuration: {
+      strategyId,
 
-  return {
+      timestepSeconds:
+        0.05,
+
+      maximumSimulationTimeSeconds:
+        180,
+
+      densityCellLengthMeters:
+        1,
+
+      specificFlowPersonsPerMeterSecond:
+        1.3,
+
+      adaptiveRerouteThreshold:
+        0.20,
+    },
+  });
+}
+
+const rows = [];
+
+for (
+  const strategyId of
+    STRATEGIES
+) {
+  console.log(
+    `Running baseline: ${strategyId}`,
+  );
+
+  const baseline =
+    runCase(
+      strategyId,
+      false,
+    );
+
+  console.log(
+    `Running corridor block: ${strategyId}`,
+  );
+
+  const blocked =
+    runCase(
+      strategyId,
+      true,
+    );
+
+  const baselineTet =
+    baseline.metrics
+      .totalEvacuationTimeSeconds;
+
+  const blockedTet =
+    blocked.metrics
+      .totalEvacuationTimeSeconds;
+
+  rows.push({
     strategy:
       strategyId,
 
-    corridor:
-      target ??
-      "BASELINE",
+    baselineTET:
+      baselineTet,
+
+    blockedTET:
+      blockedTet,
+
+    tetDelta:
+      baselineTet !==
+        null &&
+      blockedTet !==
+        null
+        ? Number(
+            (
+              blockedTet -
+              baselineTet
+            ).toFixed(
+              2,
+            ),
+          )
+        : null,
 
     completionRate:
       Number(
-        result.metrics
+        blocked.metrics
           .completionRate
           .toFixed(
             3,
           ),
       ),
 
-    totalEvacuationTime:
-      result.metrics
-        .totalEvacuationTimeSeconds ===
-      null
-        ? null
-        : Number(
-            result.metrics
-              .totalEvacuationTimeSeconds
-              .toFixed(
-                2,
-              ),
-          ),
-
-    p95:
-      result.metrics
-        .p95EvacuationTimeSeconds ===
-      null
-        ? null
-        : Number(
-            result.metrics
-              .p95EvacuationTimeSeconds
-              .toFixed(
-                2,
-              ),
-          ),
-
-    maximumDensity:
-      result.metrics
-        .maximumLocalDensityPersonsPerSquareMeter ===
-      null
-        ? null
-        : Number(
-            result.metrics
-              .maximumLocalDensityPersonsPerSquareMeter
-              .toFixed(
-                3,
-              ),
-          ),
-
     queueExposure:
       Number(
-        result.queueMetrics
+        blocked.queueMetrics
           .populationQueueWaitPersonSeconds
           .toFixed(
             2,
           ),
       ),
 
-    reroutes:
-      result.routeStability
-        .acceptedReroutes,
+    acceptedReroutes:
+      blocked.routeStability
+        .totalAcceptedReroutes,
 
-    exitChanges:
-      result.routeStability
-        .exitTargetChanges,
+    exitTargetChanges:
+      blocked.routeStability
+        .totalExitTargetChanges,
 
-    reversals:
-      result.routeStability
-        .routeReversals,
+    routeReversals:
+      blocked.routeStability
+        .totalRouteReversalEvents,
 
     unreachable:
-      result.metrics
+      blocked.metrics
         .unreachableAgents,
 
     timeout:
-      result.metrics
+      blocked.metrics
         .timeoutAgents,
-  };
-}
-
-const results = [];
-
-for (
-  const strategy of
-    STRATEGIES
-) {
-  console.log(
-    `Running baseline: ${strategy}`,
-  );
-
-  results.push(
-    runCase(
-      strategy,
-      null,
-    ),
-  );
-
-  for (
-    const corridor of
-      CORRIDOR_TARGETS
-  ) {
-    console.log(
-      `Running ${strategy} with ${corridor} blocked`,
-    );
-
-    results.push(
-      runCase(
-        strategy,
-        corridor,
-      ),
-    );
-  }
+  });
 }
 
 console.log(
-  "\nCorridor-block target calibration\n",
+  "\nPermanent Layout A corridor-block verification\n",
 );
 
 console.log(
-  `Occupancy: ${OCCUPANT_COUNT}`,
+  `Target zone: ${BLOCKABLE_ZONE}`,
 );
 
 console.log(
-  `Block time: ${BLOCK_TIME_SECONDS} s\n`,
+  "Target edge: edge-main-east-end",
+);
+
+console.log(
+  `Activation time: ${BLOCK_TIME_SECONDS} s`,
+);
+
+console.log(
+  `Occupancy: ${OCCUPANT_COUNT}\n`,
 );
 
 console.table(
-  results,
+  rows,
 );

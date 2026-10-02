@@ -111,15 +111,20 @@ Pending implementation specification.
 
 # 8. Numerical Time
 
-Nominal candidate timestep:
+Baseline timestep:
+
 0.05 s
 
-Validation:
+Numerical validation:
+
 0.025 s
+0.05 s
 0.10 s
 
+The 0.05 s timestep satisfied the convergence checks relative to the 0.025 s reference while requiring approximately half as many simulation ticks.
+
 Status:
-Not frozen.
+Frozen for Research Model v1.0.
 
 # 9. Navigation Graph
 
@@ -277,19 +282,23 @@ Voluntary switch occurs if:
 
 I >= theta
 
-Candidate development thresholds:
+Development candidates evaluated:
 
 0.00
 0.10
 0.20
 0.30
 
-Final theta:
-Not frozen.
+Selected value:
 
-Selection procedure:
-Tune on development scenarios and freeze before holdout experiments.
+theta = 0.10
 
+The selected threshold was calibrated on Layout A using controlled congestion-only development scenarios. Theta = 0.10 was the lowest candidate that rejected all demonstrated harmful low-benefit voluntary reroutes.
+
+Safety-improving and forced reroutes remain independent of the normal time-improvement threshold.
+
+Status:
+Frozen before holdout evaluation.
 # 18. Information Model
 
 All strategies operate on current simulation state.
@@ -376,60 +385,363 @@ Planned:
 - exit target changes
 - route reversal events
 
-# 23. Hazard Model
+
 
 # 23. Hazard and Disruption Model
 
-Hazard states:
+The simulation represents hazards and disruptions as controlled changes to routing conditions.
+
+The model does not simulate physical fire development, smoke transport, temperature, toxicity, visibility degradation, or physiological tenability. Hazard conditions are experimental routing-state variables used to evaluate how evacuation-guidance strategies respond when environmental conditions change.
+
+## 23.1 Hazard States
+
+Each relevant building zone can occupy one of three states:
 
 CLEAR
+
 RISK
+
 BLOCKED
 
-CLEAR:
-Normal traversal.
+### CLEAR
 
-RISK:
-Traversal remains possible and exposure time accumulates.
+Normal traversal is permitted.
 
-BLOCKED:
-Traversal is prohibited and the affected edge or region is removed from feasible routing.
+No hazard exposure is accumulated while an occupant moves through the zone.
 
-Hazard evolution:
-Deterministic scheduled scenario events.
+### RISK
 
-Supported events:
+Traversal remains physically permitted.
 
-HAZARD_ACTIVATE
-HAZARD_EXPAND
-CORRIDOR_BLOCK
-EXIT_BLOCK
+Occupants traveling through the affected region accumulate hazard-exposure time.
 
-Individual hazard exposure:
+Routing strategies that use hazard information may choose a safer alternative route.
+
+### BLOCKED
+
+Traversal is prohibited.
+
+Navigation edges associated with the blocked region are removed from the currently feasible routing network.
+
+A route that becomes blocked triggers forced reevaluation because the existing route is no longer physically feasible.
+
+## 23.2 Hazard Exposure Metric
+
+Individual hazard exposure is defined as accumulated time spent traversing regions currently classified as RISK.
+
+For occupant i:
 
 H_i = integral I_risk,i(t) dt
 
+where:
+
+- H_i = individual hazard-exposure duration
+- I_risk,i(t) = 1 while occupant i is within a RISK region and 0 otherwise
+
 Unit:
+
 seconds
 
-Population hazard exposure:
+Population hazard exposure is:
 
 H_total = sum(H_i)
 
 Unit:
+
 person-seconds
 
-Hazard exposure is a simulation metric and does not represent injury, toxicity, or physiological tenability.
+Hazard exposure is a simulation metric only.
 
-Physical fire and smoke simulation:
-Not included.
+It must not be interpreted as:
 
-Future hazard knowledge:
-Prohibited.
+- injury probability
+- toxic dose
+- fractional effective dose
+- smoke exposure
+- heat exposure
+- physiological tenability
+- mortality risk
 
-Exact event timing and location:
-Research Pass 4.
+## 23.3 Dynamic Disruption Events
 
+Environmental changes are represented through deterministic scheduled events.
+
+Supported event types are:
+
+HAZARD_ACTIVATE
+
+HAZARD_EXPAND
+
+CORRIDOR_BLOCK
+
+EXIT_BLOCK
+
+### HAZARD_ACTIVATE
+
+Changes the target zone from CLEAR to RISK.
+
+Traversal remains possible.
+
+Hazard exposure begins accumulating for occupants who traverse the affected zone.
+
+### HAZARD_EXPAND
+
+Changes an additional target zone from CLEAR to RISK.
+
+This supports later scenarios in which an existing hazard expands to another region.
+
+### CORRIDOR_BLOCK
+
+Changes the target corridor zone to BLOCKED.
+
+Edges associated with the blocked corridor become non-traversable.
+
+Occupants whose remaining routes depend on the blocked segment must recover through another feasible route when one exists.
+
+### EXIT_BLOCK
+
+Makes the target exit unavailable.
+
+Occupants currently targeting that exit must select another reachable exit.
+
+## 23.4 Event Information
+
+All routing strategies operate using only the current simulation state.
+
+Future disruption information is prohibited.
+
+A strategy may respond to an event only after that event has been applied to the simulation.
+
+This prevents the routing policies from receiving advance knowledge of future hazards, corridor closures, or exit failures.
+
+## 23.5 Route Reevaluation Under Disruptions
+
+Dynamic events may trigger route reevaluation.
+
+Forced reevaluation occurs when:
+
+- the current target exit becomes unavailable
+- the remaining route contains a blocked segment
+- the current route is otherwise physically infeasible
+
+Hazard activation may also trigger reevaluation when the currently planned route becomes exposed to a newly identified RISK region.
+
+A safety-improving reroute is not required to satisfy the normal time-improvement threshold used for congestion-only rerouting.
+
+Congestion alone does not force a mid-edge route change.
+
+## 23.6 Formal Experimental Disruption Conditions
+
+The primary experiment uses five disruption conditions.
+
+These conditions form the disruption factor in the formal:
+
+5 routing strategies × 3 occupancy levels × 5 disruption conditions
+
+experimental design.
+
+### D0 - Baseline
+
+No disruption events are applied.
+
+Purpose:
+
+Provide the reference condition for evaluating changes in evacuation performance, congestion, route stability, and hazard exposure.
+
+Schedule:
+
+No events.
+
+### D1 - Hazard
+
+Event:
+
+HAZARD_ACTIVATE
+
+Target:
+
+corridor-main-spine
+
+Activation time:
+
+6.65 s
+
+Purpose:
+
+Introduce an early RISK condition on a highly relevant circulation region while retaining physical traversability.
+
+This condition allows comparison between strategies that explicitly account for hazard exposure and strategies that continue to prioritize geometric or travel-time objectives.
+
+Calibration showed that early activation produced meaningful hazard-exposure differentiation while retaining complete evacuation.
+
+### D2 - Exit Block
+
+Event:
+
+EXIT_BLOCK
+
+Target:
+
+exit-south-central
+
+Activation time:
+
+13.25 s
+
+Purpose:
+
+Create a dynamic route-recovery problem after occupants have already begun evacuation and some have committed to routes.
+
+The selected mid-run timing produced a measurable evacuation-time effect and route reversals while maintaining complete evacuation with no unreachable or timeout occupants.
+
+### D3 - Corridor Block
+
+Event:
+
+CORRIDOR_BLOCK
+
+Target:
+
+corridor-main-east-blockable
+
+Associated navigation edge:
+
+edge-main-east-end
+
+Activation time:
+
+6.65 s
+
+Purpose:
+
+Remove a calibrated corridor segment while preserving alternative paths through the building.
+
+The selected segment and timing create a measurable detour without structurally disconnecting occupied portions of the layout from all exits.
+
+### D4 - Combined
+
+The combined condition contains two sequential events.
+
+First event:
+
+HAZARD_ACTIVATE
+
+Target:
+
+corridor-main-spine
+
+Activation time:
+
+6.65 s
+
+Second event:
+
+EXIT_BLOCK
+
+Target:
+
+exit-south-central
+
+Activation time:
+
+13.25 s
+
+Purpose:
+
+Create a multi-stage dynamic condition in which occupants first encounter a safety-related routing challenge and later lose an available exit.
+
+This condition allows evaluation of both hazard-sensitive response and later route recovery within the same scenario.
+
+The selected combined schedule retained complete evacuation while producing meaningful differences in evacuation time, hazard exposure, rerouting behavior, and route stability across strategies.
+
+## 23.7 Timing Basis
+
+The primary timing anchors established during Layout A development calibration are:
+
+EARLY = 6.65 s
+
+MID = 13.25 s
+
+LATE = 19.90 s
+
+These values were derived relative to the observed medium-occupancy baseline evacuation behavior.
+
+They are experimental timing parameters.
+
+They are not intended to represent validated physical fire-development times.
+
+Different disruption types are not required to use the same timing anchor because their operational effects depend on where occupants are located when the event occurs.
+
+## 23.8 Calibration Results Supporting the Selected Conditions
+
+The medium-occupancy baseline total evacuation time was:
+
+26.50 s
+
+The selected D1 hazard condition produced a measurable difference in hazard exposure between the safety-aware and non-safety-aware routing strategies.
+
+The selected D2 exit-block condition increased evacuation time while preserving:
+
+- completion rate = 1.00
+- unreachable occupants = 0
+- timeout occupants = 0
+
+The selected D3 corridor-block condition increased total evacuation time from:
+
+26.50 s
+
+to:
+
+33.45 s
+
+while preserving:
+
+- completion rate = 1.00
+- unreachable occupants = 0
+- timeout occupants = 0
+- route reversals = 0
+
+The selected D4 combined condition also retained complete evacuation with no unreachable or timeout occupants while producing both evacuation-performance and hazard-exposure effects.
+
+A more severe three-event combined development candidate was evaluated but was not selected for the primary factorial experiment because it created substantially greater route instability and severity than required for the formal comparison.
+
+## 23.9 Experimental Interpretation
+
+The disruption conditions are designed as controlled experimental challenges.
+
+They are intended to test:
+
+- route recovery
+- congestion response
+- hazard-aware routing
+- safety-performance tradeoffs
+- rerouting stability
+- exit reassignment
+- response to changing environmental information
+
+They are not intended to reproduce a specific real emergency event.
+
+The fictional Layout A environment and its disruption schedules exist to support repeatable comparison of routing strategies under identical controlled conditions.
+
+## 23.10 Frozen Research Model v1.0 Disruption Set
+
+The formal Research Model v1.0 disruption factor is frozen as:
+
+- D0 = no disruption
+- D1 = main-spine hazard at 6.65 s
+- D2 = south-central exit block at 13.25 s
+- D3 = main-east corridor block at 6.65 s
+- D4 = main-spine hazard at 6.65 s followed by south-central exit block at 13.25 s
+
+The corresponding parameter definitions are centralized in:
+
+`src/scenario/researchParameterSet.ts`
+
+These conditions must remain unchanged during the formal primary experiment unless a methodological revision is explicitly documented and versioned.
+
+Status:
+
+Frozen for Research Model v1.0.
 # 24. Randomness
 
 All formal stochastic variables use recorded pseudorandom seeds.
