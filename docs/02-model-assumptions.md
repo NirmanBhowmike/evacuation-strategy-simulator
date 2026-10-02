@@ -118,14 +118,28 @@ Status: Locked
 
 ## A-011: Timestep
 
-Nominal timestep:
+Baseline timestep:
 
 dt = 0.05 s
 
-Status: Provisional
+Status: Locked for the primary experiment after numerical convergence testing.
 
-Required validation:
-Compare against 0.025 s and 0.10 s before freezing.
+Validation:
+
+The baseline was compared against:
+
+- 0.025 s fine reference
+- 0.05 s production candidate
+- 0.10 s coarse sensitivity case
+
+The 0.05 s timestep preserved the qualitative evacuation outcome, remained within the predefined convergence tolerance relative to the 0.025 s reference, and reduced the required simulation ticks by approximately half relative to the fine reference.
+
+Sensitivity cases:
+
+- 0.025 s
+- 0.10 s
+
+These values remain available for later numerical sensitivity analysis.
 
 ## A-012: Determinism and Randomness
 
@@ -410,11 +424,43 @@ Status: Locked framework
 
 ## A-039: Occupancy Levels
 
-Occupancy will use low, medium, and high congestion regimes.
+The primary Layout A experiment will use three occupancy conditions:
 
-Exact occupant counts will be calibrated using Layout A after the movement engine is operational.
+- LOW = 12 occupants
+- MEDIUM = 36 occupants
+- HIGH = 48 occupants
 
-Status: Calibration-gated
+Status: Locked for the primary Layout A experiment after occupancy calibration.
+
+Calibration method:
+
+Occupancy candidates of 12, 24, 36, 48, 60, 72, 96, and 120 occupants were evaluated using:
+
+- Layout A
+- Static Shortest Path
+- no disruption
+- fixed desired walking speed of 1.34 m/s
+- timestep = 0.05 s
+- density cell length = 1.0 m
+- specific bottleneck flow = 1.3 persons/(m*s)
+
+Observed maximum local density:
+
+- 12 occupants: 2.286 persons/m²
+- 24 occupants: 2.667 persons/m²
+- 36 occupants: 3.429 persons/m²
+- 48 occupants: 4.571 persons/m²
+- 60 occupants: 6.857 persons/m²
+
+Completion remained 100% through 48 occupants.
+
+At 60 occupants, local density exceeded the 5.4 persons/m² jam-density reference and completion fell to 90% because six agents reached the defensive runtime ceiling.
+
+Reason for selected levels:
+
+LOW, MEDIUM, and HIGH were selected to provide increasing congestion severity while retaining complete baseline evacuation.
+
+Occupancies of 60 and above are classified as overload/stress cases rather than primary experimental conditions.
 
 ## A-040: Development Layout
 

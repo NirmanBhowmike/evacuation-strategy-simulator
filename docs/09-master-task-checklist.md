@@ -22,7 +22,9 @@ Phase 0 — Project Infrastructure
 - [x] First GitHub push completed
 - [x] Working tree verified clean
 Phase 1 — Research Model Specification
--- [x] Research Pass 1: Pedestrian movement and flow model
+Phase 1 — Research Model Specification
+
+- [x] Research Pass 1: Pedestrian movement and flow model
   - [x] Free-flow walking speed
   - [x] Inter-person variability / speed distribution
   - [x] Speed-density relationship
@@ -30,32 +32,35 @@ Phase 1 — Research Model Specification
   - [x] Corridor flow treatment
   - [x] Door/bottleneck capacity
   - [x] Personal spacing / collision approach
-  - [~] Numerical timestep - provisional; convergence test required
+  - - [x] Numerical timestep - baseline 0.05 s frozen after convergence testing against 0.025 s and 0.10 s
   - [x] Movement-model validation targets
-- - [x] Research Pass 2: Navigation and route-choice model
+
+- [x] Research Pass 2: Navigation and route-choice model
   - [x] Navigation-graph structure
   - [x] Shortest-path baseline
   - [x] Nearest-exit baseline
   - [x] Congestion-aware routing
-  - [~] Hazard-aware routing - routing structure defined; hazard rules require Pass 3
+  - [x] Hazard-aware routing - safety-first CLEAR/RISK/BLOCKED rules implemented and validated
   - [x] Adaptive hybrid routing architecture
   - [x] Route-cost formulation
   - [x] Information available to agents
   - [x] Route update mechanism - decision-node and event based
   - [~] Rerouting threshold - tuning procedure defined; value not frozen
   - [x] Rerouting hysteresis / switching approach
-- - [x] Research Pass 3: Hazard and disruption model
+
+- [x] Research Pass 3: Hazard and disruption model
   - [x] Hazard representation
   - [x] Hazard growth/expansion mechanism
   - [x] Hazard exposure metric
   - [x] Exit blocking
   - [x] Corridor blocking
-  - [~] Dynamic disruption timing - mechanism defined; exact timings require Pass 4
-- - [x] Research Pass 4: Experimental methodology
+  - - [~] Dynamic disruption timing - EARLY = 6.65 s, MID = 13.25 s, and LATE = 19.90 s calibrated from the 26.50 s medium-occupancy baseline; corridor-block target still requires calibration
+
+- [x] Research Pass 4: Experimental methodology
   - [x] Independent variables
   - [x] Factor-level framework
   - [x] Dependent variables
-  - [~] Occupancy conditions - regime definitions fixed; exact counts require calibration
+  - [x] Occupancy conditions - LOW = 12, MEDIUM = 36, HIGH = 48 occupants for Layout A primary experiments; 60+ reserved for overload/stress testing
   - [x] Disruption conditions
   - [x] Random-seed / ScenarioInstance strategy
   - [x] Replication and convergence method
@@ -64,7 +69,8 @@ Phase 1 — Research Model Specification
   - [x] Sensitivity-analysis plan
   - [x] Statistical-analysis framework
   - [x] Stopping / termination rules
-- - [x] Update `01-research-basis.md`
+
+- [x] Update `01-research-basis.md`
 - [x] Update `02-model-assumptions.md`
 - [x] Update `03-decision-log.md`
 - [x] Complete `08-research-model-specification.md`
@@ -121,15 +127,15 @@ Phase 5 — Verification and Validation
 - [x] Blocked-edge tests
 - [x] Unreachable-agent tests
 - [x] Same-seed reproducibility
-- [ ] Density-speed sanity tests
-- [ ] Bottleneck-flow tests
-- [ ] Zero-hazard exposure tests
-- [ ] Routing-response tests
-- [ ] Adaptive rerouting tests
+- [x] Density-speed sanity tests
+- [x] Bottleneck-flow tests
+- [x] Zero-hazard exposure tests
+- [x] Routing-response tests
+- [x] Adaptive rerouting tests
 - [ ] Visual vs headless-result consistency
-- [ ] Independent Python/reference validation where useful
-- [ ] Boundary-condition tests
-- [ ] Performance/stress tests
+- [x] Independent Python/reference validation where useful
+- [x] Boundary-condition tests
+- [x] Performance/stress tests
 - [ ] Document all validation results in 05-validation-log.md
 Phase 6 — Building and 3D Visualization
 - [ ] Finalize original fictional building layout

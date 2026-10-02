@@ -57,7 +57,13 @@ Nominal candidate:
 
 Comparison values:
 0.025 s and 0.10 s
+Validation result:
 
+Numerical convergence testing was completed using 0.025 s, 0.05 s, and 0.10 s timesteps. The 0.05 s timestep satisfied the convergence checks relative to the 0.025 s reference while requiring approximately half as many simulation ticks.
+
+Decision:
+
+Use 0.05 s as the baseline timestep for the primary experiment. Retain 0.025 s and 0.10 s as numerical sensitivity cases.
 Date:
 Research Pass 1
 
@@ -301,7 +307,27 @@ Use low, medium, and high occupancy regimes defined by observed congestion behav
 
 Reason:
 The same occupant count can represent different congestion severity in different building geometries.
+Calibration result:
 
+Layout A occupancy calibration evaluated:
+
+12, 24, 36, 48, 60, 72, 96, and 120 occupants.
+
+The selected primary occupancy conditions are:
+
+- LOW = 12 occupants
+- MEDIUM = 36 occupants
+- HIGH = 48 occupants
+
+All three selected conditions achieved 100% completion under the baseline calibration case while showing progressively greater local density and queue exposure.
+
+At 60 occupants, maximum local density exceeded the 5.4 persons/m² jam-density reference and completion dropped below 100%.
+
+Decision:
+
+Use 12, 36, and 48 occupants as the primary Layout A occupancy levels.
+
+Treat 60 occupants and above as overload/stress conditions rather than primary factor levels.
 Date:
 Research Pass 4
 

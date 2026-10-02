@@ -1028,6 +1028,8 @@ function reviewRouteAtNode(
       string,
       NavigationNodeId | null
     >,
+  pendingNodeReviewAgentIds:
+    Set<string>,
   decisionTrace:
     DecisionTraceLog,
   stability:
@@ -1073,19 +1075,58 @@ function reviewRouteAtNode(
       disruptions,
     );
 
-  const normalReview =
+  const atReviewNode =
     isRoutingReviewNode(
       currentNode,
-    ) &&
+    );
+
+  /**
+   * A normal dynamic-routing review occurs once per node visit.
+   *
+   * An agent waiting for bottleneck admission remains physically
+   * at the node with currentEdgeId === null. Without this visit
+   * gate, congestion-sensitive policies can repeatedly switch
+   * outbound queues every simulation tick and never depart.
+   */
+  const normalReview =
+    atReviewNode &&
     strategyId !==
-      "STATIC_SHORTEST_PATH";
+      "STATIC_SHORTEST_PATH" &&
+    pendingNodeReviewAgentIds.has(
+      agent.id,
+    );
+
+  /**
+   * A newly applied disruption may justify another review even
+   * when the normal review for the current node visit has already
+   * occurred.
+   *
+   * Forced reviews for blocked routes or unavailable exits remain
+   * independent of this rule.
+   */
+  const eventReview =
+    atReviewNode &&
+    strategyId !==
+      "STATIC_SHORTEST_PATH" &&
+    disruptionAppliedThisTick;
 
   if (
     !forcedReview &&
-    !normalReview
+    !normalReview &&
+    !eventReview
   ) {
     return;
   }
+
+  /**
+   * Consume the normal review opportunity for this node visit.
+   *
+   * A future arrival at another node will add the agent back to
+   * the pending-review set.
+   */
+  pendingNodeReviewAgentIds.delete(
+    agent.id,
+  );
 
   const context =
     createRoutingStrategyContext(
@@ -1464,6 +1505,8 @@ function moveAgents(
       string,
       NavigationNodeId | null
     >,
+  pendingNodeReviewAgentIds:
+    Set<string>,
 ): void {
   for (
     const agent of agents
@@ -1479,7 +1522,7 @@ function moveAgents(
 
     if (
       agent.currentNodeId ===
-      null
+        null
     ) {
       throw new Error(
         `Agent ${agent.id} is traversing an edge without an origin node.`,
@@ -1568,11 +1611,19 @@ function moveAgents(
 
     if (
       movement.arrivedAtNodeId !==
-      null
+        null
     ) {
       arrivalFromNodeByAgent.set(
         agent.id,
         originNodeId,
+      );
+
+      /**
+       * Arrival creates exactly one normal routing-review
+       * opportunity at the new node.
+       */
+      pendingNodeReviewAgentIds.add(
+        agent.id,
       );
 
       agent.routeCursorIndex +=
@@ -1633,7 +1684,7 @@ function initializeRoutes(
 
     if (
       agent.currentNodeId ===
-      null
+        null
     ) {
       throw new Error(
         `Agent ${agent.id} has no navigation access node.`,
@@ -1651,7 +1702,7 @@ function initializeRoutes(
 
     if (
       agent.status !==
-      "ACTIVE"
+        "ACTIVE"
     ) {
       continue;
     }
@@ -1777,6 +1828,18 @@ export function runHeadlessSimulation(
       string,
       NavigationNodeId | null
     >();
+
+  /**
+   * Agents are added here when they arrive at a new navigation
+   * node. The entry is consumed when the normal routing review
+   * for that node visit occurs.
+   *
+   * Initial routing already constitutes the decision at the
+   * starting access node, so agents are not inserted here during
+   * initialization.
+   */
+  const pendingNodeReviewAgentIds =
+    new Set<string>();
 
   const edgeQueues =
     new Map<
@@ -1916,6 +1979,7 @@ export function runHeadlessSimulation(
         currentTime,
         routeByAgentId,
         arrivalFromNodeByAgent,
+        pendingNodeReviewAgentIds,
         decisionTrace,
         stability,
       );
@@ -1961,6 +2025,7 @@ export function runHeadlessSimulation(
         .timestepSeconds,
       routeByAgentId,
       arrivalFromNodeByAgent,
+      pendingNodeReviewAgentIds,
     );
 
     clock.advance();
