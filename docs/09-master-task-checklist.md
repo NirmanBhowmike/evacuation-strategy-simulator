@@ -85,10 +85,10 @@ Phase 2 — Core Research Engine
 - [x] Implement congestion effects
 - [x] Implement bottleneck behavior
 - [x] Implement hazard field
-- [ ] Implement dynamic disruptions
-- [ ] Implement evacuation-state handling
-- [ ] Implement simulation termination conditions
-- [ ] Implement metrics engine
+- [x] Implement dynamic disruptions
+- [x] Implement evacuation-state handling
+- [x] Implement simulation termination conditions
+- [x] Implement metrics engine
 - [ ] Separate rendering completely from simulation logic
 Phase 3 — Routing Strategy Engine
 - [ ] Define common strategy interface
