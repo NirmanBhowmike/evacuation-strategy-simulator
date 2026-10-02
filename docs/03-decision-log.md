@@ -475,3 +475,53 @@ The threshold must remain frozen before Layout B holdout evaluation.
 
 Date:
 October 2, 2026
+
+### D-047
+
+Freeze the five-level disruption factor and Research Model v1.0 calibrated parameter set.
+
+Formal disruption conditions:
+
+D0 - Baseline
+No disruption.
+
+D1 - Hazard
+HAZARD_ACTIVATE on corridor-main-spine at 6.65 s.
+
+D2 - Exit Block
+EXIT_BLOCK on exit-south-central at 13.25 s.
+
+D3 - Corridor Block
+CORRIDOR_BLOCK on corridor-main-east-blockable at 6.65 s.
+
+D4 - Combined
+HAZARD_ACTIVATE on corridor-main-spine at 6.65 s followed by EXIT_BLOCK on exit-south-central at 13.25 s.
+
+Calibration rationale:
+
+The selected conditions produced meaningful experimental effects while retaining complete evacuation and avoiding unreachable or timeout occupants in the medium-occupancy development calibration.
+
+The hazard condition produces measurable differentiation in hazard exposure.
+
+The exit-block condition creates a dynamic recovery problem after route commitment.
+
+The corridor-block condition creates a controlled detour without structural disconnection.
+
+The combined condition provides simultaneous performance and hazard-exposure tradeoffs without the excessive severity of the rejected three-event combined candidate.
+
+The calibrated values are centralized in:
+
+`src/scenario/researchParameterSet.ts`
+
+The parameter set is protected by:
+
+`tests/validation/researchParameterSetRegression.test.ts`
+
+Validation status at freeze:
+
+45 test files passed.
+343 tests passed.
+0 tests failed.
+
+Date:
+October 2, 2026

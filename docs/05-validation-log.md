@@ -8,8 +8,8 @@ The research engine is developed and tested independently from the future 3D ren
 
 As of October 2, 2026:
 
-- 45 test files passed
-- 343 tests passed
+- 46 test files passed
+- 346 tests passed
 - 0 tests failed
 - Core simulation engine tests are passing
 - Routing-strategy tests are passing
@@ -18,6 +18,7 @@ As of October 2, 2026:
 - Numerical convergence tests are passing
 - Calibration regression tests are passing
 - Frozen Research Model v1.0 parameter-set regression tests are passing
+- Visualization-facing result consistency tests are passing
 
 The dedicated Phase 5 validation tests are stored under:
 
@@ -33,7 +34,7 @@ Key dedicated validation files include:
 - `corridorBlockSegmentValidation.test.ts`
 - `adaptiveThresholdSelectionRegression.test.ts`
 - `researchParameterSetRegression.test.ts`
-
+- `visualHeadlessConsistency.test.ts`
 ## 1. Single-Agent Analytical Validation
 
 ### Purpose
@@ -489,46 +490,167 @@ Result: Passed.
 
 Current automated test status:
 
-- Test files: 45 passed
-- Tests: 343 passed
+- Test files: 46 passed
+- Tests: 346 passed
 - Failed tests: 0
 
-The suite now includes regression coverage for:
+The complete validation suite now includes regression coverage for:
 
 - analytical engine behavior
-- routing algorithms
-- congestion and bottleneck behavior
-- hazard and blockage response
+- shortest-path correctness
+- independent routing reference comparison
+- density-speed behavior
+- bottleneck capacity and admission
+- hazard exposure accounting
+- routing-strategy response
+- adaptive rerouting behavior
+- safety-priority rerouting
+- numerical boundary conditions
+- blocked-route recovery
+- unavailable-exit recovery
+- unreachable-agent classification
+- timeout handling
 - same-seed reproducibility
+- experiment provenance
 - numerical timestep convergence
 - Congestion-Aware queue stability
+- occupancy calibration
 - selected corridor-block configuration
 - Adaptive Hybrid threshold selection
+- frozen disruption schedules
 - frozen Research Model v1.0 parameter set
-## 18. Validation Items Still Open
+- visualization-facing result consistency
 
-### Visual vs Headless Result Consistency
+All automated tests are passing.
+## 18. Visual vs Headless Result Consistency Validation
 
-Status: Pending.
+### Purpose
 
-Reason:
+Verify that the data supplied to the future visualization layer are consistent with the authoritative headless research-engine result.
 
-The 3D rendering layer has not yet been implemented.
+The visualization must not maintain a second evacuation simulation or independently calculate:
 
-The future visualization must be driven by the same simulation state used by the headless research engine. Validation will confirm that rendered:
+- occupant movement
+- route selection
+- rerouting
+- hazard exposure
+- congestion
+- exit availability
+- corridor blockage
+- evacuation status
+- performance metrics
 
-- agent positions
-- route selections
-- exit states
-- hazard states
-- corridor blockages
-- event timing
+The research engine remains the authoritative source of simulation state.
 
-remain consistent with the corresponding headless simulation state.
+### Architecture Tested
 
-This validation will be performed during the visualization phase.
+The validated data path is:
 
-All primary research-engine calibration items required before visualization are now closed.
+Headless research engine
+
+→ completed HeadlessSimulationResult
+
+→ visualization-result adapter
+
+→ renderer-facing visualization state
+
+The adapter creates a detached, read-only presentation model from the authoritative simulation result and the same environment, navigation graph, and exit definitions used by the research engine.
+
+### Validation Scope
+
+The test compares visualization-facing data against the corresponding headless values for:
+
+- scenario ID
+- parameter-set ID
+- random seed
+- layout ID
+- routing strategy
+- simulation timestep
+- final simulated time
+- simulation tick count
+- termination state
+- simulation metrics
+- queue metrics
+- applied disruption events
+- occupant count
+- occupant IDs
+- occupant positions
+- occupant statuses
+- current navigation nodes
+- current navigation edges
+- planned route nodes
+- route cursor positions
+- selected exits
+- reroute counts
+- distance traveled
+- hazard exposure
+- evacuation times
+
+Static visualization geometry is also checked against the same authoritative Layout A definitions used by the simulation:
+
+- building zones
+- zone polygons
+- navigation nodes
+- navigation edges
+- exits
+- layout dimensions
+
+### Experimental Coverage
+
+Consistency was checked across all five frozen disruption conditions:
+
+- D0 - Baseline
+- D1 - Hazard
+- D2 - Exit Block
+- D3 - Corridor Block
+- D4 - Combined
+
+Each condition was evaluated across all five routing strategies:
+
+- Nearest Exit
+- Static Shortest Path
+- Congestion-Aware
+- Hazard-Aware
+- Adaptive Hybrid
+
+This produces 25 strategy-condition combinations within the consistency regression.
+
+### Read-Only Projection Validation
+
+The renderer-facing result was also verified to be detached from the authoritative headless objects.
+
+The visualization result, layout model, agent array, agent objects, agent positions, route arrays, metrics, queue metrics, termination state, and applied-disruption collection are frozen before presentation.
+
+This prevents the visualization layer from mutating research-engine results through the presentation model.
+
+### Result
+
+Passed.
+
+The visualization-facing projection matched the corresponding authoritative headless simulation results for all tested strategy-condition combinations.
+
+The complete automated test suite after this validation contained:
+
+- 46 passing test files
+- 346 passing tests
+- 0 failed tests
+
+### Interpretation
+
+The validation establishes consistency between the completed headless simulation result and the data model that will be consumed by the visualization layer.
+
+The visualization layer therefore has a validated interface for presenting research-engine outputs without reproducing simulation logic.
+
+### Limitation
+
+This test does not yet validate graphical rendering fidelity.
+
+It does not establish that a future 3D mesh, camera, animation, color state, or rendered occupant icon visually appears in the correct screen location.
+
+Those renderer-level checks can only be performed after the actual 3D presentation layer exists.
+
+The present validation establishes result and state consistency at the engine-to-visualization interface.
+
 ## 19. Validation Scope and Limitations
 
 The current validation establishes internal consistency, deterministic behavior, reference agreement for selected mathematical components, and correct implementation of the defined research model.
@@ -555,12 +677,33 @@ The current building environment is an original fictional research layout and is
 
 ## 20. Next Validation Actions
 
-The next research-engine calibration sequence is:
+Phase 5 research-engine validation is complete.
 
-1. Run numerical timestep convergence testing.
-2. Calibrate LOW, MEDIUM, and HIGH occupancy counts.
-3. Establish experimental disruption timings.
-4. Tune the Adaptive Hybrid rerouting threshold on development scenarios.
-5. Freeze the calibrated parameter set.
-6. Record the frozen Git commit and parameter-set version.
-7. Later validate 3D visualization against headless simulation state.
+All planned research-engine validation and calibration items required before visualization development have been completed.
+
+The frozen engine now has:
+
+- validated deterministic execution
+- validated routing behavior
+- validated congestion and bottleneck behavior
+- validated hazard and blockage behavior
+- validated numerical timestep
+- calibrated occupancy levels
+- calibrated disruption schedules
+- calibrated Adaptive Hybrid rerouting threshold
+- frozen Research Model v1.0 parameter set
+- validated visualization-facing result consistency
+
+The next development phase is the 3D presentation layer.
+
+Future validation associated with that phase will include renderer-level checks such as:
+
+- correct geometric placement
+- correct visual representation of hazard states
+- correct blocked-exit representation
+- correct blocked-corridor representation
+- correct occupant animation from authoritative engine state
+- synchronization of displayed time with simulation time
+- consistency of rendered metrics with the validated visualization-result model
+
+Any renderer-level defect must be corrected in the visualization layer unless investigation identifies an actual research-engine defect.

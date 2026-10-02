@@ -131,11 +131,11 @@ Phase 5 — Verification and Validation
 - [x] Zero-hazard exposure tests
 - [x] Routing-response tests
 - [x] Adaptive rerouting tests
-- [ ] Visual vs headless-result consistency
+-  [x] Visual vs headless-result consistency
 - [x] Independent Python/reference validation where useful
 - [x] Boundary-condition tests
 - [x] Performance/stress tests
-- [ ] Document all validation results in 05-validation-log.md
+- [x] Document all validation results in validation log
 Phase 6 — Building and 3D Visualization
 - [ ] Finalize original fictional building layout
 - [ ] Design geometry to create meaningful routing tradeoffs

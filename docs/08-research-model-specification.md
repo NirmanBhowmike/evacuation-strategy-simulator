@@ -863,31 +863,39 @@ Holdout evaluation.
 
 Adaptive parameters must be frozen before Layout B is evaluated.
 
-# 31. Occupancy Calibration
+## 31. Occupancy Calibration
 
-Low, medium, and high occupancy represent distinct congestion regimes.
+Primary Layout A occupancy regimes:
 
-Exact occupant counts are calibration-gated and will be established using Layout A after implementation of the movement and bottleneck models.
+LOW = 12 occupants
+MEDIUM = 36 occupants
+HIGH = 48 occupants
 
-# 32. Adaptive Threshold Calibration
+The selected conditions retain complete evacuation in the baseline calibration while producing progressively stronger congestion.
 
-Candidate values:
+Occupancy of 60 or greater is treated as overload/stress behavior rather than a primary experimental factor level.
+
+Status:
+Frozen for the primary experiment.
+# # 32. Adaptive Threshold Calibration
+
+Candidate values evaluated:
 
 theta = 0.00
 theta = 0.10
 theta = 0.20
 theta = 0.30
 
-Selection uses Layout A development scenarios only.
+Selected value:
 
-Selection priorities:
+theta = 0.10
 
-1. hazard exposure
-2. evacuation performance
-3. routing stability
+Selection used Layout A development scenarios only.
 
-The selected value is frozen before holdout evaluation.
+The selected value is the lowest candidate that suppressed all demonstrated harmful low-benefit voluntary reroutes while avoiding unnecessary additional routing inertia.
 
+Status:
+Frozen before Layout B holdout evaluation.
 # 33. Replication and Convergence
 
 Minimum initial replications:
@@ -973,22 +981,27 @@ Produces explicit TIMEOUT status.
 
 Timeout occupants are not counted as evacuated.
 
-# 37. Validation-Gated Parameters
+# # 37. Validation-Gated Parameters
 
-Research Model Specification v1.0 freezes the model architecture and calibration procedures.
+The principal Research Model v1.0 calibration parameters required before the formal experiment have now been resolved.
 
-The following parameters remain validation- or calibration-gated:
+Frozen primary values:
 
-- final simulation timestep
-- final density-cell length
-- final bottleneck-capacity parameter
-- exact local overlap-resolution behavior
-- exact low/medium/high occupancy counts
-- final adaptive rerouting threshold
-- exact disruption locations
-- exact normalized disruption timings
+- simulation timestep = 0.05 s
+- density-cell length = 1.0 m
+- bottleneck specific flow = 1.3 persons/(m*s)
+- LOW occupancy = 12
+- MEDIUM occupancy = 36
+- HIGH occupancy = 48
+- Adaptive Hybrid rerouting threshold = 0.10
+- D1 hazard activation = corridor-main-spine at 6.65 s
+- D2 exit block = exit-south-central at 13.25 s
+- D3 corridor block = corridor-main-east-blockable at 6.65 s
+- D4 combined = hazard at 6.65 s followed by exit block at 13.25 s
 
-These values must be resolved according to the procedures defined in this specification before formal experiments are executed.
+Sensitivity values remain available for later robustness analysis.
+
+The major validation item still dependent on future implementation is visual-versus-headless state consistency after the 3D presentation layer is built.
 
 # 38. Version 1.0 Freeze Meaning
 

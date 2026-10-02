@@ -247,22 +247,46 @@ Immediate reevaluation will occur when:
 
 ## A-022: Rerouting Threshold
 
-Voluntary rerouting will require a minimum relative improvement:
+Voluntary rerouting requires a minimum relative predicted travel-time improvement:
 
 I = (C_current - C_alternative) / C_current
 
-A route switch occurs when:
+A voluntary route switch occurs when:
 
 I >= theta
 
-Status: Mechanism locked; theta not frozen
+Selected value:
 
-Candidate development values:
+theta = 0.10
 
-0.00
-0.10
-0.20
-0.30
+Candidate development values evaluated:
+
+- 0.00
+- 0.10
+- 0.20
+- 0.30
+
+Calibration included controlled congestion-only development scenarios with no hazards or blocked routes so that the threshold was not bypassed by forced or safety-priority rerouting.
+
+In valid consequential development cases, theta = 0 allowed route switches for predicted improvements of approximately:
+
+- 0.31%
+- 4.71%
+- 8.73%
+
+Those switches increased the probe occupant's realized evacuation time.
+
+Theta values of 0.10, 0.20, and 0.30 all rejected those harmful low-benefit switches. Because the three nonzero candidates were tied on the valid consequential cases, the lowest effective threshold was selected to minimize unnecessary rerouting inertia.
+
+Status: Locked for the primary experiment
+
+Interpretation:
+
+The selected value is a development-calibrated control parameter. It is not claimed to be a universally optimal human rerouting threshold.
+
+Sensitivity:
+
+The alternative candidate values remain available for later sensitivity analysis.
 
 ## A-023: Current-State Information
 
@@ -528,16 +552,30 @@ Status: Locked
 
 ## A-047: Adaptive Threshold Development
 
-Candidate thresholds:
+Candidate thresholds evaluated:
 
-0.00
-0.10
-0.20
-0.30
+- 0.00
+- 0.10
+- 0.20
+- 0.30
 
-The threshold will be selected using Layout A development scenarios only.
+Selected threshold:
 
-Status: Locked procedure; final value calibration-gated
+theta = 0.10
+
+Selection rule:
+
+First, exclude calibration cases that violate the development validity criteria, including incomplete evacuation, timeout occupants, or maximum local density at or above the 5.4 persons/m² jam-density reference.
+
+Second, identify threshold values that suppress demonstrated harmful low-benefit voluntary reroutes.
+
+When multiple candidates satisfy those criteria with equivalent development performance, select the lowest threshold to preserve the greatest responsiveness to future meaningful improvements.
+
+Result:
+
+Theta = 0.10 was the lowest candidate that rejected all demonstrated harmful low-benefit reroutes in the valid consequential development cases.
+
+Status: Locked before holdout evaluation
 
 ## A-048: Holdout Integrity
 
@@ -549,10 +587,34 @@ Status: Locked
 
 ## A-049: Disruption Timing
 
-Exact disruption timing will be defined relative to baseline evacuation behavior rather than presented as real fire-development timing.
+Exact disruption timing is defined relative to baseline evacuation behavior rather than presented as real fire-development timing.
 
-Status: Experimental calibration-gated
+Calibrated reference anchors:
 
+- EARLY = 6.65 s
+- MID = 13.25 s
+- LATE = 19.90 s
+
+Primary corridor-block configuration:
+
+- Layout = Layout A
+- Target zone = corridor-main-east-blockable
+- Target edge = edge-main-east-end
+- Activation time = 6.65 s
+- Reference occupancy = 36 occupants
+
+Calibration result:
+
+- baseline TET = 26.50 s
+- blocked TET = 33.45 s
+- TET increase = 6.95 s
+- completion rate = 1.00
+- unreachable occupants = 0
+- timeout occupants = 0
+
+The 6.65 s condition produced a measurable dynamic-route disruption while preserving complete evacuation. Later activation times on this segment occurred after the relevant route opportunity and therefore did not produce a useful experimental effect.
+
+Status: Corridor-block timing locked; remaining disruption-family schedules still calibration-gated
 ## A-050: Statistical Pairing
 
 Routing strategies will be compared using matched ScenarioInstances.
