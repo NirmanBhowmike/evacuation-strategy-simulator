@@ -82,8 +82,8 @@ Phase 2 — Core Research Engine
 - [x] Implement agent-state model
 - [x] Implement pedestrian movement
 - [x] Implement density calculation
-- [ ] Implement congestion effects
-- [ ] Implement bottleneck behavior
+- [x] Implement congestion effects
+- [x] Implement bottleneck behavior
 - [ ] Implement hazard field
 - [ ] Implement dynamic disruptions
 - [ ] Implement evacuation-state handling
