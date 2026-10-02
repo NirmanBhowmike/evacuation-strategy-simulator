@@ -81,7 +81,7 @@ Phase 2 — Core Research Engine
 - [x] Implement exits and spawn zones
 - [x] Implement agent-state model
 - [x] Implement pedestrian movement
-- [ ] Implement density calculation
+- [x] Implement density calculation
 - [ ] Implement congestion effects
 - [ ] Implement bottleneck behavior
 - [ ] Implement hazard field
