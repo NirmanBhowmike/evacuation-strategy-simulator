@@ -104,17 +104,17 @@ Phase 3 – Routing Strategy Engine
 - [x] Verify every strategy independently
 - [x] Prevent unfair strategy-specific access to future information
 Phase 4 — Experiment Engine
-- [ ] Headless simulation mode
-- [ ] Batch experiment runner
-- [ ] Scenario IDs
-- [ ] Parameter-set IDs
-- [ ] Random-seed logging
+- [x] Headless simulation mode
+- [x] Batch experiment runner
+- [x] Scenario IDs
+- [x] Parameter-set IDs
+- [x] Random-seed logging
 - [ ] Software/commit-version logging
 - [ ] CSV export
 - [ ] JSON configuration export
 - [ ] Experiment registry integration
 - [ ] Automatic metric aggregation
-- [ ] Exact same-scenario replay across strategies
+- [x] Exact same-scenario replay across strategies
 Phase 5 — Verification and Validation
 - [ ] Single-agent analytical tests
 - [ ] Known shortest-path graph tests
