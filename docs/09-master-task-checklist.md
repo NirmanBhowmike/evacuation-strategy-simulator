@@ -72,9 +72,9 @@ Phase 1 — Research Model Specification
 Phase 2 — Core Research Engine
 - - [x] Initialize TypeScript project
 - [x] Configure testing framework
-- [ ] Define scenario data schema
-- [ ] Implement seeded random-number generator
-- [ ] Implement deterministic simulation clock
+- [x] Define scenario data schema
+- [x] Implement seeded random-number generator
+- [x] Implement deterministic simulation clock
 - [ ] Implement building/environment representation
 - [ ] Implement navigation graph
 - [ ] Implement exits and spawn zones
