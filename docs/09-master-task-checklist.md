@@ -73,11 +73,12 @@ Phase 2 — Core Research Engine
 - - [x] Initialize TypeScript project
 - [x] Configure testing framework
 - [x] Define scenario data schema
+- [x] Implement deterministic ScenarioInstance generation
 - [x] Implement seeded random-number generator
 - [x] Implement deterministic simulation clock
-- [ ] Implement building/environment representation
-- [ ] Implement navigation graph
-- [ ] Implement exits and spawn zones
+- [x] Implement building/environment representation- [x] Implement building/environment representation
+- [x] Implement navigation graph
+- [x] Implement exits and spawn zones
 - [ ] Implement agent-state model
 - [ ] Implement pedestrian movement
 - [ ] Implement density calculation
