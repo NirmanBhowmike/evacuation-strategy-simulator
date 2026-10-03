@@ -8,6 +8,10 @@ import {
   OrbitControls,
 } from "@react-three/drei";
 
+import type {
+  SimulationReplayFrame,
+} from "../types/simulationReplay";
+
 import {
   LayoutABuilding,
 } from "./LayoutABuilding";
@@ -15,6 +19,21 @@ import {
 import {
   NavigationNetworkOverlay,
 } from "./NavigationNetworkOverlay";
+
+import {
+  OccupantLayer,
+} from "./OccupantLayer";
+
+interface ResearchSceneProps {
+  readonly currentFrame:
+    SimulationReplayFrame | null;
+
+  readonly nextFrame:
+    SimulationReplayFrame | null;
+
+  readonly interpolationAlpha:
+    number;
+}
 
 function ResearchSceneEnvironment() {
   return (
@@ -171,7 +190,11 @@ function ResearchGround() {
   );
 }
 
-export function ResearchScene() {
+export function ResearchScene({
+  currentFrame,
+  nextFrame,
+  interpolationAlpha,
+}: ResearchSceneProps) {
   return (
     <Canvas
       shadows
@@ -210,6 +233,18 @@ export function ResearchScene() {
       <LayoutABuilding />
 
       <NavigationNetworkOverlay />
+
+      <OccupantLayer
+        currentFrame={
+          currentFrame
+        }
+        nextFrame={
+          nextFrame
+        }
+        interpolationAlpha={
+          interpolationAlpha
+        }
+      />
 
       <ContactShadows
         position={[

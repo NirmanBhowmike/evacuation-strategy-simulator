@@ -33,6 +33,10 @@ import type {
   Position2D,
 } from "../types/scenario";
 
+import {
+  LayoutAArchitecturalLayer,
+} from "./LayoutAArchitecturalLayer";
+
 interface ZoneStyle {
   readonly color:
     string;
@@ -1520,11 +1524,11 @@ export function LayoutABuilding() {
         ),
       )}
 
-      <AnalyticalRoomWalls />
+      <LayoutAArchitecturalLayer />
 
       <ExperimentalControlOverlay />
 
-      {layoutAExits.exits.map(
+      {false && layoutAExits.exits.map(
         (
           exit,
         ) => (
