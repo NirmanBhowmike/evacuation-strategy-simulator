@@ -17,6 +17,12 @@ import {
   createRoutingStrategyContext,
 } from "./createRoutingStrategyContext";
 import {
+  createSimulationReplayFrame,
+} from "./createSimulationReplayFrame";
+import {
+  createSimulationSnapshot,
+} from "./createSimulationSnapshot";
+import {
   DecisionTraceLog,
 } from "./DecisionTraceLog";
 import {
@@ -84,6 +90,9 @@ import type {
   ScenarioInstance,
 } from "../types/scenario";
 import type {
+  SimulationReplayFrame,
+} from "../types/simulationReplay";
+import type {
   SpawnZoneSet,
 } from "../types/spawn";
 
@@ -105,6 +114,30 @@ export interface HeadlessSimulationInput {
 
   readonly configuration:
     HeadlessSimulationConfiguration;
+
+  /**
+   * Optional read-only replay observer.
+   *
+   * When omitted, the simulation behaves exactly as the
+   * ordinary headless research runner.
+   */
+  readonly replayObserver?:
+    (
+      frame:
+        SimulationReplayFrame,
+    ) => void;
+
+  /**
+   * Regular replay sampling interval.
+   *
+   * This controls visualization output only.
+   * It does not alter the numerical simulation timestep.
+   *
+   * Default:
+   * 0.10 seconds.
+   */
+  readonly replayIntervalSeconds?:
+    number;
 }
 
 const DEFAULT_TIMESTEP_SECONDS =
@@ -1770,6 +1803,25 @@ export function runHeadlessSimulation(
     configuration,
   } = input;
 
+  const replayObserver =
+    input.replayObserver;
+
+  const replayIntervalSeconds =
+    input.replayIntervalSeconds ??
+    0.10;
+
+  if (
+    !Number.isFinite(
+      replayIntervalSeconds,
+    ) ||
+    replayIntervalSeconds <=
+      0
+  ) {
+    throw new Error(
+      "Replay interval must be positive and finite.",
+    );
+  }
+
   const clock =
     new SimulationClock(
       validated
@@ -1901,6 +1953,70 @@ export function runHeadlessSimulation(
         .maximumSimulationTimeSeconds,
     );
 
+  const REPLAY_TIME_TOLERANCE =
+    1e-9;
+
+  let lastReplayFrameTimeSeconds =
+    Number.NEGATIVE_INFINITY;
+
+  let nextRegularReplayTimeSeconds =
+    replayIntervalSeconds;
+
+  const emitReplayFrame =
+    (
+      simulationTimeSeconds:
+        number,
+
+      triggeredDisruptions:
+        readonly AppliedDisruption[],
+
+      isTerminal:
+        boolean,
+    ): void => {
+      if (!replayObserver) {
+        return;
+      }
+
+      const snapshot =
+        createSimulationSnapshot(
+          scenario.layoutId,
+          simulationTimeSeconds,
+          agents,
+          hazardField,
+          disruptions,
+        );
+
+      replayObserver(
+        createSimulationReplayFrame({
+          snapshot,
+
+          tick:
+            clock.tick,
+
+          agents,
+
+          routeByAgentId,
+
+          queueWaitByAgent,
+
+          appliedDisruptions,
+
+          triggeredDisruptions,
+
+          isTerminal,
+        }),
+      );
+
+      lastReplayFrameTimeSeconds =
+        simulationTimeSeconds;
+    };
+
+  emitReplayFrame(
+    0,
+    initialEvents,
+    termination.isTerminated,
+  );
+
   while (
     !termination.isTerminated
   ) {
@@ -1985,6 +2101,22 @@ export function runHeadlessSimulation(
       );
     }
 
+    if (
+      newDisruptions.length >
+        0 &&
+      Math.abs(
+        currentTime -
+        lastReplayFrameTimeSeconds,
+      ) >
+        REPLAY_TIME_TOLERANCE
+    ) {
+      emitReplayFrame(
+        currentTime,
+        newDisruptions,
+        false,
+      );
+    }
+
     synchronizeEdgeQueues(
       agents,
       routeByAgentId,
@@ -2062,6 +2194,44 @@ export function runHeadlessSimulation(
         validated
           .maximumSimulationTimeSeconds,
       );
+
+    if (replayObserver) {
+      const regularFrameDue =
+        endTime +
+          REPLAY_TIME_TOLERANCE >=
+        nextRegularReplayTimeSeconds;
+
+      const terminalFrameDue =
+        termination
+          .isTerminated;
+
+      if (
+        (
+          regularFrameDue ||
+          terminalFrameDue
+        ) &&
+        Math.abs(
+          endTime -
+          lastReplayFrameTimeSeconds,
+        ) >
+          REPLAY_TIME_TOLERANCE
+      ) {
+        emitReplayFrame(
+          endTime,
+          [],
+          terminalFrameDue,
+        );
+      }
+
+      while (
+        nextRegularReplayTimeSeconds <=
+        endTime +
+          REPLAY_TIME_TOLERANCE
+      ) {
+        nextRegularReplayTimeSeconds +=
+          replayIntervalSeconds;
+      }
+    }
   }
 
   const baseMetrics =
