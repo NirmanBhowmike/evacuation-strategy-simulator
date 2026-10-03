@@ -13,16 +13,8 @@ import type {
 } from "../types/simulationReplay";
 
 import {
-  LayoutABuilding,
-} from "./LayoutABuilding";
-
-import {
-  NavigationNetworkOverlay,
-} from "./NavigationNetworkOverlay";
-
-import {
-  OccupantLayer,
-} from "./OccupantLayer";
+  LayoutAArchitectureV2Preview,
+} from "./LayoutAArchitectureV2Preview";
 
 interface ResearchSceneProps {
   readonly currentFrame:
@@ -190,11 +182,18 @@ function ResearchGround() {
   );
 }
 
-export function ResearchScene({
-  currentFrame,
-  nextFrame,
-  interpolationAlpha,
-}: ResearchSceneProps) {
+/**
+ * Architecture V2 review scene.
+ *
+ * Navigation and occupants are intentionally hidden.
+ * This allows the physical floor plan, doors, circulation,
+ * and exterior exits to be reviewed without contamination
+ * from the frozen v1.0 routing model.
+ */
+export function ResearchScene(
+  _props:
+    ResearchSceneProps,
+) {
   return (
     <Canvas
       shadows
@@ -230,21 +229,7 @@ export function ResearchScene({
 
       <ResearchGround />
 
-      <LayoutABuilding />
-
-      <NavigationNetworkOverlay />
-
-      <OccupantLayer
-        currentFrame={
-          currentFrame
-        }
-        nextFrame={
-          nextFrame
-        }
-        interpolationAlpha={
-          interpolationAlpha
-        }
-      />
+      <LayoutAArchitectureV2Preview />
 
       <ContactShadows
         position={[
