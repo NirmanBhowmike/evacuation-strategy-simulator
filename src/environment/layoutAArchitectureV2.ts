@@ -1,15 +1,20 @@
 export interface ArchitecturePoint {
-  readonly x: number;
-  readonly y: number;
+  readonly x:
+    number;
+
+  readonly y:
+    number;
 }
 
 export interface ArchitectureDoor {
-  readonly id: string;
+  readonly id:
+    string;
 
   /**
    * Zero-based polygon-edge index.
    */
-  readonly edgeIndex: number;
+  readonly edgeIndex:
+    number;
 
   /**
    * Position of the center of the door along the selected edge.
@@ -17,16 +22,25 @@ export interface ArchitectureDoor {
    * 0 = edge start
    * 1 = edge end
    */
-  readonly centerT: number;
+  readonly centerT:
+    number;
 
-  readonly widthMeters: number;
+  readonly widthMeters:
+    number;
 }
 
 export interface ArchitectureRoom {
-  readonly id: string;
-  readonly label: string;
-  readonly polygon: readonly ArchitecturePoint[];
-  readonly doors: readonly ArchitectureDoor[];
+  readonly id:
+    string;
+
+  readonly label:
+    string;
+
+  readonly polygon:
+    readonly ArchitecturePoint[];
+
+  readonly doors:
+    readonly ArchitectureDoor[];
 }
 
 export type CirculationKind =
@@ -35,37 +49,60 @@ export type CirculationKind =
   | "OPEN_AREA";
 
 export interface ArchitectureCirculationArea {
-  readonly id: string;
-  readonly kind: CirculationKind;
-  readonly polygon: readonly ArchitecturePoint[];
+  readonly id:
+    string;
+
+  readonly kind:
+    CirculationKind;
+
+  readonly polygon:
+    readonly ArchitecturePoint[];
 }
 
 export interface ArchitectureExit {
-  readonly id: string;
-  readonly label: string;
-  readonly position: ArchitecturePoint;
+  readonly id:
+    string;
+
+  readonly label:
+    string;
+
+  readonly position:
+    ArchitecturePoint;
+
   readonly orientation:
     | "HORIZONTAL"
     | "VERTICAL";
-  readonly widthMeters: number;
+
+  readonly widthMeters:
+    number;
 }
 
 export interface LayoutAArchitectureV2 {
-  readonly widthMeters: number;
-  readonly heightMeters: number;
+  readonly widthMeters:
+    number;
+
+  readonly heightMeters:
+    number;
+
   readonly rooms:
     readonly ArchitectureRoom[];
+
   readonly circulation:
     readonly ArchitectureCirculationArea[];
+
   readonly exits:
     readonly ArchitectureExit[];
 }
 
 function rectangle(
-  x: number,
-  y: number,
-  width: number,
-  height: number,
+  x:
+    number,
+  y:
+    number,
+  width:
+    number,
+  height:
+    number,
 ): readonly ArchitecturePoint[] {
   return [
     {
@@ -77,6 +114,7 @@ function rectangle(
       x:
         x +
         width,
+
       y,
     },
 
@@ -84,6 +122,7 @@ function rectangle(
       x:
         x +
         width,
+
       y:
         y +
         height,
@@ -91,6 +130,7 @@ function rectangle(
 
     {
       x,
+
       y:
         y +
         height,
@@ -99,8 +139,10 @@ function rectangle(
 }
 
 function room(
-  id: string,
-  label: string,
+  id:
+    string,
+  label:
+    string,
   polygon:
     readonly ArchitecturePoint[],
   doors:
@@ -115,12 +157,18 @@ function room(
 }
 
 function rectangularRoom(
-  id: string,
-  label: string,
-  x: number,
-  y: number,
-  width: number,
-  height: number,
+  id:
+    string,
+  label:
+    string,
+  x:
+    number,
+  y:
+    number,
+  width:
+    number,
+  height:
+    number,
   doors:
     readonly ArchitectureDoor[],
 ): ArchitectureRoom {
@@ -138,8 +186,10 @@ function rectangularRoom(
 }
 
 function circulation(
-  id: string,
-  kind: CirculationKind,
+  id:
+    string,
+  kind:
+    CirculationKind,
   polygon:
     readonly ArchitecturePoint[],
 ): ArchitectureCirculationArea {
@@ -151,12 +201,18 @@ function circulation(
 }
 
 function rectangularCirculation(
-  id: string,
-  kind: CirculationKind,
-  x: number,
-  y: number,
-  width: number,
-  height: number,
+  id:
+    string,
+  kind:
+    CirculationKind,
+  x:
+    number,
+  y:
+    number,
+  width:
+    number,
+  height:
+    number,
 ): ArchitectureCirculationArea {
   return circulation(
     id,
@@ -171,10 +227,14 @@ function rectangularCirculation(
 }
 
 function door(
-  id: string,
-  edgeIndex: number,
-  centerT: number,
-  widthMeters = 1.35,
+  id:
+    string,
+  edgeIndex:
+    number,
+  centerT:
+    number,
+  widthMeters =
+    1.35,
 ): ArchitectureDoor {
   return {
     id,
@@ -185,119 +245,15 @@ function door(
 }
 
 /**
- * Symmetrical faceted polygon used by all three
- * northwest rooms.
- *
- * Adjacent copies share their short vertical side exactly.
- * The lower horizontal edge faces the shared hall and
- * contains the room door.
- */
-function createNorthwestPolygon(
-  leftX: number,
-  bottomY: number,
-): readonly ArchitecturePoint[] {
-  const width =
-    7;
-
-  const height =
-    8;
-
-  const chamferX =
-    2.05;
-
-  const chamferY =
-    2.0;
-
-  const rightX =
-    leftX +
-    width;
-
-  const topY =
-    bottomY +
-    height;
-
-  return [
-    // bottom-left facet
-    {
-      x:
-        leftX +
-        chamferX,
-      y:
-        bottomY,
-    },
-
-    // bottom-right facet
-    {
-      x:
-        rightX -
-        chamferX,
-      y:
-        bottomY,
-    },
-
-    // lower-right diagonal
-    {
-      x:
-        rightX,
-      y:
-        bottomY +
-        chamferY,
-    },
-
-    // upper-right vertical
-    {
-      x:
-        rightX,
-      y:
-        topY -
-        chamferY,
-    },
-
-    // upper-right diagonal
-    {
-      x:
-        rightX -
-        chamferX,
-      y:
-        topY,
-    },
-
-    // upper-left facet
-    {
-      x:
-        leftX +
-        chamferX,
-      y:
-        topY,
-    },
-
-    // upper-left diagonal
-    {
-      x:
-        leftX,
-      y:
-        topY -
-        chamferY,
-    },
-
-    // lower-left vertical
-    {
-      x:
-        leftX,
-      y:
-        bottomY +
-        chamferY,
-    },
-  ];
-}
-
-/**
  * Layout A Architecture V2
  *
- * Architecture-only development model.
+ * Architecture-first research environment.
  *
- * Navigation and simulation logic will be derived only after
- * the physical architecture has been accepted.
+ * The northwest wing uses three unequal rectangular rooms
+ * with individual doors opening directly onto the shared hall.
+ *
+ * Their door-center positions intentionally remain aligned
+ * with the already validated northwest navigation access nodes.
  */
 export const layoutAArchitectureV2:
   LayoutAArchitectureV2 = {
@@ -309,24 +265,30 @@ export const layoutAArchitectureV2:
 
   rooms: [
     // ==========================================================
-    // NORTHWEST POLYGON WING
+    // NORTHWEST RECTANGULAR WING
     //
-    // Three identical faceted polygon rooms.
+    // Refined three-room design:
     //
-    // Each room:
-    // - has exactly the same dimensions;
-    // - shares a vertical architectural boundary with
-    //   its neighbor;
-    // - has its own centered door into the shared hall.
+    // Room 01: 6.0 m × 7.0 m
+    // Room 02: 7.0 m × 8.0 m
+    // Room 03: 6.0 m × 7.5 m
+    //
+    // All three rooms:
+    // - are separated by 0.5 m;
+    // - have their lower wall at y = 36;
+    // - have centered doors opening directly into the
+    //   northwest hall;
+    // - preserve the original validated door-center
+    //   x coordinates 5.5, 12.5, and 19.5.
     // ==========================================================
 
-    room(
+    rectangularRoom(
       "room-nw-01",
       "NW Room 01",
-      createNorthwestPolygon(
-        2,
-        36,
-      ),
+      2.5,
+      36,
+      6,
+      7,
       [
         door(
           "door-nw-01",
@@ -336,13 +298,13 @@ export const layoutAArchitectureV2:
       ],
     ),
 
-    room(
+    rectangularRoom(
       "room-nw-02",
       "NW Room 02",
-      createNorthwestPolygon(
-        9,
-        36,
-      ),
+      9,
+      36,
+      7,
+      8,
       [
         door(
           "door-nw-02",
@@ -352,13 +314,13 @@ export const layoutAArchitectureV2:
       ],
     ),
 
-    room(
+    rectangularRoom(
       "room-nw-03",
       "NW Room 03",
-      createNorthwestPolygon(
-        16,
-        36,
-      ),
+      16.5,
+      36,
+      6,
+      7.5,
       [
         door(
           "door-nw-03",
@@ -699,8 +661,10 @@ export const layoutAArchitectureV2:
     ),
 
     /**
-     * Extended far enough to sit beneath all three
-     * northwest polygon rooms.
+     * Shared hall beneath the three northwest rectangular rooms.
+     *
+     * The hall reaches all three room doors and connects
+     * to the existing northwest vertical connector.
      */
     rectangularCirculation(
       "hall-northwest",
@@ -716,33 +680,51 @@ export const layoutAArchitectureV2:
       "OPEN_AREA",
       [
         {
-          x: 18,
-          y: 22,
+          x:
+            18,
+
+          y:
+            22,
         },
 
         {
-          x: 34,
-          y: 22,
+          x:
+            34,
+
+          y:
+            22,
         },
 
         {
-          x: 34,
-          y: 31,
+          x:
+            34,
+
+          y:
+            31,
         },
 
         {
-          x: 28,
-          y: 31,
+          x:
+            28,
+
+          y:
+            31,
         },
 
         {
-          x: 24,
-          y: 29,
+          x:
+            24,
+
+          y:
+            29,
         },
 
         {
-          x: 18,
-          y: 29,
+          x:
+            18,
+
+          y:
+            29,
         },
       ],
     ),
@@ -828,8 +810,11 @@ export const layoutAArchitectureV2:
         "West Exit",
 
       position: {
-        x: 4,
-        y: 24,
+        x:
+          4,
+
+        y:
+          24,
       },
 
       orientation:
@@ -847,8 +832,11 @@ export const layoutAArchitectureV2:
         "South Central Exit",
 
       position: {
-        x: 36,
-        y: 14,
+        x:
+          36,
+
+        y:
+          14,
       },
 
       orientation:
@@ -866,8 +854,11 @@ export const layoutAArchitectureV2:
         "East Exit",
 
       position: {
-        x: 82,
-        y: 20,
+        x:
+          82,
+
+        y:
+          20,
       },
 
       orientation:
@@ -885,8 +876,11 @@ export const layoutAArchitectureV2:
         "Southeast Exit",
 
       position: {
-        x: 69,
-        y: 6,
+        x:
+          69,
+
+        y:
+          6,
       },
 
       orientation:
