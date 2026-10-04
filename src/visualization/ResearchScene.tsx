@@ -13,12 +13,12 @@ import type {
 } from "../types/simulationReplay";
 
 import {
-  LayoutAArchitectureV2Preview,
-} from "./LayoutAArchitectureV2Preview";
+  ArchitectureV2OccupantLayer,
+} from "./ArchitectureV2OccupantLayer";
 
 import {
-  RoomOccupantPreview,
-} from "./RoomOccupantPreview";
+  LayoutAArchitectureV2Preview,
+} from "./LayoutAArchitectureV2Preview";
 
 interface ResearchSceneProps {
   readonly currentFrame:
@@ -187,20 +187,21 @@ function ResearchGround() {
 }
 
 /**
- * Architecture V2 room-population preview.
+ * Architecture V2 authoritative research scene.
  *
- * Important:
+ * The building is the approved Architecture V2 geometry.
  *
- * - Architecture V2 is authoritative for this visual inspection.
- * - The frozen Navigation V2 graph is intentionally hidden.
- * - These 36 people are deterministic visual-preview occupants.
- * - They are not yet authoritative research-engine agents.
- * - Limb animation is renderer-only.
+ * Occupant position and evacuation state come directly
+ * from the authoritative Architecture V2 engine replay.
+ *
+ * Human geometry, limb motion, lighting, shadows, and
+ * interpolation remain renderer-only.
  */
-export function ResearchScene(
-  _props:
-    ResearchSceneProps,
-) {
+export function ResearchScene({
+  currentFrame,
+  nextFrame,
+  interpolationAlpha,
+}: ResearchSceneProps) {
   return (
     <Canvas
       shadows
@@ -238,7 +239,17 @@ export function ResearchScene(
 
       <LayoutAArchitectureV2Preview />
 
-      <RoomOccupantPreview />
+      <ArchitectureV2OccupantLayer
+        currentFrame={
+          currentFrame
+        }
+        nextFrame={
+          nextFrame
+        }
+        interpolationAlpha={
+          interpolationAlpha
+        }
+      />
 
       <ContactShadows
         position={[

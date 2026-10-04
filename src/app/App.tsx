@@ -18,8 +18,8 @@ import {
 } from "../visualization/ResearchScene";
 
 import {
-  createBaselineDemoReplay,
-} from "./createBaselineDemoReplay";
+  createArchitectureV2DemoReplay,
+} from "./createArchitectureV2DemoReplay";
 
 interface MetricCardProps {
   readonly label:
@@ -125,7 +125,8 @@ function locateReplay(
       frames.length -
         1 &&
     frames[
-      index + 1
+      index +
+        1
     ]!.snapshot
       .simulationTimeSeconds <=
       timeSeconds +
@@ -136,12 +137,15 @@ function locateReplay(
   }
 
   const currentFrame =
-    frames[index]!;
+    frames[
+      index
+    ]!;
 
   const nextFrame =
     frames[
       Math.min(
-        index + 1,
+        index +
+          1,
         frames.length -
           1,
       )
@@ -285,7 +289,7 @@ export function App() {
   const replay =
     useMemo(
       () =>
-        createBaselineDemoReplay(),
+        createArchitectureV2DemoReplay(),
       [],
     );
 
@@ -543,7 +547,7 @@ export function App() {
 
           <div>
             <div className="status-title">
-              Research Model v1.0
+              Architecture V2
             </div>
 
             <div className="status-caption">
@@ -566,7 +570,7 @@ export function App() {
             </h2>
 
             <p>
-              Validated Layout A replay driven
+              Architecture V2 replay driven
               directly by the research engine.
             </p>
           </div>
@@ -574,8 +578,8 @@ export function App() {
           <div className="scenario-fields">
             <ScenarioField
               label="Layout"
-              value="Layout A"
-              secondary="Development environment"
+              value="Architecture V2"
+              secondary="Approved building geometry"
             />
 
             <ScenarioField
@@ -586,8 +590,8 @@ export function App() {
 
             <ScenarioField
               label="Occupancy"
-              value="Medium · 36"
-              secondary="Frozen research level"
+              value="Medium · 42"
+              secondary="Provisional V2 level"
             />
 
             <ScenarioField
@@ -601,7 +605,7 @@ export function App() {
 
           <div className="visual-layer-section">
             <span className="eyebrow">
-              Visual Layers
+              System Layers
             </span>
 
             <div className="layer-row">
@@ -620,7 +624,7 @@ export function App() {
               </span>
 
               <span className="layer-state">
-                Live
+                Authoritative
               </span>
             </div>
 
@@ -630,7 +634,7 @@ export function App() {
               </span>
 
               <span className="layer-state">
-                Live
+                Active
               </span>
             </div>
 
@@ -647,14 +651,14 @@ export function App() {
 
           <div className="foundation-note">
             <div className="foundation-note-title">
-              Phase 6C
+              Architecture V2
             </div>
 
             <p>
-              Occupant motion is driven by
-              validated replay snapshots.
-              Visual interpolation does not
-              alter the research simulation.
+              The same 42 simulated occupants
+              generate both the 3D motion and
+              the research metrics. Limb animation
+              remains renderer-only.
             </p>
           </div>
         </aside>
@@ -667,11 +671,11 @@ export function App() {
             </div>
 
             <div className="scene-title">
-              Layout A
+              Architecture V2
             </div>
 
             <div className="scene-description">
-              Authoritative occupant replay
+              42-agent authoritative room-to-exit replay
             </div>
           </div>
 
@@ -815,7 +819,7 @@ export function App() {
           </span>
 
           <span className="preview-badge">
-            Replay
+            V2 Replay
           </span>
         </div>
 
