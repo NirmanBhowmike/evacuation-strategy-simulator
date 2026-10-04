@@ -19,9 +19,18 @@ import type {
   ArchitectureV2FormalSoftwareProvenance,
 } from "./architectureV2FormalOutput";
 
+import {
+  ARCHITECTURE_V2_FORMAL_SPATIAL_BASE_SEED,
+} from "../population/architectureV2FormalPopulation";
+
 import type {
   ArchitectureV2FormalPopulationLevel,
 } from "../population/architectureV2FormalPopulation";
+
+import {
+  ARCHITECTURE_V2_FORMAL_SPEED_ASSIGNMENT_VERSION,
+  ARCHITECTURE_V2_FORMAL_WALKING_SPEED,
+} from "../scenario/architectureV2FormalScenario";
 
 import type {
   ArchitectureV2ResearchDisruptionConditionId,
@@ -34,9 +43,12 @@ import type {
 /**
  * Version identifier for the collection of formal
  * machine-readable artifact files.
+ *
+ * Version 2 adds explicit provenance for the formal
+ * stochastic walking-speed model.
  */
 export const ARCHITECTURE_V2_FORMAL_ARTIFACT_SET_VERSION =
-  "architecture-v2-formal-artifacts-v1";
+  "architecture-v2-formal-artifacts-v2";
 
 export const ARCHITECTURE_V2_FORMAL_RECORDS_JSON_FILENAME =
   "formal-run-records.json";
@@ -71,6 +83,33 @@ export interface ArchitectureV2FormalArtifactManifest {
 
   readonly parameterSetVersion:
     string;
+
+  /**
+   * Explicit provenance for the strategy-independent
+   * stochastic population model.
+   *
+   * These values are stored in the manifest rather than
+   * repeated in every output row.
+   */
+  readonly stochasticModel: {
+    readonly spatialBaseSeed:
+      number;
+
+    readonly speedAssignmentVersion:
+      string;
+
+    readonly walkingSpeedMeanMps:
+      number;
+
+    readonly walkingSpeedStandardDeviationMps:
+      number;
+
+    readonly walkingSpeedMinimumMps:
+      number;
+
+    readonly walkingSpeedMaximumMps:
+      number;
+  };
 
   readonly totalRuns:
     number;
@@ -600,6 +639,30 @@ export function createArchitectureV2FormalArtifacts(
     seedBankVersion,
 
     parameterSetVersion,
+
+    stochasticModel: {
+      spatialBaseSeed:
+        ARCHITECTURE_V2_FORMAL_SPATIAL_BASE_SEED,
+
+      speedAssignmentVersion:
+        ARCHITECTURE_V2_FORMAL_SPEED_ASSIGNMENT_VERSION,
+
+      walkingSpeedMeanMps:
+        ARCHITECTURE_V2_FORMAL_WALKING_SPEED
+          .mean,
+
+      walkingSpeedStandardDeviationMps:
+        ARCHITECTURE_V2_FORMAL_WALKING_SPEED
+          .standardDeviation,
+
+      walkingSpeedMinimumMps:
+        ARCHITECTURE_V2_FORMAL_WALKING_SPEED
+          .min,
+
+      walkingSpeedMaximumMps:
+        ARCHITECTURE_V2_FORMAL_WALKING_SPEED
+          .max,
+    },
 
     totalRuns:
       summary.totalRuns,
