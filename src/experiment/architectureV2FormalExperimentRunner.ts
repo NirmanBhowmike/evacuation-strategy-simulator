@@ -16,6 +16,10 @@ import {
   createArchitectureV2FormalScenario,
 } from "../scenario/architectureV2FormalScenario";
 
+import type {
+  ArchitectureV2FormalScenarioBundle,
+} from "../scenario/architectureV2FormalScenario";
+
 import {
   ARCHITECTURE_V2_RESEARCH_ADAPTIVE_REROUTE_THRESHOLD,
   ARCHITECTURE_V2_RESEARCH_DENSITY_CELL_LENGTH_METERS,
@@ -175,13 +179,6 @@ export interface ArchitectureV2FormalRunResult {
   readonly metrics:
     ArchitectureV2FormalRunMetrics;
 
-  /**
-   * Retain the complete engine output as the authoritative
-   * low-level result.
-   *
-   * The flattened metrics above are provided for formal
-   * experiment export and analysis.
-   */
   readonly simulation:
     HeadlessSimulationResult;
 }
@@ -281,6 +278,54 @@ function validateRunSpecification(
   }
 }
 
+function validateScenarioBundleForSpecification(
+  specification:
+    ArchitectureV2FormalRunSpecification,
+
+  formalScenario:
+    ArchitectureV2FormalScenarioBundle,
+): void {
+  if (
+    formalScenario.metadata
+      .populationLevel !==
+    specification.populationLevel
+  ) {
+    throw new Error(
+      "Formal scenario population level does not match the run specification.",
+    );
+  }
+
+  if (
+    formalScenario.metadata
+      .conditionId !==
+    specification.conditionId
+  ) {
+    throw new Error(
+      "Formal scenario disruption condition does not match the run specification.",
+    );
+  }
+
+  if (
+    formalScenario.metadata
+      .replicationSeed !==
+    specification.replicationSeed
+  ) {
+    throw new Error(
+      "Formal scenario replication seed does not match the run specification.",
+    );
+  }
+
+  if (
+    formalScenario.metadata
+      .parameterSetVersion !==
+    ARCHITECTURE_V2_RESEARCH_PARAMETER_SET_VERSION
+  ) {
+    throw new Error(
+      "Formal scenario parameter-set version does not match the frozen Architecture V2 research model.",
+    );
+  }
+}
+
 function flattenFormalMetrics(
   result:
     HeadlessSimulationResult,
@@ -373,30 +418,28 @@ function flattenFormalMetrics(
 }
 
 /**
- * Executes exactly one Architecture V2 formal run.
+ * Executes one strategy against an already-created formal
+ * ScenarioInstance bundle.
  *
- * The run specification already identifies:
- *
- * - factorial cell
- * - routing strategy
- * - occupancy
- * - disruption condition
- * - replication seed
- *
- * The ScenarioInstance itself remains strategy-independent.
+ * This is deliberately separate from scenario generation
+ * so paired strategy comparisons can literally reuse the
+ * same generated stochastic scenario.
  */
-export function runArchitectureV2FormalExperiment(
+function runSpecificationWithFormalScenario(
   specification:
     ArchitectureV2FormalRunSpecification,
+
+  formalScenario:
+    ArchitectureV2FormalScenarioBundle,
 ): ArchitectureV2FormalRunResult {
   validateRunSpecification(
     specification,
   );
 
-  const formalScenario =
-    createArchitectureV2FormalScenario(
-      specification.scenarioRequest,
-    );
+  validateScenarioBundleForSpecification(
+    specification,
+    formalScenario,
+  );
 
   const simulation =
     runHeadlessSimulation({
@@ -550,14 +593,35 @@ export function runArchitectureV2FormalExperiment(
 }
 
 /**
+ * Executes exactly one Architecture V2 formal run.
+ */
+export function runArchitectureV2FormalExperiment(
+  specification:
+    ArchitectureV2FormalRunSpecification,
+): ArchitectureV2FormalRunResult {
+  validateRunSpecification(
+    specification,
+  );
+
+  const formalScenario =
+    createArchitectureV2FormalScenario(
+      specification.scenarioRequest,
+    );
+
+  return runSpecificationWithFormalScenario(
+    specification,
+    formalScenario,
+  );
+}
+
+/**
  * Executes one complete five-strategy paired comparison.
  *
- * Input must contain exactly five run specifications
- * sharing the same pairKey and strategy-independent
- * ScenarioInstance request.
+ * One stochastic Architecture V2 formal scenario is
+ * generated exactly once.
  *
- * This is the unit that the later full experiment executor
- * should process.
+ * That same immutable scenario bundle is then supplied to
+ * all five routing strategies.
  */
 export function runArchitectureV2FormalPair(
   specifications:
@@ -652,7 +716,15 @@ export function runArchitectureV2FormalPair(
   }
 
   /**
-   * Preserve the formal strategy ordering regardless of
+   * Create the stochastic ScenarioInstance exactly once.
+   */
+  const formalScenario =
+    createArchitectureV2FormalScenario(
+      first.scenarioRequest,
+    );
+
+  /**
+   * Preserve frozen strategy ordering regardless of
    * caller ordering.
    */
   return ARCHITECTURE_V2_FORMAL_STRATEGY_IDS
@@ -675,8 +747,9 @@ export function runArchitectureV2FormalPair(
           );
         }
 
-        return runArchitectureV2FormalExperiment(
+        return runSpecificationWithFormalScenario(
           specification,
+          formalScenario,
         );
       },
     );
