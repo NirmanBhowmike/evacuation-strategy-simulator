@@ -16,6 +16,10 @@ import {
   LayoutAArchitectureV2Preview,
 } from "./LayoutAArchitectureV2Preview";
 
+import {
+  LayoutAArchitectureV2NavigationOverlay,
+} from "./LayoutAArchitectureV2NavigationOverlay";
+
 interface ResearchSceneProps {
   readonly currentFrame:
     SimulationReplayFrame | null;
@@ -183,12 +187,13 @@ function ResearchGround() {
 }
 
 /**
- * Architecture V2 review scene.
+ * Architecture V2 routing-review scene.
  *
- * Navigation and occupants are intentionally hidden.
- * This allows the physical floor plan, doors, circulation,
- * and exterior exits to be reviewed without contamination
- * from the frozen v1.0 routing model.
+ * Architecture V2 and its validated navigation graph are shown
+ * together.
+ *
+ * Occupants remain intentionally disabled until every route
+ * has been visually inspected against the physical building.
  */
 export function ResearchScene(
   _props:
@@ -230,6 +235,8 @@ export function ResearchScene(
       <ResearchGround />
 
       <LayoutAArchitectureV2Preview />
+
+      <LayoutAArchitectureV2NavigationOverlay />
 
       <ContactShadows
         position={[
