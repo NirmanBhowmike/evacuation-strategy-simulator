@@ -17,8 +17,8 @@ import {
 } from "./LayoutAArchitectureV2Preview";
 
 import {
-  LayoutAArchitectureV2NavigationOverlay,
-} from "./LayoutAArchitectureV2NavigationOverlay";
+  RoomOccupantPreview,
+} from "./RoomOccupantPreview";
 
 interface ResearchSceneProps {
   readonly currentFrame:
@@ -187,13 +187,15 @@ function ResearchGround() {
 }
 
 /**
- * Architecture V2 routing-review scene.
+ * Architecture V2 room-population preview.
  *
- * Architecture V2 and its validated navigation graph are shown
- * together.
+ * Important:
  *
- * Occupants remain intentionally disabled until every route
- * has been visually inspected against the physical building.
+ * - Architecture V2 is authoritative for this visual inspection.
+ * - The frozen Navigation V2 graph is intentionally hidden.
+ * - These 36 people are deterministic visual-preview occupants.
+ * - They are not yet authoritative research-engine agents.
+ * - Limb animation is renderer-only.
  */
 export function ResearchScene(
   _props:
@@ -236,7 +238,7 @@ export function ResearchScene(
 
       <LayoutAArchitectureV2Preview />
 
-      <LayoutAArchitectureV2NavigationOverlay />
+      <RoomOccupantPreview />
 
       <ContactShadows
         position={[
@@ -259,7 +261,7 @@ export function ResearchScene(
           0.8,
           0,
         ]}
-        minDistance={42}
+        minDistance={36}
         maxDistance={180}
         minPolarAngle={0.25}
         maxPolarAngle={
