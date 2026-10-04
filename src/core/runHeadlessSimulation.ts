@@ -1,4 +1,8 @@
 import {
+  calculateArchitectureV2JamReleaseSpeedMps,
+  createArchitectureV2JamReleaseContext,
+} from "./architectureV2JamRelease";
+import {
   BottleneckFlowController,
 } from "./bottleneckFlow";
 import {
@@ -7,9 +11,6 @@ import {
 import {
   calculateSimulationMetrics,
 } from "./calculateSimulationMetrics";
-import {
-  calculateAgentEffectiveSpeedMps,
-} from "./congestionEffects";
 import {
   createInitialAgentStates,
 } from "./createInitialAgentStates";
@@ -1541,6 +1542,13 @@ function moveAgents(
   pendingNodeReviewAgentIds:
     Set<string>,
 ): void {
+  const jamReleaseContext =
+    createArchitectureV2JamReleaseContext(
+      agents,
+      graph,
+      densitySnapshot,
+    );
+
   for (
     const agent of agents
   ) {
@@ -1602,10 +1610,11 @@ function moveAgents(
       );
 
     const effectiveSpeed =
-      calculateAgentEffectiveSpeedMps(
+      calculateArchitectureV2JamReleaseSpeedMps(
         agent,
         graph,
         densitySnapshot,
+        jamReleaseContext,
       );
 
     const movement =
@@ -1917,7 +1926,7 @@ export function runHeadlessSimulation(
     ...initialEvents,
   );
 
-  let initialDensity =
+  const initialDensity =
     calculateDensitySnapshot(
       agents,
       graph,

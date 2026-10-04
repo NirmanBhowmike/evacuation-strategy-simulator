@@ -27,7 +27,7 @@ import type {
  * must receive a new design version.
  */
 export const ARCHITECTURE_V2_FORMAL_EXPERIMENT_DESIGN_VERSION =
-  "architecture-v2-formal-factorial-v1";
+  "architecture-v2-formal-factorial-v2";
 
 /**
  * Frozen identifier for the replication-seed policy.

@@ -175,7 +175,7 @@ describe(
       expect(
         ARCHITECTURE_V2_RESEARCH_PARAMETER_SET_VERSION,
       ).toBe(
-        "architecture-v2-research-v1.0-frozen",
+        "architecture-v2-research-v1.1-frozen",
       );
 
       expect(

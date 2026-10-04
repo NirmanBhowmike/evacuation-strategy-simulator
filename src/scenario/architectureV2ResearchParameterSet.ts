@@ -12,7 +12,7 @@ import type {
  * calibration / validation work.
  */
 export const ARCHITECTURE_V2_RESEARCH_PARAMETER_SET_VERSION =
-  "architecture-v2-research-v1.0-frozen";
+  "architecture-v2-research-v1.1-frozen";
 
 export const ARCHITECTURE_V2_RESEARCH_TIMESTEP_SECONDS =
   0.05;

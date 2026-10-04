@@ -1,6 +1,6 @@
 {
   "name": "evacuation-strategy-simulator",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Research-oriented software for experimentally evaluating evacuation routing strategies under dynamic building conditions.",
   "main": "index.js",
   "directories": {
