@@ -1,5 +1,12 @@
-import type { AgentState } from "../types/agent";
-import type { DensitySnapshot } from "../types/density";
+import type {
+  AgentState,
+} from "../types/agent";
+
+import type {
+  DensityCell,
+  DensitySnapshot,
+} from "../types/density";
+
 import type {
   NavigationEdge,
   NavigationGraph,
@@ -10,17 +17,29 @@ import type {
  * Baseline values used by the selected Weidmann
  * pedestrian speed-density relationship.
  */
-export const WEIDMANN_FREE_FLOW_SPEED_MPS = 1.34;
-export const WEIDMANN_LAMBDA = 1.913;
-export const WEIDMANN_JAM_DENSITY_PPM2 = 5.4;
+export const WEIDMANN_FREE_FLOW_SPEED_MPS =
+  1.34;
+
+export const WEIDMANN_LAMBDA =
+  1.913;
+
+export const WEIDMANN_JAM_DENSITY_PPM2 =
+  5.4;
 
 function getNode(
-  graph: NavigationGraph,
-  nodeId: string,
+  graph:
+    NavigationGraph,
+  nodeId:
+    string,
 ): NavigationNode {
-  const node = graph.nodes.find(
-    (candidate) => candidate.id === nodeId,
-  );
+  const node =
+    graph.nodes.find(
+      (
+        candidate,
+      ) =>
+        candidate.id ===
+        nodeId,
+    );
 
   if (!node) {
     throw new Error(
@@ -32,12 +51,19 @@ function getNode(
 }
 
 function getEdge(
-  graph: NavigationGraph,
-  edgeId: string,
+  graph:
+    NavigationGraph,
+  edgeId:
+    string,
 ): NavigationEdge {
-  const edge = graph.edges.find(
-    (candidate) => candidate.id === edgeId,
-  );
+  const edge =
+    graph.edges.find(
+      (
+        candidate,
+      ) =>
+        candidate.id ===
+        edgeId,
+    );
 
   if (!edge) {
     throw new Error(
@@ -49,19 +75,24 @@ function getEdge(
 }
 
 function projectedDistanceFromEdgeStart(
-  agent: AgentState,
-  edge: NavigationEdge,
-  graph: NavigationGraph,
+  agent:
+    AgentState,
+  edge:
+    NavigationEdge,
+  graph:
+    NavigationGraph,
 ): number {
-  const fromNode = getNode(
-    graph,
-    edge.from,
-  );
+  const fromNode =
+    getNode(
+      graph,
+      edge.from,
+    );
 
-  const toNode = getNode(
-    graph,
-    edge.to,
-  );
+  const toNode =
+    getNode(
+      graph,
+      edge.to,
+    );
 
   const dx =
     toNode.position.x -
@@ -72,19 +103,27 @@ function projectedDistanceFromEdgeStart(
     fromNode.position.y;
 
   const geometricLength =
-    Math.hypot(dx, dy);
+    Math.hypot(
+      dx,
+      dy,
+    );
 
-  if (geometricLength <= 0) {
+  if (
+    geometricLength <=
+    0
+  ) {
     throw new Error(
       `Navigation edge ${edge.id} has zero geometric length.`,
     );
   }
 
   const unitX =
-    dx / geometricLength;
+    dx /
+    geometricLength;
 
   const unitY =
-    dy / geometricLength;
+    dy /
+    geometricLength;
 
   const relativeX =
     agent.position.x -
@@ -95,8 +134,10 @@ function projectedDistanceFromEdgeStart(
     fromNode.position.y;
 
   const projectedDistance =
-    relativeX * unitX +
-    relativeY * unitY;
+    relativeX *
+      unitX +
+    relativeY *
+      unitY;
 
   return Math.min(
     edge.lengthMeters,
@@ -112,13 +153,15 @@ function projectedDistanceFromEdgeStart(
  * Weidmann speed-density relationship.
  */
 export function calculateWeidmannSpeedMps(
-  densityPersonsPerSquareMeter: number,
+  densityPersonsPerSquareMeter:
+    number,
 ): number {
   if (
     !Number.isFinite(
       densityPersonsPerSquareMeter,
     ) ||
-    densityPersonsPerSquareMeter < 0
+    densityPersonsPerSquareMeter <
+      0
   ) {
     throw new Error(
       "Pedestrian density must be non-negative and finite.",
@@ -126,7 +169,8 @@ export function calculateWeidmannSpeedMps(
   }
 
   if (
-    densityPersonsPerSquareMeter === 0
+    densityPersonsPerSquareMeter ===
+    0
   ) {
     return WEIDMANN_FREE_FLOW_SPEED_MPS;
   }
@@ -151,7 +195,9 @@ export function calculateWeidmannSpeedMps(
     WEIDMANN_FREE_FLOW_SPEED_MPS *
     (
       1 -
-      Math.exp(exponent)
+      Math.exp(
+        exponent,
+      )
     );
 
   return Math.max(
@@ -170,7 +216,8 @@ export function calculateWeidmannSpeedMps(
  * 0 = jammed movement
  */
 export function calculateCongestionSpeedFactor(
-  densityPersonsPerSquareMeter: number,
+  densityPersonsPerSquareMeter:
+    number,
 ): number {
   const baselineSpeed =
     calculateWeidmannSpeedMps(
@@ -183,6 +230,116 @@ export function calculateCongestionSpeedFactor(
   );
 }
 
+function getLegacyDensityCell(
+  projectedDistance:
+    number,
+  snapshot:
+    DensitySnapshot,
+  edgeCells:
+    readonly DensityCell[],
+): DensityCell {
+  let cellIndex =
+    Math.floor(
+      projectedDistance /
+      snapshot.cellLengthMeters,
+    );
+
+  if (
+    cellIndex >=
+    edgeCells.length
+  ) {
+    cellIndex =
+      edgeCells.length -
+      1;
+  }
+
+  const cell =
+    edgeCells.find(
+      (
+        candidate,
+      ) =>
+        candidate.cellIndex ===
+        cellIndex,
+    );
+
+  if (!cell) {
+    throw new Error(
+      `Density cell not found for legacy cell ${cellIndex}.`,
+    );
+  }
+
+  return cell;
+}
+
+function getBalancedDensityCell(
+  projectedDistance:
+    number,
+  edgeCells:
+    readonly DensityCell[],
+): DensityCell {
+  const orderedCells =
+    [
+      ...edgeCells,
+    ].sort(
+      (
+        first,
+        second,
+      ) =>
+        first.cellIndex -
+        second.cellIndex,
+    );
+
+  const tolerance =
+    1e-9;
+
+  for (
+    let index =
+      0;
+    index <
+      orderedCells.length;
+    index +=
+      1
+  ) {
+    const cell =
+      orderedCells[
+        index
+      ]!;
+
+    const endDistance =
+      cell.startDistanceMeters +
+      cell.lengthMeters;
+
+    const isLastCell =
+      index ===
+      orderedCells.length -
+        1;
+
+    const afterStart =
+      projectedDistance +
+        tolerance >=
+      cell.startDistanceMeters;
+
+    const beforeEnd =
+      isLastCell
+        ? projectedDistance <=
+          endDistance +
+            tolerance
+        : projectedDistance <
+          endDistance;
+
+    if (
+      afterStart &&
+      beforeEnd
+    ) {
+      return cell;
+    }
+  }
+
+  throw new Error(
+    `Balanced density cell not found at projected distance ${projectedDistance}.`,
+  );
+}
+
 /**
  * Finds the density cell currently occupied by an agent.
  *
@@ -190,21 +347,27 @@ export function calculateCongestionSpeedFactor(
  * density and return zero.
  */
 export function getAgentLocalDensity(
-  agent: AgentState,
-  graph: NavigationGraph,
-  snapshot: DensitySnapshot,
+  agent:
+    AgentState,
+  graph:
+    NavigationGraph,
+  snapshot:
+    DensitySnapshot,
 ): number {
   if (
-    agent.currentEdgeId === null ||
-    agent.status !== "ACTIVE"
+    agent.currentEdgeId ===
+      null ||
+    agent.status !==
+      "ACTIVE"
   ) {
     return 0;
   }
 
-  const edge = getEdge(
-    graph,
-    agent.currentEdgeId,
-  );
+  const edge =
+    getEdge(
+      graph,
+      agent.currentEdgeId,
+    );
 
   const projectedDistance =
     projectedDistanceFromEdgeStart(
@@ -213,43 +376,36 @@ export function getAgentLocalDensity(
       graph,
     );
 
-  let cellIndex =
-    Math.floor(
-      projectedDistance /
-        snapshot.cellLengthMeters,
-    );
-
   const edgeCells =
     snapshot.cells.filter(
-      (cell) =>
-        cell.edgeId === edge.id,
+      (
+        cell,
+      ) =>
+        cell.edgeId ===
+        edge.id,
     );
 
-  if (edgeCells.length === 0) {
+  if (
+    edgeCells.length ===
+    0
+  ) {
     throw new Error(
       `Density snapshot contains no cells for edge ${edge.id}.`,
     );
   }
 
-  if (
-    cellIndex >= edgeCells.length
-  ) {
-    cellIndex =
-      edgeCells.length - 1;
-  }
-
   const cell =
-    edgeCells.find(
-      (candidate) =>
-        candidate.cellIndex ===
-        cellIndex,
-    );
-
-  if (!cell) {
-    throw new Error(
-      `Density cell not found for edge ${edge.id}, cell ${cellIndex}.`,
-    );
-  }
+    snapshot.partitionMode ===
+    "BALANCED"
+      ? getBalancedDensityCell(
+          projectedDistance,
+          edgeCells,
+        )
+      : getLegacyDensityCell(
+          projectedDistance,
+          snapshot,
+          edgeCells,
+        );
 
   return (
     cell.densityPersonsPerSquareMeter
@@ -265,15 +421,19 @@ export function getAgentLocalDensity(
  * Weidmann relationship.
  */
 export function calculateAgentEffectiveSpeedMps(
-  agent: AgentState,
-  graph: NavigationGraph,
-  snapshot: DensitySnapshot,
+  agent:
+    AgentState,
+  graph:
+    NavigationGraph,
+  snapshot:
+    DensitySnapshot,
 ): number {
   if (
     !Number.isFinite(
       agent.desiredSpeedMps,
     ) ||
-    agent.desiredSpeedMps <= 0
+    agent.desiredSpeedMps <=
+      0
   ) {
     throw new Error(
       `Agent ${agent.id} must have a positive finite desired speed.`,

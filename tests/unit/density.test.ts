@@ -4,75 +4,217 @@ import {
   it,
 } from "vitest";
 
-import { calculateDensitySnapshot } from "../../src/core/calculateDensity";
+import {
+  calculateDensitySnapshot,
+} from "../../src/core/calculateDensity";
 
-import type { AgentState } from "../../src/types/agent";
-import type { NavigationGraph } from "../../src/types/navigation";
+import type {
+  AgentState,
+} from "../../src/types/agent";
 
-function createGraph(): NavigationGraph {
+import type {
+  NavigationGraph,
+} from "../../src/types/navigation";
+
+function createGraph():
+  NavigationGraph {
   return {
-    layoutId: "density-test",
+    layoutId:
+      "density-test",
 
     nodes: [
       {
-        id: "node-a",
-        type: "JUNCTION",
+        id:
+          "node-a",
+
+        type:
+          "JUNCTION",
+
         position: {
-          x: 0,
-          y: 0,
+          x:
+            0,
+
+          y:
+            0,
         },
-        zoneId: "corridor-a",
+
+        zoneId:
+          "corridor-a",
       },
 
       {
-        id: "node-b",
-        type: "JUNCTION",
+        id:
+          "node-b",
+
+        type:
+          "JUNCTION",
+
         position: {
-          x: 5,
-          y: 0,
+          x:
+            5,
+
+          y:
+            0,
         },
-        zoneId: "corridor-a",
+
+        zoneId:
+          "corridor-a",
       },
 
       {
-        id: "node-c",
-        type: "JUNCTION",
+        id:
+          "node-c",
+
+        type:
+          "JUNCTION",
+
         position: {
-          x: 7.5,
-          y: 0,
+          x:
+            7.5,
+
+          y:
+            0,
         },
-        zoneId: "corridor-b",
+
+        zoneId:
+          "corridor-b",
       },
     ],
 
     edges: [
       {
-        id: "edge-a-b",
-        from: "node-a",
-        to: "node-b",
-        lengthMeters: 5,
-        widthMeters: 2,
-        zoneId: "corridor-a",
-        bidirectional: true,
+        id:
+          "edge-a-b",
+
+        from:
+          "node-a",
+
+        to:
+          "node-b",
+
+        lengthMeters:
+          5,
+
+        widthMeters:
+          2,
+
+        zoneId:
+          "corridor-a",
+
+        bidirectional:
+          true,
       },
 
       {
-        id: "edge-b-c",
-        from: "node-b",
-        to: "node-c",
-        lengthMeters: 2.5,
-        widthMeters: 1,
-        zoneId: "corridor-b",
-        bidirectional: true,
+        id:
+          "edge-b-c",
+
+        from:
+          "node-b",
+
+        to:
+          "node-c",
+
+        lengthMeters:
+          2.5,
+
+        widthMeters:
+          1,
+
+        zoneId:
+          "corridor-b",
+
+        bidirectional:
+          true,
+      },
+    ],
+  };
+}
+
+function createSliverGraph(
+  architectureV2:
+    boolean,
+): NavigationGraph {
+  return {
+    layoutId:
+      architectureV2
+        ? "layout-a-architecture-v2"
+        : "legacy-sliver-test",
+
+    nodes: [
+      {
+        id:
+          "sliver-a",
+
+        type:
+          "JUNCTION",
+
+        position: {
+          x:
+            0,
+
+          y:
+            0,
+        },
+
+        zoneId:
+          "corridor-sliver",
+      },
+
+      {
+        id:
+          "sliver-b",
+
+        type:
+          "JUNCTION",
+
+        position: {
+          x:
+            4.005,
+
+          y:
+            0,
+        },
+
+        zoneId:
+          "corridor-sliver",
+      },
+    ],
+
+    edges: [
+      {
+        id:
+          "edge-sliver",
+
+        from:
+          "sliver-a",
+
+        to:
+          "sliver-b",
+
+        lengthMeters:
+          4.005,
+
+        widthMeters:
+          1.35,
+
+        zoneId:
+          "corridor-sliver",
+
+        bidirectional:
+          true,
       },
     ],
   };
 }
 
 function createAgent(
-  id: string,
-  x: number,
-  edgeId: string | null,
+  id:
+    string,
+  x:
+    number,
+  edgeId:
+    string | null,
   status:
     | "ACTIVE"
     | "EVACUATED"
@@ -83,295 +225,622 @@ function createAgent(
   return {
     id,
 
-    desiredSpeedMps: 1.3,
+    desiredSpeedMps:
+      1.3,
 
     position: {
       x,
-      y: 0,
+
+      y:
+        0,
     },
 
     status,
 
     currentNodeId:
-      edgeId === null
-        ? "node-a"
-        : "node-a",
+      "node-a",
 
-    currentEdgeId: edgeId,
+    currentEdgeId:
+      edgeId,
 
-    routeNodeIds: [],
-    routeCursorIndex: 0,
+    routeNodeIds:
+      [],
 
-    targetExitId: null,
+    routeCursorIndex:
+      0,
 
-    rerouteCount: 0,
-    distanceTraveledMeters: 0,
-    hazardExposureSeconds: 0,
+    targetExitId:
+      null,
 
-    evacuationTimeSeconds: null,
+    rerouteCount:
+      0,
+
+    distanceTraveledMeters:
+      0,
+
+    hazardExposureSeconds:
+      0,
+
+    evacuationTimeSeconds:
+      null,
   };
 }
 
-describe("Density calculation", () => {
-  it("creates network cells using the configured cell length", () => {
-    const snapshot =
-      calculateDensitySnapshot(
-        [],
-        createGraph(),
-        1,
-      );
+function createSliverAgent():
+  AgentState {
+  return {
+    id:
+      "agent-sliver",
 
-    const firstEdgeCells =
-      snapshot.cells.filter(
-        (cell) =>
-          cell.edgeId ===
-          "edge-a-b",
-      );
+    desiredSpeedMps:
+      1.34,
 
-    expect(
-      firstEdgeCells,
-    ).toHaveLength(5);
+    position: {
+      x:
+        4.004,
 
-    for (
-      const cell of
-        firstEdgeCells
-    ) {
-      expect(
-        cell.lengthMeters,
-      ).toBeCloseTo(1);
-    }
-  });
+      y:
+        0,
+    },
 
-  it("calculates density using occupant count divided by cell area", () => {
-    const agents = [
-      createAgent(
-        "agent-001",
-        0.25,
-        "edge-a-b",
-      ),
+    status:
+      "ACTIVE",
 
-      createAgent(
-        "agent-002",
-        0.75,
-        "edge-a-b",
-      ),
-    ];
+    currentNodeId:
+      "sliver-a",
 
-    const snapshot =
-      calculateDensitySnapshot(
-        agents,
-        createGraph(),
-        1,
-      );
+    currentEdgeId:
+      "edge-sliver",
 
-    const firstCell =
-      snapshot.cells.find(
-        (cell) =>
-          cell.edgeId ===
-            "edge-a-b" &&
-          cell.cellIndex === 0,
-      );
+    routeNodeIds:
+      [],
 
-    expect(firstCell).toBeDefined();
+    routeCursorIndex:
+      0,
 
-    expect(
-      firstCell?.occupantCount,
-    ).toBe(2);
+    targetExitId:
+      null,
 
-    expect(
-      firstCell
-        ?.densityPersonsPerSquareMeter,
-    ).toBeCloseTo(1);
-  });
+    rerouteCount:
+      0,
 
-  it("places agents into different cells according to position", () => {
-    const agents = [
-      createAgent(
-        "agent-001",
-        0.5,
-        "edge-a-b",
-      ),
+    distanceTraveledMeters:
+      0,
 
-      createAgent(
-        "agent-002",
-        2.25,
-        "edge-a-b",
-      ),
-    ];
+    hazardExposureSeconds:
+      0,
 
-    const snapshot =
-      calculateDensitySnapshot(
-        agents,
-        createGraph(),
-        1,
-      );
+    evacuationTimeSeconds:
+      null,
+  };
+}
 
-    const occupiedCells =
-      snapshot.cells.filter(
-        (cell) =>
-          cell.edgeId ===
-            "edge-a-b" &&
-          cell.occupantCount > 0,
-      );
+describe(
+  "Density calculation",
+  () => {
+    it(
+      "creates network cells using the configured cell length",
+      () => {
+        const snapshot =
+          calculateDensitySnapshot(
+            [],
+            createGraph(),
+            1,
+          );
 
-    expect(
-      occupiedCells,
-    ).toHaveLength(2);
+        const firstEdgeCells =
+          snapshot.cells.filter(
+            (
+              cell,
+            ) =>
+              cell.edgeId ===
+              "edge-a-b",
+          );
 
-    expect(
-      occupiedCells.map(
-        (cell) =>
-          cell.cellIndex,
-      ),
-    ).toEqual([0, 2]);
-  });
+        expect(
+          firstEdgeCells,
+        ).toHaveLength(
+          5,
+        );
 
-  it("handles a shorter final cell correctly", () => {
-    const snapshot =
-      calculateDensitySnapshot(
-        [
-          createAgent(
-            "agent-001",
-            7.4,
-            "edge-b-c",
-          ),
-        ],
-        createGraph(),
-        1,
-      );
-
-    const edgeCells =
-      snapshot.cells.filter(
-        (cell) =>
-          cell.edgeId ===
-          "edge-b-c",
-      );
-
-    expect(edgeCells).toHaveLength(
-      3,
+        for (
+          const cell of
+            firstEdgeCells
+        ) {
+          expect(
+            cell.lengthMeters,
+          ).toBeCloseTo(
+            1,
+          );
+        }
+      },
     );
 
-    const finalCell =
-      edgeCells[2];
-
-    expect(
-      finalCell?.lengthMeters,
-    ).toBeCloseTo(0.5);
-
-    expect(
-      finalCell?.occupantCount,
-    ).toBe(1);
-
-    expect(
-      finalCell
-        ?.densityPersonsPerSquareMeter,
-    ).toBeCloseTo(2);
-  });
-
-  it("ignores agents that are not currently traversing an edge", () => {
-    const snapshot =
-      calculateDensitySnapshot(
-        [
+    it(
+      "calculates density using occupant count divided by cell area",
+      () => {
+        const agents = [
           createAgent(
             "agent-001",
-            0,
-            null,
+            0.25,
+            "edge-a-b",
           ),
-        ],
-        createGraph(),
-        1,
-      );
 
-    const totalOccupants =
-      snapshot.cells.reduce(
-        (
-          total,
-          cell,
-        ) =>
-          total +
-          cell.occupantCount,
-        0,
-      );
+          createAgent(
+            "agent-002",
+            0.75,
+            "edge-a-b",
+          ),
+        ];
 
-    expect(
-      totalOccupants,
-    ).toBe(0);
-  });
+        const snapshot =
+          calculateDensitySnapshot(
+            agents,
+            createGraph(),
+            1,
+          );
 
-  it("ignores non-active agents", () => {
-    const snapshot =
-      calculateDensitySnapshot(
-        [
+        const firstCell =
+          snapshot.cells.find(
+            (
+              cell,
+            ) =>
+              cell.edgeId ===
+                "edge-a-b" &&
+              cell.cellIndex ===
+                0,
+          );
+
+        expect(
+          firstCell,
+        ).toBeDefined();
+
+        expect(
+          firstCell
+            ?.occupantCount,
+        ).toBe(
+          2,
+        );
+
+        expect(
+          firstCell
+            ?.densityPersonsPerSquareMeter,
+        ).toBeCloseTo(
+          1,
+        );
+      },
+    );
+
+    it(
+      "places agents into different cells according to position",
+      () => {
+        const agents = [
           createAgent(
             "agent-001",
             0.5,
             "edge-a-b",
-            "EVACUATED",
           ),
-        ],
-        createGraph(),
-        1,
-      );
 
-    const totalOccupants =
-      snapshot.cells.reduce(
-        (
-          total,
-          cell,
-        ) =>
-          total +
-          cell.occupantCount,
-        0,
-      );
+          createAgent(
+            "agent-002",
+            2.25,
+            "edge-a-b",
+          ),
+        ];
 
-    expect(
-      totalOccupants,
-    ).toBe(0);
-  });
+        const snapshot =
+          calculateDensitySnapshot(
+            agents,
+            createGraph(),
+            1,
+          );
 
-  it("supports alternative cell lengths for sensitivity analysis", () => {
-    const snapshot =
-      calculateDensitySnapshot(
-        [],
-        createGraph(),
-        0.5,
-      );
+        const occupiedCells =
+          snapshot.cells.filter(
+            (
+              cell,
+            ) =>
+              cell.edgeId ===
+                "edge-a-b" &&
+              cell.occupantCount >
+                0,
+          );
 
-    const firstEdgeCells =
-      snapshot.cells.filter(
-        (cell) =>
-          cell.edgeId ===
-          "edge-a-b",
-      );
+        expect(
+          occupiedCells,
+        ).toHaveLength(
+          2,
+        );
 
-    expect(
-      firstEdgeCells,
-    ).toHaveLength(10);
-
-    expect(
-      snapshot.cellLengthMeters,
-    ).toBe(0.5);
-  });
-
-  it("rejects invalid cell lengths", () => {
-    expect(() =>
-      calculateDensitySnapshot(
-        [],
-        createGraph(),
-        0,
-      ),
-    ).toThrow(
-      /cell length must be positive/,
+        expect(
+          occupiedCells.map(
+            (
+              cell,
+            ) =>
+              cell.cellIndex,
+          ),
+        ).toEqual([
+          0,
+          2,
+        ]);
+      },
     );
 
-    expect(() =>
-      calculateDensitySnapshot(
-        [],
-        createGraph(),
-        -1,
-      ),
-    ).toThrow(
-      /cell length must be positive/,
+    it(
+      "handles a shorter final cell correctly in legacy mode",
+      () => {
+        const snapshot =
+          calculateDensitySnapshot(
+            [
+              createAgent(
+                "agent-001",
+                7.4,
+                "edge-b-c",
+              ),
+            ],
+            createGraph(),
+            1,
+          );
+
+        const edgeCells =
+          snapshot.cells.filter(
+            (
+              cell,
+            ) =>
+              cell.edgeId ===
+              "edge-b-c",
+          );
+
+        expect(
+          edgeCells,
+        ).toHaveLength(
+          3,
+        );
+
+        const finalCell =
+          edgeCells[
+            2
+          ];
+
+        expect(
+          finalCell
+            ?.lengthMeters,
+        ).toBeCloseTo(
+          0.5,
+        );
+
+        expect(
+          finalCell
+            ?.occupantCount,
+        ).toBe(
+          1,
+        );
+
+        expect(
+          finalCell
+            ?.densityPersonsPerSquareMeter,
+        ).toBeCloseTo(
+          2,
+        );
+      },
     );
-  });
-});
+
+    it(
+      "ignores agents that are not currently traversing an edge",
+      () => {
+        const snapshot =
+          calculateDensitySnapshot(
+            [
+              createAgent(
+                "agent-001",
+                0,
+                null,
+              ),
+            ],
+            createGraph(),
+            1,
+          );
+
+        const totalOccupants =
+          snapshot.cells.reduce(
+            (
+              total,
+              cell,
+            ) =>
+              total +
+              cell.occupantCount,
+            0,
+          );
+
+        expect(
+          totalOccupants,
+        ).toBe(
+          0,
+        );
+      },
+    );
+
+    it(
+      "ignores non-active agents",
+      () => {
+        const snapshot =
+          calculateDensitySnapshot(
+            [
+              createAgent(
+                "agent-001",
+                0.5,
+                "edge-a-b",
+                "EVACUATED",
+              ),
+            ],
+            createGraph(),
+            1,
+          );
+
+        const totalOccupants =
+          snapshot.cells.reduce(
+            (
+              total,
+              cell,
+            ) =>
+              total +
+              cell.occupantCount,
+            0,
+          );
+
+        expect(
+          totalOccupants,
+        ).toBe(
+          0,
+        );
+      },
+    );
+
+    it(
+      "supports alternative cell lengths for sensitivity analysis",
+      () => {
+        const snapshot =
+          calculateDensitySnapshot(
+            [],
+            createGraph(),
+            0.5,
+          );
+
+        const firstEdgeCells =
+          snapshot.cells.filter(
+            (
+              cell,
+            ) =>
+              cell.edgeId ===
+              "edge-a-b",
+          );
+
+        expect(
+          firstEdgeCells,
+        ).toHaveLength(
+          10,
+        );
+
+        expect(
+          snapshot
+            .cellLengthMeters,
+        ).toBe(
+          0.5,
+        );
+      },
+    );
+
+    it(
+      "rejects invalid cell lengths",
+      () => {
+        expect(
+          () =>
+            calculateDensitySnapshot(
+              [],
+              createGraph(),
+              0,
+            ),
+        ).toThrow(
+          /cell length must be positive/,
+        );
+
+        expect(
+          () =>
+            calculateDensitySnapshot(
+              [],
+              createGraph(),
+              -1,
+            ),
+        ).toThrow(
+          /cell length must be positive/,
+        );
+      },
+    );
+
+    it(
+      "preserves the legacy trailing-cell behavior outside Architecture V2",
+      () => {
+        const snapshot =
+          calculateDensitySnapshot(
+            [
+              createSliverAgent(),
+            ],
+            createSliverGraph(
+              false,
+            ),
+            1,
+          );
+
+        expect(
+          snapshot
+            .partitionMode,
+        ).toBeUndefined();
+
+        const cells =
+          snapshot.cells.filter(
+            (
+              cell,
+            ) =>
+              cell.edgeId ===
+              "edge-sliver",
+          );
+
+        expect(
+          cells,
+        ).toHaveLength(
+          5,
+        );
+
+        const finalCell =
+          cells[
+            4
+          ]!;
+
+        expect(
+          finalCell
+            .lengthMeters,
+        ).toBeCloseTo(
+          0.005,
+          6,
+        );
+
+        expect(
+          finalCell
+            .densityPersonsPerSquareMeter,
+        ).toBeGreaterThan(
+          100,
+        );
+      },
+    );
+
+    it(
+      "uses balanced cells automatically for Architecture V2",
+      () => {
+        const snapshot =
+          calculateDensitySnapshot(
+            [
+              createSliverAgent(),
+            ],
+            createSliverGraph(
+              true,
+            ),
+            1,
+          );
+
+        expect(
+          snapshot
+            .partitionMode,
+        ).toBe(
+          "BALANCED",
+        );
+
+        const cells =
+          snapshot.cells.filter(
+            (
+              cell,
+            ) =>
+              cell.edgeId ===
+              "edge-sliver",
+          );
+
+        expect(
+          cells,
+        ).toHaveLength(
+          5,
+        );
+
+        for (
+          const cell of
+            cells
+        ) {
+          expect(
+            cell.lengthMeters,
+          ).toBeCloseTo(
+            4.005 /
+              5,
+            8,
+          );
+        }
+
+        const finalCell =
+          cells[
+            4
+          ]!;
+
+        expect(
+          finalCell
+            .densityPersonsPerSquareMeter,
+        ).toBeLessThan(
+          2,
+        );
+      },
+    );
+
+    it(
+      "eliminates the pathological sliver-density amplification",
+      () => {
+        const legacy =
+          calculateDensitySnapshot(
+            [
+              createSliverAgent(),
+            ],
+            createSliverGraph(
+              false,
+            ),
+            1,
+          );
+
+        const balanced =
+          calculateDensitySnapshot(
+            [
+              createSliverAgent(),
+            ],
+            createSliverGraph(
+              true,
+            ),
+            1,
+          );
+
+        const legacyMaximum =
+          Math.max(
+            ...legacy.cells.map(
+              (
+                cell,
+              ) =>
+                cell
+                  .densityPersonsPerSquareMeter,
+            ),
+          );
+
+        const balancedMaximum =
+          Math.max(
+            ...balanced.cells.map(
+              (
+                cell,
+              ) =>
+                cell
+                  .densityPersonsPerSquareMeter,
+            ),
+          );
+
+        expect(
+          legacyMaximum,
+        ).toBeGreaterThan(
+          100,
+        );
+
+        expect(
+          balancedMaximum,
+        ).toBeLessThan(
+          2,
+        );
+
+        expect(
+          balancedMaximum,
+        ).toBeLessThan(
+          legacyMaximum,
+        );
+      },
+    );
+  },
+);
