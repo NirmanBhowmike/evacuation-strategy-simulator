@@ -21,6 +21,7 @@ import {
   createArchitectureV2AuthoritativeBundle,
   createArchitectureV2DemoReplay,
   ARCHITECTURE_V2_OCCUPANCY,
+  ARCHITECTURE_V2_STRESS_TEST_OCCUPANCY,
 } from "../../src/app/createArchitectureV2DemoReplay";
 
 import {
@@ -70,7 +71,7 @@ describe(
   "Architecture V2 authoritative 42-person population",
   () => {
     it(
-      "uses consistent Architecture V2 layout identifiers and 42 occupants",
+      "uses the calibrated Architecture V2 occupancy levels and consistent layout identifiers",
       () => {
         const bundle =
           createArchitectureV2AuthoritativeBundle();
@@ -85,8 +86,32 @@ describe(
             42,
 
           HIGH:
-            56,
+            70,
         });
+
+        expect(
+          ARCHITECTURE_V2_STRESS_TEST_OCCUPANCY,
+        ).toBe(
+          84,
+        );
+
+        expect(
+          ARCHITECTURE_V2_OCCUPANCY
+            .MEDIUM -
+            ARCHITECTURE_V2_OCCUPANCY
+              .LOW,
+        ).toBe(
+          28,
+        );
+
+        expect(
+          ARCHITECTURE_V2_OCCUPANCY
+            .HIGH -
+            ARCHITECTURE_V2_OCCUPANCY
+              .MEDIUM,
+        ).toBe(
+          28,
+        );
 
         expect(
           bundle.scenario
@@ -419,7 +444,7 @@ describe(
     );
 
     it(
-      "runs all 42 occupants from room origins through Architecture V2 to real exits",
+      "runs all 42 Medium occupants from room origins through Architecture V2 to real exits",
       () => {
         const replay =
           createArchitectureV2DemoReplay();
@@ -446,7 +471,8 @@ describe(
             .metrics
             .totalAgents,
         ).toBe(
-          42,
+          ARCHITECTURE_V2_OCCUPANCY
+            .MEDIUM,
         );
 
         /**
@@ -515,7 +541,8 @@ describe(
             .metrics
             .totalAgents,
         ).toBe(
-          42,
+          ARCHITECTURE_V2_OCCUPANCY
+            .MEDIUM,
         );
 
         expect(
@@ -523,7 +550,8 @@ describe(
             .metrics
             .evacuatedAgents,
         ).toBe(
-          42,
+          ARCHITECTURE_V2_OCCUPANCY
+            .MEDIUM,
         );
 
         expect(

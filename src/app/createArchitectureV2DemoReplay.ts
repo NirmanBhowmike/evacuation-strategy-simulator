@@ -56,6 +56,16 @@ import {
   ROOM_OCCUPANT_PREVIEW_COUNT,
 } from "../visualization/createRoomOccupantPreview";
 
+/**
+ * Architecture V2 occupancy levels selected through
+ * D0 baseline calibration.
+ *
+ * LOW    = light operating condition
+ * MEDIUM = approved reference condition
+ * HIGH   = first clearly distinct higher-congestion regime
+ *
+ * These are now the standard Architecture V2 occupancy levels.
+ */
 export const ARCHITECTURE_V2_OCCUPANCY =
   Object.freeze({
     LOW:
@@ -65,11 +75,27 @@ export const ARCHITECTURE_V2_OCCUPANCY =
       42,
 
     HIGH:
-      56,
+      70,
   });
 
+/**
+ * Optional overload / stress-test reference.
+ *
+ * This is not one of the three standard experimental
+ * occupancy levels.
+ */
+export const ARCHITECTURE_V2_STRESS_TEST_OCCUPANCY =
+  84;
+
+/**
+ * Occupancy levels are calibrated.
+ *
+ * Other Architecture V2 parameters, especially dynamic
+ * disruption timing, still require V2-specific calibration
+ * before the complete parameter set can be called frozen.
+ */
 export const ARCHITECTURE_V2_PROVISIONAL_PARAMETER_SET_VERSION =
-  "architecture-v2-provisional-42-v1";
+  "architecture-v2-occupancy-calibrated-v1";
 
 const ROOM_ORIGIN_SPAWN_HALF_SIZE_METERS =
   0.08;
@@ -227,7 +253,7 @@ function prepareOccupants():
       .MEDIUM
   ) {
     throw new Error(
-      "Architecture V2 preview population and provisional MEDIUM occupancy disagree.",
+      "Architecture V2 preview population and calibrated MEDIUM occupancy disagree.",
     );
   }
 
@@ -448,17 +474,17 @@ function createSpawnZone(
 }
 
 /**
- * Builds the provisional 42-person Architecture V2
- * authoritative simulation input.
+ * Builds the authoritative Architecture V2
+ * MEDIUM-occupancy simulation input.
  *
- * Important design feature:
+ * The MEDIUM level is the calibrated 42-person reference.
  *
  * The spawn access node is placed at the actual room-origin
  * coordinate. The authoritative graph then contains a directed
  * room-origin -> room-door edge.
  *
- * Therefore runHeadlessSimulation does not teleport the agent
- * from the room to the door.
+ * Therefore runHeadlessSimulation does not teleport an agent
+ * from its room position to the doorway.
  */
 export function createArchitectureV2AuthoritativeBundle():
   ArchitectureV2AuthoritativeBundle {
@@ -514,7 +540,7 @@ export function createArchitectureV2AuthoritativeBundle():
   const scenario:
     ScenarioInstance = {
     id:
-      "layout-a-v2-medium-42-d0-adaptive-provisional",
+      "layout-a-v2-medium-42-d0-adaptive",
 
     seed:
       1042,
