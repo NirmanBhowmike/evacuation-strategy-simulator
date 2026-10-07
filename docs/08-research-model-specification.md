@@ -1,3 +1,25 @@
+> **Historical document**
+>
+> This file preserves the earlier **Research Model v1.0 / Layout A** specification and is retained for methodological traceability.
+>
+> It is **not the current Architecture V2 formal configuration**.
+>
+> Current Architecture V2 parameter definitions, automated regression tests, experiment configuration, and `docs/09-master-task-checklist.md` take precedence where values differ.
+>
+> Current formal Architecture V2 disruption timing is:
+>
+> - D1 = main-spine hazard at 12 s
+> - D2 = south-central exit block at 18 s
+> - D3 = main-central corridor block at 12 s
+> - D4 = main-spine hazard at 12 s followed by south-central exit block at 18 s
+>
+> Current formal Architecture V2 occupancy levels are:
+>
+> - LOW = 14
+> - MEDIUM = 42
+> - HIGH = 70
+
+---
 # Research Model Specification
 
 Version: 1.0

@@ -1,42 +1,52 @@
 # Project Charter
 
-## Working Title
+## Project Title
 
-3D Emergency Evacuation Strategy Simulator: Experimental Evaluation of Adaptive Routing Strategies Under Dynamic Building Conditions
+**3D Emergency Evacuation Strategy Simulator: Experimental Evaluation of Adaptive Routing Strategies Under Dynamic Building Conditions**
 
 ## Purpose
 
-Develop a research-oriented simulation system for comparing evacuation routing strategies under controlled and reproducible building evacuation scenarios.
+Develop a research-oriented simulation platform for comparing fixed and adaptive evacuation-routing strategies under controlled, reproducible, and dynamically changing building conditions.
 
 ## Central Research Question
 
-How do fixed and adaptive evacuation-routing strategies differ in performance when congestion, exit availability, hazards, occupancy, and other building conditions change during an evacuation?
+How do fixed and adaptive evacuation-routing strategies differ in performance when congestion, hazards, exit availability, occupancy, and route conditions change during an evacuation?
 
 ## Core Design Principle
 
-The quantitative simulation and experimental engine is the primary research artifact. The 3D interface will visualize the state and outputs of that engine rather than define its behavior.
+The quantitative simulation and experimental engine is the authoritative research artifact.
 
-## Planned Strategy Families
+The 3D interface visualizes authoritative simulation state and results. It does not independently determine research outcomes.
 
-- Shortest-path routing
-- Nearest-exit routing
-- Congestion-aware routing
-- Hazard-aware routing
-- Adaptive routing
+## Current Routing Strategies
 
-Exact algorithm definitions will be established after the research-model review.
+The simulator implements five routing strategies:
 
-## Planned Outcomes
+1. Nearest Exit
+2. Static Shortest Path
+3. Congestion-Aware
+4. Hazard-Aware
+5. Adaptive Hybrid
 
-- Reproducible evacuation simulation engine
-- Multiple interchangeable routing strategies
-- Dynamic disruption scenarios
-- Automated experiment runner
-- Experiment logs and datasets
-- Comparative performance analysis
-- Interactive 3D demonstration
-- Local application and optional online deployment
+## Current Research Environment
 
-## Current Phase
+The current research model uses **Architecture V2**, a fictional first-floor institutional / academic building designed to provide:
 
-Research-model definition and quantitative parameter validation.
+- multiple building wings
+- four exterior exits
+- alternative circulation paths
+- bottlenecks
+- tactical decision points
+- room-origin occupant movement
+- configurable hazards
+- corridor blocks
+- exit failures
+
+The building is intentionally fictional and is not presented as a digital twin of a real facility.
+
+## Formal Occupancy Levels
+
+```text
+LOW     = 14
+MEDIUM  = 42
+HIGH    = 70
