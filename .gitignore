@@ -24,3 +24,10 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.temp
+# Backup files
+*.bak
+*.backup
+*.old
+*.orig
+*.save
+*~
