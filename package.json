@@ -26,7 +26,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "UNLICENSED",
   "type": "module",
   "bugs": {
     "url": "https://github.com/NirmanBhowmike/evacuation-strategy-simulator/issues"
@@ -49,5 +49,6 @@
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "three": "^0.186.1"
-  }
+  },
+  "private": true
 }
