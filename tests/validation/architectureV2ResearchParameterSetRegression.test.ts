@@ -5,8 +5,8 @@ import {
 } from "vitest";
 
 import {
-  createArchitectureV2AuthoritativeBundle,
-} from "../../src/app/createArchitectureV2DemoReplay";
+  createArchitectureV2FormalPopulationBundle,
+} from "../../src/population/architectureV2FormalPopulation";
 
 import {
   runHeadlessSimulation,
@@ -54,7 +54,9 @@ function runCase(
     ArchitectureV2ResearchDisruptionConditionId,
 ) {
   const base =
-    createArchitectureV2AuthoritativeBundle();
+    createArchitectureV2FormalPopulationBundle(
+      "MEDIUM",
+    );
 
   const condition =
     getArchitectureV2ResearchDisruptionCondition(
@@ -259,7 +261,9 @@ describe(
 
     it("preserves room-origin nodes while applying the D3-only corridor mapping", () => {
       const base =
-        createArchitectureV2AuthoritativeBundle();
+        createArchitectureV2FormalPopulationBundle(
+          "MEDIUM",
+        );
 
       /**
        * The authoritative bundle must contain the private

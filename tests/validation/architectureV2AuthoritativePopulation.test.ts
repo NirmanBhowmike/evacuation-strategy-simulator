@@ -5,6 +5,10 @@ import {
 } from "vitest";
 
 import {
+  createArchitectureV2DemoReplay,
+} from "../../src/app/createArchitectureV2DemoReplay";
+
+import {
   layoutAArchitectureV2,
 } from "../../src/environment/layoutAArchitectureV2";
 
@@ -18,51 +22,44 @@ import {
 } from "../../src/environment/layoutAArchitectureV2Exits";
 
 import {
-  createArchitectureV2AuthoritativeBundle,
-  createArchitectureV2DemoReplay,
-  ARCHITECTURE_V2_OCCUPANCY,
-  ARCHITECTURE_V2_STRESS_TEST_OCCUPANCY,
-} from "../../src/app/createArchitectureV2DemoReplay";
+  createArchitectureV2FormalPopulationBundle,
+} from "../../src/population/architectureV2FormalPopulation";
+
+import {
+  ARCHITECTURE_V2_RESEARCH_OCCUPANCY,
+  ARCHITECTURE_V2_RESEARCH_STRESS_TEST_OCCUPANCY,
+} from "../../src/scenario/architectureV2ResearchParameterSet";
 
 import {
   pointInOrOnRoomPolygon,
 } from "../../src/visualization/createRoomOccupantPreview";
 
+function createMediumBundle() {
+  return createArchitectureV2FormalPopulationBundle(
+    "MEDIUM",
+  );
+}
+
 function interpolate(
   start: {
-    readonly x:
-      number;
-
-    readonly y:
-      number;
+    readonly x: number;
+    readonly y: number;
   },
-
   end: {
-    readonly x:
-      number;
-
-    readonly y:
-      number;
+    readonly x: number;
+    readonly y: number;
   },
-
-  t:
-    number,
+  t: number,
 ) {
   return {
     x:
       start.x +
-      (
-        end.x -
-        start.x
-      ) *
+      (end.x - start.x) *
         t,
 
     y:
       start.y +
-      (
-        end.y -
-        start.y
-      ) *
+      (end.y - start.y) *
         t,
   };
 }
@@ -74,40 +71,35 @@ describe(
       "uses the calibrated Architecture V2 occupancy levels and consistent layout identifiers",
       () => {
         const bundle =
-          createArchitectureV2AuthoritativeBundle();
+          createMediumBundle();
 
         expect(
-          ARCHITECTURE_V2_OCCUPANCY,
+          ARCHITECTURE_V2_RESEARCH_OCCUPANCY,
         ).toEqual({
-          LOW:
-            14,
-
-          MEDIUM:
-            42,
-
-          HIGH:
-            70,
+          LOW: 14,
+          MEDIUM: 42,
+          HIGH: 70,
         });
 
         expect(
-          ARCHITECTURE_V2_STRESS_TEST_OCCUPANCY,
+          ARCHITECTURE_V2_RESEARCH_STRESS_TEST_OCCUPANCY,
         ).toBe(
           84,
         );
 
         expect(
-          ARCHITECTURE_V2_OCCUPANCY
+          ARCHITECTURE_V2_RESEARCH_OCCUPANCY
             .MEDIUM -
-            ARCHITECTURE_V2_OCCUPANCY
+            ARCHITECTURE_V2_RESEARCH_OCCUPANCY
               .LOW,
         ).toBe(
           28,
         );
 
         expect(
-          ARCHITECTURE_V2_OCCUPANCY
+          ARCHITECTURE_V2_RESEARCH_OCCUPANCY
             .HIGH -
-            ARCHITECTURE_V2_OCCUPANCY
+            ARCHITECTURE_V2_RESEARCH_OCCUPANCY
               .MEDIUM,
         ).toBe(
           28,
@@ -168,44 +160,41 @@ describe(
       "places every spawn access node exactly at its room-origin coordinate",
       () => {
         const bundle =
-          createArchitectureV2AuthoritativeBundle();
+          createMediumBundle();
 
         const nodeById =
           new Map(
-            bundle.graph
-              .nodes
-              .map(
-                (
+            bundle.graph.nodes.map(
+              (
+                node,
+              ) =>
+                [
+                  node.id,
                   node,
-                ) =>
-                  [
-                    node.id,
-                    node,
-                  ] as const,
-              ),
+                ] as const,
+            ),
           );
 
         for (
           let index =
             0;
           index <
-            bundle.scenario
-              .occupants
-              .length;
+          bundle.scenario
+            .occupants.length;
           index +=
-            1
+          1
         ) {
           const occupant =
             bundle.scenario
               .occupants[
-                index
-              ]!;
+              index
+            ]!;
 
           const spawnZone =
             bundle.spawnZones
               .zones[
-                index
-              ]!;
+              index
+            ]!;
 
           const accessNode =
             nodeById.get(
@@ -220,7 +209,9 @@ describe(
           }
 
           expect(
-            accessNode.position.x,
+            accessNode
+              .position
+              .x,
           ).toBeCloseTo(
             occupant
               .spawnPosition
@@ -229,7 +220,9 @@ describe(
           );
 
           expect(
-            accessNode.position.y,
+            accessNode
+              .position
+              .y,
           ).toBeCloseTo(
             occupant
               .spawnPosition
@@ -244,12 +237,12 @@ describe(
       "gives every occupant one directed room-origin edge ending at that room's real door",
       () => {
         const bundle =
-          createArchitectureV2AuthoritativeBundle();
+          createMediumBundle();
 
         for (
           const spawnZone of
-            bundle.spawnZones
-              .zones
+          bundle.spawnZones
+            .zones
         ) {
           const outgoing =
             bundle.graph
@@ -324,7 +317,7 @@ describe(
       "keeps every authoritative room-origin path inside its assigned room until the doorway",
       () => {
         const bundle =
-          createArchitectureV2AuthoritativeBundle();
+          createMediumBundle();
 
         const nodeById =
           new Map(
@@ -343,8 +336,8 @@ describe(
 
         for (
           const spawnZone of
-            bundle.spawnZones
-              .zones
+          bundle.spawnZones
+            .zones
         ) {
           const room =
             layoutAArchitectureV2
@@ -416,7 +409,7 @@ describe(
             sampleIndex <=
             samples;
             sampleIndex +=
-              1
+            1
           ) {
             const t =
               sampleIndex /
@@ -450,7 +443,8 @@ describe(
           createArchitectureV2DemoReplay();
 
         expect(
-          replay.frames.length,
+          replay.frames
+            .length,
         ).toBeGreaterThan(
           1,
         );
@@ -471,16 +465,16 @@ describe(
             .metrics
             .totalAgents,
         ).toBe(
-          ARCHITECTURE_V2_OCCUPANCY
+          ARCHITECTURE_V2_RESEARCH_OCCUPANCY
             .MEDIUM,
         );
 
         /**
-         * The first frame must still show the occupants at
-         * their room origins rather than already at the doors.
+         * The first frame must still show occupants at
+         * their room origins rather than already at doors.
          */
         const bundle =
-          createArchitectureV2AuthoritativeBundle();
+          createMediumBundle();
 
         const scenarioPositionById =
           new Map(
@@ -500,14 +494,14 @@ describe(
 
         for (
           const agent of
-            firstFrame
-              .snapshot
-              .agents
+          firstFrame.snapshot
+            .agents
         ) {
           const expected =
-            scenarioPositionById.get(
-              agent.id,
-            );
+            scenarioPositionById
+              .get(
+                agent.id,
+              );
 
           if (!expected) {
             throw new Error(
@@ -541,7 +535,7 @@ describe(
             .metrics
             .totalAgents,
         ).toBe(
-          ARCHITECTURE_V2_OCCUPANCY
+          ARCHITECTURE_V2_RESEARCH_OCCUPANCY
             .MEDIUM,
         );
 
@@ -550,7 +544,7 @@ describe(
             .metrics
             .evacuatedAgents,
         ).toBe(
-          ARCHITECTURE_V2_OCCUPANCY
+          ARCHITECTURE_V2_RESEARCH_OCCUPANCY
             .MEDIUM,
         );
 

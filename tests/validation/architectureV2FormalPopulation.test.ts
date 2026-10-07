@@ -5,10 +5,6 @@ import {
 } from "vitest";
 
 import {
-  createArchitectureV2AuthoritativeBundle,
-} from "../../src/app/createArchitectureV2DemoReplay";
-
-import {
   runHeadlessSimulation,
 } from "../../src/core/runHeadlessSimulation";
 
@@ -53,39 +49,24 @@ import {
 
 function interpolate(
   start: {
-    readonly x:
-      number;
-
-    readonly y:
-      number;
+    readonly x: number;
+    readonly y: number;
   },
-
   end: {
-    readonly x:
-      number;
-
-    readonly y:
-      number;
+    readonly x: number;
+    readonly y: number;
   },
-
-  t:
-    number,
+  t: number,
 ) {
   return {
     x:
       start.x +
-      (
-        end.x -
-        start.x
-      ) *
+      (end.x - start.x) *
         t,
 
     y:
       start.y +
-      (
-        end.y -
-        start.y
-      ) *
+      (end.y - start.y) *
         t,
   };
 }
@@ -105,11 +86,8 @@ function positionsByAgentId(
 ): ReadonlyMap<
   string,
   {
-    readonly x:
-      number;
-
-    readonly y:
-      number;
+    readonly x: number;
+    readonly y: number;
   }
 > {
   return new Map(
@@ -151,8 +129,8 @@ function expectPopulationIsSubset(
 
   for (
     const occupant of
-      subset.scenario
-        .occupants
+    subset.scenario
+      .occupants
   ) {
     const corresponding =
       supersetPositions.get(
@@ -219,8 +197,8 @@ function expectValidRoomOriginStructure(
 
   for (
     const occupant of
-      bundle.scenario
-        .occupants
+    bundle.scenario
+      .occupants
   ) {
     const matchingSpawnZones =
       bundle.spawnZones
@@ -390,16 +368,13 @@ function expectValidRoomOriginStructure(
       );
     }
 
-    /**
-     * Verify that the private room-origin segment stays
-     * inside the assigned room until it reaches the door.
-     */
     const samples =
       Math.max(
         2,
         Math.ceil(
-          originEdge.lengthMeters /
-          0.10,
+          originEdge
+            .lengthMeters /
+            0.10,
         ),
       );
 
@@ -409,7 +384,7 @@ function expectValidRoomOriginStructure(
       sampleIndex <=
       samples;
       sampleIndex +=
-        1
+      1
     ) {
       const sample =
         interpolate(
@@ -567,11 +542,11 @@ describe(
 
         for (
           const bundle of
-            [
-              low,
-              medium,
-              high,
-            ]
+          [
+            low,
+            medium,
+            high,
+          ]
         ) {
           expect(
             bundle.scenario
@@ -777,45 +752,42 @@ describe(
     );
 
     it(
-      "keeps the frozen 42-person Medium population spatially unchanged",
+      "reproduces the frozen 42-person Medium population deterministically",
       () => {
-        const previousAuthoritative =
-          createArchitectureV2AuthoritativeBundle();
-
-        const formalMedium =
+        const firstMedium =
           requireBundle(
             "MEDIUM",
           );
 
-        /**
-         * IDs, positions, desired speeds, graph geometry,
-         * and private spawn zones must remain identical.
-         *
-         * Scenario ID and parameter-set version intentionally
-         * differ because the formal module now belongs to the
-         * frozen Architecture V2 research configuration.
-         */
+        const secondMedium =
+          requireBundle(
+            "MEDIUM",
+          );
+
         expect(
-          formalMedium.scenario
+          secondMedium.population,
+        ).toBe(
+          42,
+        );
+
+        expect(
+          secondMedium.scenario
             .occupants,
         ).toEqual(
-          previousAuthoritative
-            .scenario
+          firstMedium.scenario
             .occupants,
         );
 
         expect(
-          formalMedium.graph,
+          secondMedium.graph,
         ).toEqual(
-          previousAuthoritative
-            .graph,
+          firstMedium.graph,
         );
 
         expect(
-          formalMedium.spawnZones,
+          secondMedium.spawnZones,
         ).toEqual(
-          previousAuthoritative
-            .spawnZones,
+          firstMedium.spawnZones,
         );
       },
     );
@@ -856,7 +828,7 @@ describe(
 
         for (
           const level of
-            levels
+          levels
         ) {
           const first =
             requireBundle(
@@ -920,20 +892,20 @@ describe(
             expectedPopulation,
             result,
           ] of
+          [
             [
-              [
-                14,
-                low,
-              ],
-              [
-                42,
-                medium,
-              ],
-              [
-                70,
-                high,
-              ],
-            ] as const
+              14,
+              low,
+            ],
+            [
+              42,
+              medium,
+            ],
+            [
+              70,
+              high,
+            ],
+          ] as const
         ) {
           expect(
             result.metrics

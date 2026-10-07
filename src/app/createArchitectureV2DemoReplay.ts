@@ -3,112 +3,62 @@ import {
 } from "../core/runHeadlessSimulation";
 
 import {
-  layoutAArchitectureV2,
-} from "../environment/layoutAArchitectureV2";
+  ARCHITECTURE_V2_FORMAL_INITIAL_SEED_BANK,
+} from "../experiment/architectureV2FormalExperimentDesign";
+
+import type {
+  ArchitectureV2FormalPopulationLevel,
+} from "../population/architectureV2FormalPopulation";
 
 import {
-  layoutAArchitectureV2Environment,
-  LAYOUT_A_ARCHITECTURE_V2_ID,
-} from "../environment/layoutAArchitectureV2Environment";
+  createArchitectureV2FormalScenario,
+} from "../scenario/architectureV2FormalScenario";
+
+import type {
+  ArchitectureV2FormalScenarioMetadata,
+} from "../scenario/architectureV2FormalScenario";
 
 import {
-  layoutAArchitectureV2Exits,
-} from "../environment/layoutAArchitectureV2Exits";
+  ARCHITECTURE_V2_RESEARCH_ADAPTIVE_REROUTE_THRESHOLD,
+  ARCHITECTURE_V2_RESEARCH_DENSITY_CELL_LENGTH_METERS,
+  ARCHITECTURE_V2_RESEARCH_SPECIFIC_FLOW_PERSONS_PER_METER_SECOND,
+  ARCHITECTURE_V2_RESEARCH_TIMESTEP_SECONDS,
+} from "../scenario/architectureV2ResearchParameterSet";
 
-import {
-  layoutAArchitectureV2NavigationGraph,
-} from "../environment/layoutAArchitectureV2NavigationGraph";
-
-import {
-  getResearchDisruptionCondition,
-  RESEARCH_ADAPTIVE_REROUTE_THRESHOLD,
-  RESEARCH_DENSITY_CELL_LENGTH_METERS,
-  RESEARCH_SPECIFIC_FLOW_PERSONS_PER_METER_SECOND,
-  RESEARCH_TIMESTEP_SECONDS,
-} from "../scenario/researchParameterSet";
+import type {
+  ArchitectureV2ResearchDisruptionConditionId,
+} from "../scenario/architectureV2ResearchParameterSet";
 
 import type {
   HeadlessSimulationResult,
 } from "../types/headlessSimulation";
 
 import type {
-  NavigationEdge,
-  NavigationGraph,
-  NavigationNode,
-} from "../types/navigation";
-
-import type {
-  Position2D,
-  ScenarioInstance,
-} from "../types/scenario";
+  RoutingStrategyId,
+} from "../types/routingStrategy";
 
 import type {
   SimulationReplayFrame,
 } from "../types/simulationReplay";
 
-import type {
-  SpawnZone,
-  SpawnZoneSet,
-} from "../types/spawn";
+export interface ArchitectureV2DemoReplayRequest {
+  readonly populationLevel:
+    ArchitectureV2FormalPopulationLevel;
 
-import {
-  createRoomOccupantPreview,
-  ROOM_OCCUPANT_PREVIEW_COUNT,
-} from "../visualization/createRoomOccupantPreview";
+  readonly conditionId:
+    ArchitectureV2ResearchDisruptionConditionId;
 
-/**
- * Architecture V2 occupancy levels selected through
- * D0 baseline calibration.
- *
- * LOW    = light operating condition
- * MEDIUM = approved reference condition
- * HIGH   = first clearly distinct higher-congestion regime
- *
- * These are now the standard Architecture V2 occupancy levels.
- */
-export const ARCHITECTURE_V2_OCCUPANCY =
-  Object.freeze({
-    LOW:
-      14,
+  readonly strategyId:
+    RoutingStrategyId;
 
-    MEDIUM:
-      42,
+  readonly replicationSeed?:
+    number;
+}
 
-    HIGH:
-      70,
-  });
-
-/**
- * Optional overload / stress-test reference.
- *
- * This is not one of the three standard experimental
- * occupancy levels.
- */
-export const ARCHITECTURE_V2_STRESS_TEST_OCCUPANCY =
-  84;
-
-/**
- * Occupancy levels are calibrated.
- *
- * Other Architecture V2 parameters, especially dynamic
- * disruption timing, still require V2-specific calibration
- * before the complete parameter set can be called frozen.
- */
-export const ARCHITECTURE_V2_PROVISIONAL_PARAMETER_SET_VERSION =
-  "architecture-v2-occupancy-calibrated-v1";
-
-const ROOM_ORIGIN_SPAWN_HALF_SIZE_METERS =
-  0.08;
-
-export interface ArchitectureV2AuthoritativeBundle {
-  readonly scenario:
-    ScenarioInstance;
-
-  readonly graph:
-    NavigationGraph;
-
-  readonly spawnZones:
-    SpawnZoneSet;
+export interface ArchitectureV2DemoReplayMetadata
+  extends ArchitectureV2FormalScenarioMetadata {
+  readonly strategyId:
+    RoutingStrategyId;
 }
 
 export interface ArchitectureV2DemoReplay {
@@ -117,485 +67,69 @@ export interface ArchitectureV2DemoReplay {
 
   readonly result:
     HeadlessSimulationResult;
+
+  readonly metadata:
+    ArchitectureV2DemoReplayMetadata;
 }
 
-interface PreparedOccupant {
-  readonly id:
-    string;
-
-  readonly roomId:
-    string;
-
-  readonly spawnPosition:
-    Position2D;
-
-  readonly originNodeId:
-    string;
-
-  readonly originEdgeId:
-    string;
-
-  readonly doorId:
-    string;
-
-  readonly doorWidthMeters:
-    number;
-}
-
-function requireSingleRoomDoor(
-  roomId:
-    string,
-): {
-  readonly id:
-    string;
-
-  readonly widthMeters:
-    number;
-} {
-  const room =
-    layoutAArchitectureV2
-      .rooms
-      .find(
-        (
-          candidate,
-        ) =>
-          candidate.id ===
-          roomId,
-      );
-
-  if (!room) {
-    throw new Error(
-      `Architecture V2 room not found: ${roomId}`,
-    );
-  }
-
-  if (
-    room.doors.length !==
-    1
-  ) {
-    throw new Error(
-      `Architecture V2 authoritative population currently requires exactly one door per room. ${roomId} has ${room.doors.length}.`,
-    );
-  }
-
-  const door =
-    room.doors[0]!;
-
-  return {
-    id:
-      door.id,
-
-    widthMeters:
-      door.widthMeters,
-  };
-}
-
-function createSpawnPolygon(
-  position:
-    Position2D,
-) {
-  const half =
-    ROOM_ORIGIN_SPAWN_HALF_SIZE_METERS;
-
-  return {
-    vertices: [
-      {
-        x:
-          position.x -
-          half,
-
-        y:
-          position.y -
-          half,
-      },
-
-      {
-        x:
-          position.x +
-          half,
-
-        y:
-          position.y -
-          half,
-      },
-
-      {
-        x:
-          position.x +
-          half,
-
-        y:
-          position.y +
-          half,
-      },
-
-      {
-        x:
-          position.x -
-          half,
-
-        y:
-          position.y +
-          half,
-      },
-    ],
-  };
-}
-
-function prepareOccupants():
-  readonly PreparedOccupant[] {
-  const previewPopulation =
-    createRoomOccupantPreview();
-
-  if (
-    ROOM_OCCUPANT_PREVIEW_COUNT !==
-    ARCHITECTURE_V2_OCCUPANCY
-      .MEDIUM
-  ) {
-    throw new Error(
-      "Architecture V2 preview population and calibrated MEDIUM occupancy disagree.",
-    );
-  }
-
-  if (
-    previewPopulation.length !==
-    ARCHITECTURE_V2_OCCUPANCY
-      .MEDIUM
-  ) {
-    throw new Error(
-      `Expected ${ARCHITECTURE_V2_OCCUPANCY.MEDIUM} Architecture V2 occupants, received ${previewPopulation.length}.`,
-    );
-  }
-
-  return previewPopulation.map(
-    (
-      previewAgent,
-      index,
-    ) => {
-      const id =
-        `agent-${String(
-          index +
-            1,
-        ).padStart(
-          4,
-          "0",
-        )}`;
-
-      const door =
-        requireSingleRoomDoor(
-          previewAgent.roomId,
-        );
-
-      return {
-        id,
-
-        roomId:
-          previewAgent.roomId,
-
-        spawnPosition: {
-          x:
-            previewAgent
-              .position
-              .x,
-
-          y:
-            previewAgent
-              .position
-              .y,
-        },
-
-        originNodeId:
-          `room-origin-${id}`,
-
-        originEdgeId:
-          `room-origin-edge-${id}`,
-
-        doorId:
-          door.id,
-
-        doorWidthMeters:
-          door.widthMeters,
-      };
-    },
-  );
-}
-
-function createOriginNode(
-  occupant:
-    PreparedOccupant,
-): NavigationNode {
-  return {
-    id:
-      occupant
-        .originNodeId,
-
-    type:
-      "CONNECTOR",
-
-    position: {
-      x:
-        occupant
-          .spawnPosition
-          .x,
-
-      y:
-        occupant
-          .spawnPosition
-          .y,
-    },
-
-    zoneId:
-      occupant
-        .roomId,
-  };
-}
-
-function requireBaseDoorNode(
-  doorId:
-    string,
-): NavigationNode {
-  const node =
-    layoutAArchitectureV2NavigationGraph
-      .nodes
-      .find(
-        (
-          candidate,
-        ) =>
-          candidate.id ===
-          doorId,
-      );
-
-  if (!node) {
-    throw new Error(
-      `Architecture V2 navigation door node not found: ${doorId}`,
-    );
-  }
-
-  if (
-    node.type !==
-    "DOOR"
-  ) {
-    throw new Error(
-      `Architecture V2 node ${doorId} is not a DOOR node.`,
-    );
-  }
-
-  return node;
-}
-
-function createOriginEdge(
-  occupant:
-    PreparedOccupant,
-): NavigationEdge {
-  const doorNode =
-    requireBaseDoorNode(
-      occupant.doorId,
-    );
-
-  const lengthMeters =
-    Math.hypot(
-      doorNode.position.x -
-        occupant
-          .spawnPosition
-          .x,
-
-      doorNode.position.y -
-        occupant
-          .spawnPosition
-          .y,
-    );
-
-  if (
-    lengthMeters <=
+const DEFAULT_DEMO_SEED =
+  ARCHITECTURE_V2_FORMAL_INITIAL_SEED_BANK[
     0
-  ) {
-    throw new Error(
-      `Architecture V2 occupant ${occupant.id} has zero room-to-door travel distance.`,
-    );
-  }
+  ] ?? 100001;
 
-  return {
-    id:
-      occupant
-        .originEdgeId,
+export const DEFAULT_ARCHITECTURE_V2_DEMO_REQUEST:
+  ArchitectureV2DemoReplayRequest =
+Object.freeze({
+  populationLevel:
+    "MEDIUM",
 
-    from:
-      occupant
-        .originNodeId,
+  conditionId:
+    "D0_BASELINE",
 
-    to:
-      occupant
-        .doorId,
+  strategyId:
+    "ADAPTIVE_HYBRID",
 
-    lengthMeters,
-
-    widthMeters:
-      occupant
-        .doorWidthMeters,
-
-    zoneId:
-      occupant
-        .roomId,
-
-    /**
-     * Deliberately one-way.
-     *
-     * The edge represents the occupant's initial room approach
-     * toward the evacuation doorway. Other agents cannot route
-     * backward into another occupant's private origin stub.
-     */
-    bidirectional:
-      false,
-  };
-}
-
-function createSpawnZone(
-  occupant:
-    PreparedOccupant,
-): SpawnZone {
-  return {
-    id:
-      `spawn-${occupant.id}`,
-
-    roomZoneId:
-      occupant
-        .roomId,
-
-    accessNodeId:
-      occupant
-        .originNodeId,
-
-    polygon:
-      createSpawnPolygon(
-        occupant
-          .spawnPosition,
-      ),
-  };
-}
+  replicationSeed:
+    DEFAULT_DEMO_SEED,
+});
 
 /**
- * Builds the authoritative Architecture V2
- * MEDIUM-occupancy simulation input.
+ * Creates one authoritative replay directly from the
+ * frozen Architecture V2.1 research model.
  *
- * The MEDIUM level is the calibrated 42-person reference.
+ * The replay uses the same:
  *
- * The spawn access node is placed at the actual room-origin
- * coordinate. The authoritative graph then contains a directed
- * room-origin -> room-door edge.
+ * - formal population model
+ * - stochastic walking-speed model
+ * - frozen disruption schedule
+ * - condition-specific environment and graph
+ * - movement model
+ * - routing strategy implementation
  *
- * Therefore runHeadlessSimulation does not teleport an agent
- * from its room position to the doorway.
+ * used by the formal experiment.
+ *
+ * This is still one simulation realization. It must not
+ * be interpreted as the 40-replication formal result.
  */
-export function createArchitectureV2AuthoritativeBundle():
-  ArchitectureV2AuthoritativeBundle {
-  const prepared =
-    prepareOccupants();
+export function createArchitectureV2DemoReplay(
+  request:
+    ArchitectureV2DemoReplayRequest =
+      DEFAULT_ARCHITECTURE_V2_DEMO_REQUEST,
+): ArchitectureV2DemoReplay {
+  const replicationSeed =
+    request.replicationSeed ??
+    DEFAULT_DEMO_SEED;
 
-  const originNodes =
-    prepared.map(
-      createOriginNode,
-    );
+  const bundle =
+    createArchitectureV2FormalScenario({
+      populationLevel:
+        request.populationLevel,
 
-  const originEdges =
-    prepared.map(
-      createOriginEdge,
-    );
+      conditionId:
+        request.conditionId,
 
-  const graph:
-    NavigationGraph = {
-    layoutId:
-      LAYOUT_A_ARCHITECTURE_V2_ID,
-
-    nodes: [
-      ...layoutAArchitectureV2NavigationGraph
-        .nodes,
-
-      ...originNodes,
-    ],
-
-    edges: [
-      ...layoutAArchitectureV2NavigationGraph
-        .edges,
-
-      ...originEdges,
-    ],
-  };
-
-  const spawnZones:
-    SpawnZoneSet = {
-    layoutId:
-      LAYOUT_A_ARCHITECTURE_V2_ID,
-
-    zones:
-      prepared.map(
-        createSpawnZone,
-      ),
-  };
-
-  const baselineCondition =
-    getResearchDisruptionCondition(
-      "D0_BASELINE",
-    );
-
-  const scenario:
-    ScenarioInstance = {
-    id:
-      "layout-a-v2-medium-42-d0-adaptive",
-
-    seed:
-      1042,
-
-    layoutId:
-      LAYOUT_A_ARCHITECTURE_V2_ID,
-
-    parameterSetVersion:
-      ARCHITECTURE_V2_PROVISIONAL_PARAMETER_SET_VERSION,
-
-    occupants:
-      prepared.map(
-        (
-          occupant,
-        ) => ({
-          id:
-            occupant.id,
-
-          spawnPosition: {
-            x:
-              occupant
-                .spawnPosition
-                .x,
-
-            y:
-              occupant
-                .spawnPosition
-                .y,
-          },
-
-          desiredSpeedMps:
-            1.34,
-        }),
-      ),
-
-    disruptionSchedule:
-      baselineCondition
-        .events,
-  };
-
-  return {
-    scenario,
-    graph,
-    spawnZones,
-  };
-}
-
-export function createArchitectureV2DemoReplay():
-  ArchitectureV2DemoReplay {
-  const {
-    scenario,
-    graph,
-    spawnZones,
-  } =
-    createArchitectureV2AuthoritativeBundle();
+      replicationSeed,
+    });
 
   const frames:
     SimulationReplayFrame[] =
@@ -603,36 +137,39 @@ export function createArchitectureV2DemoReplay():
 
   const result =
     runHeadlessSimulation({
-      scenario,
+      scenario:
+        bundle.scenario,
 
       environment:
-        layoutAArchitectureV2Environment,
+        bundle.environment,
 
-      graph,
+      graph:
+        bundle.graph,
 
       exits:
-        layoutAArchitectureV2Exits,
+        bundle.exits,
 
-      spawnZones,
+      spawnZones:
+        bundle.spawnZones,
 
       configuration: {
         strategyId:
-          "ADAPTIVE_HYBRID",
+          request.strategyId,
 
         timestepSeconds:
-          RESEARCH_TIMESTEP_SECONDS,
+          ARCHITECTURE_V2_RESEARCH_TIMESTEP_SECONDS,
 
         maximumSimulationTimeSeconds:
           180,
 
         densityCellLengthMeters:
-          RESEARCH_DENSITY_CELL_LENGTH_METERS,
+          ARCHITECTURE_V2_RESEARCH_DENSITY_CELL_LENGTH_METERS,
 
         specificFlowPersonsPerMeterSecond:
-          RESEARCH_SPECIFIC_FLOW_PERSONS_PER_METER_SECOND,
+          ARCHITECTURE_V2_RESEARCH_SPECIFIC_FLOW_PERSONS_PER_METER_SECOND,
 
         adaptiveRerouteThreshold:
-          RESEARCH_ADAPTIVE_REROUTE_THRESHOLD,
+          ARCHITECTURE_V2_RESEARCH_ADAPTIVE_REROUTE_THRESHOLD,
       },
 
       replayIntervalSeconds:
@@ -653,7 +190,7 @@ export function createArchitectureV2DemoReplay():
     0
   ) {
     throw new Error(
-      "Architecture V2 replay produced no frames.",
+      "Architecture V2 demo replay produced no frames.",
     );
   }
 
@@ -664,5 +201,13 @@ export function createArchitectureV2DemoReplay():
       ]),
 
     result,
+
+    metadata:
+      Object.freeze({
+        ...bundle.metadata,
+
+        strategyId:
+          request.strategyId,
+      }),
   });
 }

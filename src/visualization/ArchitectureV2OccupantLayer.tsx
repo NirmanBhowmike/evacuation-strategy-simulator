@@ -2,6 +2,10 @@ import {
   useMemo,
 } from "react";
 
+import type {
+  ThreeEvent,
+} from "@react-three/fiber";
+
 import {
   layoutAArchitectureV2,
 } from "../environment/layoutAArchitectureV2";
@@ -22,6 +26,10 @@ import {
   LowPolyHuman,
 } from "./LowPolyHuman";
 
+export type AgentSelectionMode =
+  | "replace"
+  | "toggle";
+
 interface ArchitectureV2OccupantLayerProps {
   readonly currentFrame:
     SimulationReplayFrame | null;
@@ -31,6 +39,20 @@ interface ArchitectureV2OccupantLayerProps {
 
   readonly interpolationAlpha:
     number;
+
+  readonly selectedAgentIds?:
+    ReadonlySet<string>;
+
+  readonly primarySelectedAgentId?:
+    string | null;
+
+  readonly onAgentSelect?:
+    (
+      agentId:
+        string,
+      mode:
+        AgentSelectionMode,
+    ) => void;
 }
 
 interface DisplayOffset {
@@ -66,6 +88,9 @@ const ZERO_OFFSET:
     y:
       0,
   };
+
+const EMPTY_SELECTION =
+  new Set<string>();
 
 function simulationXToWorldX(
   x:
@@ -163,12 +188,6 @@ function hashString(
   );
 }
 
-/**
- * Small renderer-only offset for agents that occupy
- * exactly the same tactical coordinate.
- *
- * This never changes the authoritative engine position.
- */
 function deterministicDisplayOffset(
   agentId:
     string,
@@ -240,7 +259,9 @@ function buildDisplayOffsets(
   string,
   DisplayOffset
 > {
-  if (!frame) {
+  if (
+    !frame
+  ) {
     return new Map();
   }
 
@@ -263,7 +284,7 @@ function buildDisplayOffsets(
 
   for (
     const agent of
-      activeAgents
+    activeAgents
   ) {
     const key =
       positionBucketKey(
@@ -290,7 +311,7 @@ function buildDisplayOffsets(
 
   for (
     const agent of
-      activeAgents
+    activeAgents
   ) {
     const key =
       positionBucketKey(
@@ -342,7 +363,9 @@ function createAppearanceMap():
         index
       ];
 
-    if (!preview) {
+    if (
+      !preview
+    ) {
       continue;
     }
 
@@ -376,19 +399,98 @@ function createAppearanceMap():
   return map;
 }
 
-/**
- * Authoritative Architecture V2 occupant renderer.
- *
- * Positions come exclusively from SimulationReplayFrame.
- *
- * Appearance, articulated body geometry, and small
- * co-location offsets are renderer-only and never feed
- * information back into the research engine.
- */
+interface SelectionHighlightProps {
+  readonly primary:
+    boolean;
+}
+
+function SelectionHighlight({
+  primary,
+}: SelectionHighlightProps) {
+  return (
+    <>
+      <mesh
+        rotation={[
+          -Math.PI /
+            2,
+          0,
+          0,
+        ]}
+        position={[
+          0,
+          0.025,
+          0,
+        ]}
+      >
+        <ringGeometry
+          args={[
+            primary
+              ? 0.30
+              : 0.27,
+            primary
+              ? 0.43
+              : 0.38,
+            32,
+          ]}
+        />
+
+        <meshBasicMaterial
+          color={
+            primary
+              ? "#55e7f0"
+              : "#a8f3f6"
+          }
+          transparent
+          opacity={
+            primary
+              ? 0.96
+              : 0.72
+          }
+          depthWrite={false}
+        />
+      </mesh>
+
+      {primary ? (
+        <mesh
+          position={[
+            0,
+            0.86,
+            0,
+          ]}
+        >
+          <cylinderGeometry
+            args={[
+              0.30,
+              0.30,
+              1.65,
+              18,
+              1,
+              true,
+            ]}
+          />
+
+          <meshBasicMaterial
+            color="#55e7f0"
+            transparent
+            opacity={0.09}
+            depthWrite={false}
+            side={2}
+          />
+        </mesh>
+      ) : null}
+    </>
+  );
+}
+
 export function ArchitectureV2OccupantLayer({
   currentFrame,
   nextFrame,
   interpolationAlpha,
+  selectedAgentIds =
+    EMPTY_SELECTION,
+  primarySelectedAgentId =
+    null,
+  onAgentSelect,
 }: ArchitectureV2OccupantLayerProps) {
   const appearanceByAgentId =
     useMemo(
@@ -442,7 +544,9 @@ export function ArchitectureV2OccupantLayer({
       ],
     );
 
-  if (!currentFrame) {
+  if (
+    !currentFrame
+  ) {
     return null;
   }
 
@@ -585,6 +689,46 @@ export function ArchitectureV2OccupantLayer({
                 ? "WALK"
                 : "IDLE";
 
+            const selected =
+              selectedAgentIds.has(
+                agent.id,
+              );
+
+            const primary =
+              primarySelectedAgentId ===
+              agent.id;
+
+            const handleAgentClick =
+              (
+                event:
+                  ThreeEvent<
+                    MouseEvent
+                  >,
+              ) => {
+                event.stopPropagation();
+
+                if (
+                  !onAgentSelect
+                ) {
+                  return;
+                }
+
+                const nativeEvent =
+                  event.nativeEvent;
+
+                const toggleMode =
+                  nativeEvent.shiftKey ||
+                  nativeEvent.ctrlKey ||
+                  nativeEvent.metaKey;
+
+                onAgentSelect(
+                  agent.id,
+                  toggleMode
+                    ? "toggle"
+                    : "replace",
+                );
+              };
+
             return (
               <group
                 key={
@@ -595,7 +739,42 @@ export function ArchitectureV2OccupantLayer({
                   0.78,
                   worldZ,
                 ]}
+                onClick={
+                  handleAgentClick
+                }
               >
+                {selected ? (
+                  <SelectionHighlight
+                    primary={
+                      primary
+                    }
+                  />
+                ) : null}
+
+                <mesh
+                  position={[
+                    0,
+                    0.82,
+                    0,
+                  ]}
+                  visible={false}
+                >
+                  <cylinderGeometry
+                    args={[
+                      0.34,
+                      0.34,
+                      1.7,
+                      12,
+                    ]}
+                  />
+
+                  <meshBasicMaterial
+                    transparent
+                    opacity={0}
+                    depthWrite={false}
+                  />
+                </mesh>
+
                 <LowPolyHuman
                   headingRadians={
                     headingRadians
