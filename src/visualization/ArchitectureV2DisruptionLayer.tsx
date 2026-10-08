@@ -23,6 +23,7 @@ import type {
 
 import {
   ARCHITECTURE_V2_D3_BLOCKABLE_ZONE,
+  ARCHITECTURE_V2_D6_BLOCKABLE_ZONE,
 } from "../scenario/architectureV2ResearchModel";
 
 import type {
@@ -237,6 +238,18 @@ function resolveZoneBounds(
     );
   }
 
+  if (
+    targetId ===
+    ARCHITECTURE_V2_D6_BLOCKABLE_ZONE
+      .id
+  ) {
+    return boundsFromPolygon(
+      ARCHITECTURE_V2_D6_BLOCKABLE_ZONE
+        .polygon
+        .vertices,
+    );
+  }
+
   return null;
 }
 
@@ -281,6 +294,9 @@ function targetDisplayName(
 
     case "corridor-main-central-east-blockable":
       return "Main-Central Corridor";
+
+    case "corridor-main-east-southeast-blockable":
+      return "East-Main to Southeast Corridor";
 
     case "corridor-west":
       return "West Corridor";

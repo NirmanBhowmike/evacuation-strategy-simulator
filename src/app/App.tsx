@@ -70,6 +70,23 @@ import type {
   ArchitectureV2DemoReplayRequest,
 } from "./createArchitectureV2DemoReplay";
 
+import {
+  createInteractiveDemoReplay,
+} from "./createInteractiveDemoReplay";
+
+import {
+  DEFAULT_SIMULATION_APPLICATION_MODE,
+} from "./interactiveDemoMode";
+
+import type {
+  InteractiveDemoManualEvent,
+  SimulationApplicationMode,
+} from "./interactiveDemoMode";
+
+import {
+  InteractiveDemoControls,
+} from "./InteractiveDemoControls";
+
 interface MetricCardProps {
   readonly label:
     string;
@@ -479,6 +496,18 @@ function conditionDetail(
         `${ARCHITECTURE_V2_RESEARCH_TIMING.EXIT_BLOCK_SECONDS} s.`
       );
 
+    case "D5_EXIT_BLOCK_WEST":
+      return (
+        "The west exit becomes unavailable at " +
+        `${ARCHITECTURE_V2_RESEARCH_TIMING.EXIT_BLOCK_SECONDS} s.`
+      );
+
+    case "D6_CORRIDOR_BLOCK_EAST_SOUTHEAST":
+      return (
+        "The east-main to southeast corridor becomes physically unavailable at " +
+        `${ARCHITECTURE_V2_RESEARCH_TIMING.CORRIDOR_BLOCK_SECONDS} s.`
+      );
+
     default:
       return conditionId;
   }
@@ -547,6 +576,9 @@ function disruptionTargetLabel(
 
     case "corridor-main-central-east-blockable":
       return "Main-central corridor";
+
+    case "corridor-main-east-southeast-blockable":
+      return "East-main to southeast corridor";
 
     case "exit-west":
       return "West exit";
@@ -650,6 +682,9 @@ function zoneDisplayName(
 
     "corridor-main-central-east-blockable":
       "Main-Central Corridor",
+
+    "corridor-main-east-southeast-blockable":
+      "East-Main to Southeast Corridor",
 
     "corridor-west":
       "West Corridor",
@@ -800,6 +835,26 @@ export function App() {
       ArchitectureV2DemoReplayRequest
     >(
       DEFAULT_ARCHITECTURE_V2_DEMO_REQUEST,
+    );
+
+  const [
+    applicationMode,
+    setApplicationMode,
+  ] =
+    useState<
+      SimulationApplicationMode
+    >(
+      DEFAULT_SIMULATION_APPLICATION_MODE,
+    );
+
+  const [
+    interactiveDemoEvents,
+    setInteractiveDemoEvents,
+  ] =
+    useState<
+      readonly InteractiveDemoManualEvent[]
+    >(
+      [],
     );
 
   const [
@@ -955,14 +1010,32 @@ export function App() {
   const replay =
     useMemo(
       () =>
-        createArchitectureV2DemoReplay(
-          configuration,
-        ),
+        applicationMode ===
+        "RESEARCH"
+          ? createArchitectureV2DemoReplay(
+              configuration,
+            )
+          : createInteractiveDemoReplay({
+              populationLevel:
+                configuration.populationLevel,
+
+              strategyId:
+                configuration.strategyId,
+
+              replicationSeed:
+                configuration.replicationSeed ??
+                DEFAULT_REPLAY_SEED,
+
+              events:
+                interactiveDemoEvents,
+            }),
       [
+        applicationMode,
         configuration.populationLevel,
         configuration.conditionId,
         configuration.strategyId,
         configuration.replicationSeed,
+        interactiveDemoEvents,
       ],
     );
 
@@ -1019,6 +1092,17 @@ export function App() {
       0,
     );
 
+  const pendingInteractiveResumeRef =
+    useRef<{
+      readonly timeSeconds:
+        number;
+
+      readonly shouldPlay:
+        boolean;
+    } | null>(
+      null,
+    );
+
   const clearAgentSelection =
     () => {
       setSelectedAgentIds(
@@ -1030,8 +1114,160 @@ export function App() {
       );
     };
 
+  const changeApplicationMode =
+    (
+      nextMode:
+        SimulationApplicationMode,
+    ) => {
+      if (
+        nextMode ===
+          applicationMode ||
+        isPreparingSimulation
+      ) {
+        return;
+      }
+
+      setIsPlaying(
+        false,
+      );
+
+      setPlaybackTimeSeconds(
+        0,
+      );
+
+      previousAnimationTimeRef.current =
+        null;
+
+      isScrubbingRef.current =
+        false;
+
+      resumeAfterScrubRef.current =
+        false;
+
+      scrubTimeRef.current =
+        0;
+
+      clearAgentSelection();
+
+      setScenarioDrawerOpen(
+        false,
+      );
+
+      pendingInteractiveResumeRef.current =
+        null;
+
+      setApplicationMode(
+        nextMode,
+      );
+    };
+
+  const triggerInteractiveDemoEvent =
+    (
+      event:
+        InteractiveDemoManualEvent,
+    ) => {
+      if (
+        applicationMode !==
+          "INTERACTIVE_DEMO" ||
+        isPreparingSimulation
+      ) {
+        return;
+      }
+
+      pendingInteractiveResumeRef.current = {
+        timeSeconds:
+          Math.min(
+          playbackTimeSeconds +
+            0.10,
+          durationSeconds,
+        ),
+
+        shouldPlay:
+          isPlaying,
+      };
+
+      setInteractiveDemoEvents(
+        (
+          current,
+        ) => [
+          ...current,
+          event,
+        ],
+      );
+    };
+
+  const clearInteractiveDemoEvents =
+    () => {
+      if (
+        applicationMode !==
+          "INTERACTIVE_DEMO" ||
+        isPreparingSimulation
+      ) {
+        return;
+      }
+
+      pendingInteractiveResumeRef.current = {
+        timeSeconds:
+          0,
+
+        shouldPlay:
+          false,
+      };
+
+      setInteractiveDemoEvents(
+        [],
+      );
+    };
+
   useEffect(
     () => {
+      const pendingResume =
+        pendingInteractiveResumeRef.current;
+
+      if (
+        applicationMode ===
+          "INTERACTIVE_DEMO" &&
+        pendingResume
+      ) {
+        pendingInteractiveResumeRef.current =
+          null;
+
+        const nextTime =
+          Math.min(
+            pendingResume.timeSeconds,
+            durationSeconds,
+          );
+
+        previousAnimationTimeRef.current =
+          null;
+
+        isScrubbingRef.current =
+          false;
+
+        resumeAfterScrubRef.current =
+          false;
+
+        scrubTimeRef.current =
+          nextTime;
+
+        setPlaybackTimeSeconds(
+          nextTime,
+        );
+
+        setIsPlaying(
+          pendingResume.shouldPlay &&
+          nextTime <
+            durationSeconds -
+              1e-9,
+        );
+
+        setIsPreparingSimulation(
+          false,
+        );
+
+        return;
+      }
+
       setIsPlaying(
         false,
       );
@@ -1059,11 +1295,14 @@ export function App() {
       setPrimarySelectedAgentId(
         null,
       );
-setIsPreparingSimulation(
+
+      setIsPreparingSimulation(
         false,
       );
     },
     [
+      applicationMode,
+      durationSeconds,
       replay,
     ],
   );
@@ -2035,8 +2274,12 @@ setIsPreparingSimulation(
   const hasPendingScenarioChanges =
     draftPopulation !==
       configuration.populationLevel ||
-    draftCondition !==
-      configuration.conditionId ||
+    (
+      applicationMode ===
+        "RESEARCH" &&
+      draftCondition !==
+        configuration.conditionId
+    ) ||
     draftStrategy !==
       configuration.strategyId ||
     parsedDraftSeed !==
@@ -2234,15 +2477,27 @@ setIsPreparingSimulation(
       );
 
   const scenarioSummary =
-    `${populationLabel(
-      configuration.populationLevel,
-    )} · ` +
-    `${conditionShortLabel(
-      configuration.conditionId,
-    )} · ` +
-    `${STRATEGY_LABELS[
-      configuration.strategyId
-    ]}`;
+    applicationMode ===
+    "RESEARCH"
+      ? (
+          `${populationLabel(
+            configuration.populationLevel,
+          )} · ` +
+          `${conditionShortLabel(
+            configuration.conditionId,
+          )} · ` +
+          `${STRATEGY_LABELS[
+            configuration.strategyId
+          ]}`
+        )
+      : (
+          `${populationLabel(
+            configuration.populationLevel,
+          )} · Interactive Demo · ` +
+          `${STRATEGY_LABELS[
+            configuration.strategyId
+          ]}`
+        );
 
   const inspectorOpen =
     selectedAgents.length >
@@ -2254,7 +2509,12 @@ setIsPreparingSimulation(
         applicationRef
       }
       className={
-        `application-shell theme-${visualTheme}${
+        `application-shell theme-${visualTheme} ${
+          applicationMode ===
+          "RESEARCH"
+            ? "research-application"
+            : "interactive-demo-application"
+        }${
           isFullscreen
             ? " presentation-mode"
             : ""
@@ -2283,11 +2543,17 @@ setIsPreparingSimulation(
 
           <div>
             <div className="status-title">
-              Architecture V2.1
+              {applicationMode ===
+              "RESEARCH"
+                ? "RESEARCH MODE"
+                : "INTERACTIVE DEMO"}
             </div>
 
             <div className="status-caption">
-              Frozen research model
+              {applicationMode ===
+              "RESEARCH"
+                ? "Architecture V2.1 · Frozen research model"
+                : "Manual disruption environment · Not a formal research condition"}
             </div>
           </div>
         </div>
@@ -2296,8 +2562,68 @@ setIsPreparingSimulation(
       <div className="workspace">
         <nav
           className="tool-rail"
-          aria-label="Research simulator tools"
+          aria-label="Simulator tools"
         >
+          <button
+            type="button"
+            className={
+              `tool-button${
+                applicationMode ===
+                "RESEARCH"
+                  ? " active"
+                  : ""
+              }`
+            }
+            onClick={
+              () =>
+                changeApplicationMode(
+                  "RESEARCH",
+                )
+            }
+            disabled={
+              isPreparingSimulation
+            }
+            title="Research Mode"
+          >
+            <span className="tool-icon">
+              R
+            </span>
+
+            <span className="tool-label">
+              Research
+            </span>
+          </button>
+
+          <button
+            type="button"
+            className={
+              `tool-button${
+                applicationMode ===
+                "INTERACTIVE_DEMO"
+                  ? " active"
+                  : ""
+              }`
+            }
+            onClick={
+              () =>
+                changeApplicationMode(
+                  "INTERACTIVE_DEMO",
+                )
+            }
+            disabled={
+              isPreparingSimulation
+            }
+            title="Interactive Demo Mode"
+          >
+            <span className="tool-icon">
+              D
+            </span>
+
+            <span className="tool-label">
+              Demo
+            </span>
+          </button>
+
           <button
             type="button"
             className={
@@ -2491,60 +2817,83 @@ setIsPreparingSimulation(
                 )}
               </ScenarioSelect>
 
-              <ScenarioSelect
-                label="Dynamic condition"
-                value={
-                  draftCondition
-                }
-                onChange={
-                  (
-                    event,
-                  ) =>
-                    setDraftCondition(
-                      event.target.value as
-                      ArchitectureV2ResearchDisruptionConditionId,
-                    )
-                }
-              >
-                {ARCHITECTURE_V2_RESEARCH_DISRUPTION_CONDITIONS.map(
-                  (
-                    candidate,
-                  ) => (
-                    <option
-                      key={
-                        candidate.id
-                      }
-                      value={
-                        candidate.id
-                      }
-                    >
+              {applicationMode ===
+              "RESEARCH" ? (
+                <>
+                  <ScenarioSelect
+                    label="Dynamic condition"
+                    value={
+                      draftCondition
+                    }
+                    onChange={
+                      (
+                        event,
+                      ) =>
+                        setDraftCondition(
+                          event.target.value as
+                          ArchitectureV2ResearchDisruptionConditionId,
+                        )
+                    }
+                  >
+                    {ARCHITECTURE_V2_RESEARCH_DISRUPTION_CONDITIONS.map(
+                      (
+                        candidate,
+                      ) => (
+                        <option
+                          key={
+                            candidate.id
+                          }
+                          value={
+                            candidate.id
+                          }
+                        >
+                          {
+                            conditionShortLabel(
+                              candidate.id,
+                            )
+                          }
+                        </option>
+                      ),
+                    )}
+                  </ScenarioSelect>
+
+                  <div className="condition-note">
+                    <span className="field-label">
+                      Research event schedule
+                    </span>
+
+                    <p>
                       {
-                        conditionShortLabel(
-                          candidate.id,
+                        conditionDetail(
+                          draftCondition,
                         )
                       }
-                    </option>
-                  ),
-                )}
-              </ScenarioSelect>
+                    </p>
 
-              <div className="condition-note">
-                <span className="field-label">
-                  Research event schedule
-                </span>
-
-                <p>
-                  {
-                    conditionDetail(
-                      draftCondition,
-                    )
+                    <small>
+                      Hazard zones remain traversable. Blocked exits and blocked corridors are unavailable for movement.
+                    </small>
+                  </div>
+                </>
+              ) : (
+                <InteractiveDemoControls
+                  events={
+                    interactiveDemoEvents
                   }
-                </p>
-
-                <small>
-                  Hazard zones remain traversable. Blocked exits and blocked corridors are unavailable for movement.
-                </small>
-              </div>
+                  playbackTimeSeconds={
+                    playbackTimeSeconds
+                  }
+                  disabled={
+                    isPreparingSimulation
+                  }
+                  onTrigger={
+                    triggerInteractiveDemoEvent
+                  }
+                  onReset={
+                    clearInteractiveDemoEvents
+                  }
+                />
+              )}
 
               <div className="seed-field">
                 <span className="field-label">
@@ -2621,11 +2970,17 @@ setIsPreparingSimulation(
 
             <div className="drawer-research-note">
               <strong>
-                One simulation run
+                {applicationMode ===
+                "RESEARCH"
+                  ? "One simulation run"
+                  : "Interactive demonstration"}
               </strong>
 
               <p>
-                The screen shows one repeatable run. Formal comparisons use 40 paired replications so conclusions do not depend on one unusually good or bad run.
+                {applicationMode ===
+                "RESEARCH"
+                  ? "The screen shows one repeatable run. Formal comparisons use 40 paired replications so conclusions do not depend on one unusually good or bad run."
+                  : "Manual events are demonstration inputs only. They can be reproduced using the same seed and event log but are not part of the formal research factorial design."}
               </p>
             </div>
           </div>
@@ -3467,7 +3822,13 @@ setIsPreparingSimulation(
 
       <section
         className={
-          `research-output-panel${
+          `research-output-panel ${
+            applicationMode ===
+            "RESEARCH"
+              ? "research-mode-panel"
+              : "interactive-demo-panel"
+          }${
+
             researchDetailsOpen
               ? " details-open"
               : ""
@@ -3477,11 +3838,17 @@ setIsPreparingSimulation(
         <div className="research-output-heading">
           <div>
             <span className="eyebrow">
-              Research Outputs
+              {applicationMode ===
+              "RESEARCH"
+                ? "Research Outputs"
+                : "Demo Outputs"}
             </span>
 
             <strong className="research-output-title">
-              Current Simulation Run
+              {applicationMode ===
+              "RESEARCH"
+                ? "Current Simulation Run"
+                : "Interactive Demonstration"}
             </strong>
 
             <span
@@ -3494,10 +3861,15 @@ setIsPreparingSimulation(
 
           <div className="research-output-actions">
             <span className="research-output-context">
-              {
-                condition?.label ??
-                configuration.conditionId
-              } · Seed {
+              {applicationMode ===
+              "RESEARCH"
+                ? condition?.label ??
+                  configuration.conditionId
+                : `Interactive Demo · ${interactiveDemoEvents.length} event${
+                    interactiveDemoEvents.length === 1
+                      ? ""
+                      : "s"
+                  }`} · Seed {
                 replay.metadata.replicationSeed
               }
             </span>
