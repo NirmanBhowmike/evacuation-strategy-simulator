@@ -34,6 +34,8 @@ theta = 0.10
 
 ## Formal Research Conditions
 
+The frozen Architecture V2 formal research configuration contains seven conditions:
+
 | Condition | Description |
 |---|---|
 | **D0** | Baseline, no disruption |
@@ -41,8 +43,10 @@ theta = 0.10
 | **D2** | South-central exit block at 18 s |
 | **D3** | Main-central corridor block at 12 s |
 | **D4** | Main-spine hazard at 12 s + south-central exit block at 18 s |
+| **D5** | West exit block at 18 s |
+| **D6** | East-main to southeast corridor block at 12 s |
 
-These D0–D4 definitions are treated as frozen research conditions. New demonstration scenarios are not silently added to the formal experiment.
+D0-D6 are version-controlled formal research conditions. Interactive Demo scenarios remain separate and are not introduced into the formal factorial design.
 
 ## Occupancy Levels
 
@@ -65,15 +69,37 @@ CORRIDOR_BLOCK
 EXIT_BLOCK
 ```
 
-A hazard is a traversable `RISK` condition. Occupants may still pass through it and accumulate hazard-exposure time. A blocked corridor or exit is unavailable and can trigger forced route recovery.
+A hazard is a traversable `RISK` condition. Occupants may still pass through it and accumulate hazard-exposure time.
 
-Strategies respond only after an event has occurred; future disruption information is not exposed to routing policies.
+A blocked exit becomes unavailable for routing and evacuation through that exit.
+
+A corridor block closes the affected segment to new route entry after activation. An occupant already committed to or traversing the affected segment at the activation instant may complete that traversal under the frozen simulation semantics.
+
+Strategies respond only after an event has occurred. Future disruption information is not exposed to routing policies.
 
 ## Reproducibility
 
 Formal stochastic experiments use recorded pseudorandom seeds and common random numbers. The same scenario and seed are presented to competing strategies so strategy comparisons are not confounded by different randomized populations.
 
-The current formal design uses 40 paired replication seeds.
+The current formal design uses 40 paired replication seeds per experimental cell.
+
+Interactive Demo runs are also reproducible when the same simulation configuration, seed, and recorded Demo event log are used.
+
+## Formal Experimental Design
+
+The planned Architecture V2 factorial design is:
+
+```text
+5 routing strategies
+x 3 occupancy levels
+x 7 disruption conditions
+x 40 paired replication seeds
+= 4,200 planned formal runs
+```
+
+**The complete 4,200-run formal experiment has not yet been executed.**
+
+The formal experiment framework and validation infrastructure are implemented. The planned run count must not be interpreted as completed experimental results.
 
 ## Simulation Architecture
 
@@ -152,9 +178,43 @@ Selected-agent routes use cyan for currently usable segments and amber for segme
 
 ## Research Mode and Interactive Demo Mode
 
-**Research Mode** uses predefined, reproducible, version-controlled experimental conditions. The frozen D0–D4 conditions belong here.
+The application has two explicitly separated operating modes.
 
-A separate **Interactive Demo Mode** is planned for exploratory and presentation use. It will allow manual exit blocks, corridor blocks, and hazards while remaining clearly separate from formal research conditions.
+### Research Mode
+
+Research Mode uses the frozen Architecture V2 formal research configuration.
+
+It provides:
+
+- predefined D0-D6 conditions
+- controlled strategy and occupancy selection
+- reproducible seed configuration
+- formal research-output metrics
+- version-controlled research behavior
+
+Research Mode uses a restrained cyan / teal interface identity.
+
+### Interactive Demo Mode
+
+Interactive Demo Mode is intended for exploratory demonstrations and presentations without modifying the frozen research design.
+
+It supports:
+
+- main-spine hazard activation
+- blocking individual exits
+- blocking multiple exits in the same Demo run
+- blocking one calibrated corridor segment
+- combined hazard, exit-block, and corridor-block events
+- custom Demo scenarios
+- predefined demonstration presets
+- applying multiple selected disruptions at the same simulation timestamp
+- timestamped event logging
+- deterministic replay using the same seed and event log
+- clearing Demo events independently of the formal research configuration
+
+Interactive Demo Mode uses a separate violet / indigo interface identity in both dark and light themes.
+
+**Interactive Demo events are not formal research conditions and are not included in formal experimental results.**
 
 ## Automated Experiments
 
@@ -179,7 +239,17 @@ npm run build
 git diff --check
 ```
 
-The automated suite covers routing, deterministic replay, same-seed reproducibility, density-speed behavior, bottleneck flow, hazard exposure, rerouting behavior, Architecture V2 population generation, room-origin navigation, disruption regression behavior, timestep convergence, and visual/headless consistency.
+At the Interactive Demo implementation checkpoint:
+
+```text
+Test Files: 66 passed
+Tests: 455 passed
+TypeScript validation: passed
+Production build: passed
+git diff --check: passed
+```
+
+The automated suite covers routing, deterministic replay, same-seed reproducibility, density-speed behavior, bottleneck flow, hazard exposure, rerouting behavior, Architecture V2 population generation, room-origin navigation, disruption regression behavior, timestep convergence, visual/headless consistency, D5/D6 regression behavior, and Interactive Demo replay reproducibility.
 
 ## Technology
 
@@ -233,9 +303,28 @@ See [`docs/README.md`](docs/README.md) for the documentation index.
 
 ## Current Status
 
-The project currently includes Architecture V2, five routing strategies, deterministic seeded simulation, congestion and bottleneck modeling, dynamic disruption events, frozen D0–D4 research conditions, automated experiment infrastructure, 3D replay, selected-agent route tracking, responsive presentation mode, research-output metrics, and automated validation.
+The project currently includes:
 
-Current development is moving toward additional demonstration presets, Interactive Demo Mode, further documentation, and formal experiment analysis.
+- Architecture V2
+- five routing strategies
+- deterministic seeded simulation
+- congestion and bottleneck modeling
+- dynamic hazard, exit-block, and corridor-block events
+- frozen D0-D6 formal research conditions
+- LOW, MEDIUM, and HIGH formal occupancy levels
+- automated formal experiment infrastructure
+- 3D deterministic replay
+- selected-agent route tracking
+- responsive presentation mode
+- light and dark visual themes
+- separate Research and Interactive Demo modes
+- custom and preset Demo disruption scenarios
+- multi-exit Demo blocking
+- timestamped Demo event logs
+- reproducible Demo replay
+- automated validation
+
+The software infrastructure for the formal Architecture V2 experiment is implemented. The complete planned 4,200-run formal experiment and subsequent statistical analysis remain future execution stages.
 
 ## Scope and Interpretation
 
@@ -252,37 +341,3 @@ No open-source license is granted. The package is marked `UNLICENSED`, and publi
 **Nirman Bhowmike**
 
 Research-oriented software project developed for graduate-level study in AI, software research, simulation, and industrial engineering.
-# 3D Emergency Evacuation Strategy Simulator
-
-A research-oriented simulation platform for experimentally evaluating fixed and adaptive evacuation-routing strategies under dynamic building conditions.
-
-The project combines a deterministic research engine, seeded stochastic scenario generation, multiple routing policies, dynamic disruption events, automated experiments, and an interactive 3D replay interface. The quantitative simulation engine is the authoritative research artifact. The 3D environment visualizes simulation state and results but does not independently determine research outcomes.
-
-## Research Objective
-
-**Central research question:** How do fixed and adaptive evacuation-routing strategies differ in performance when congestion, hazards, exit availability, occupancy, and route conditions change during an evacuation?
-
-The simulator is designed for controlled and reproducible comparison rather than visual demonstration alone.
-
-## Current Research Configuration
-
-The current environment uses **Architecture V2**, a fictional first-floor institutional / academic building with multiple wings, four exterior exits, alternative circulation paths, bottlenecks, tactical decision points, configurable hazards, corridor blocks, and exit failures.
-
-Occupants originate from room locations and move through an explicit navigation network toward available exits.
-
-The building is intentionally fictional and is not presented as a digital twin of a real facility.
-
-## Routing Strategies
-
-Five routing strategies are implemented:
-
-- **Nearest Exit** — geometric nearest-exit baseline.
-- **Static Shortest Path** — shortest feasible network route with recovery when the route becomes physically infeasible.
-- **Congestion-Aware** — uses current density, queueing, and estimated travel-time effects.
-- **Hazard-Aware** — safety-first routing that treats blocked infrastructure as infeasible and traversable hazard regions as exposure-bearing `RISK` areas.
-- **Adaptive Hybrid** — combines feasibility, hazard state, congestion-adjusted travel time, bottleneck delay, exit availability, route history, and rerouting inertia.
-
-The frozen Adaptive Hybrid voluntary rerouting threshold is:
-
-```text
-theta = 0.10
