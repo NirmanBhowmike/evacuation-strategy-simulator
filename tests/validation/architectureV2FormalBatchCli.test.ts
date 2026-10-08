@@ -141,10 +141,10 @@ describe(
 
             {
               totalRuns:
-                750,
+                1050,
 
               completedRunCount:
-                748,
+                1048,
 
               unreachablePresentRunCount:
                 1,
@@ -175,13 +175,13 @@ describe(
         expect(
           metadata.totalRuns,
         ).toBe(
-          750,
+          1050,
         );
 
         expect(
           metadata.uniqueScenarioPairs,
         ).toBe(
-          150,
+          210,
         );
 
         expect(
@@ -193,7 +193,7 @@ describe(
         expect(
           metadata.averageRunsPerSecond,
         ).toBeCloseTo(
-          6.25,
+          8.75,
         );
 
         expect(
@@ -221,10 +221,10 @@ describe(
 
               {
                 totalRuns:
-                  749,
+                  1049,
 
                 completedRunCount:
-                  749,
+                  1049,
 
                 unreachablePresentRunCount:
                   0,
@@ -240,7 +240,7 @@ describe(
               120000,
             ),
         ).toThrow(
-          /exactly 750 runs/i,
+          /exactly 1050 runs/i,
         );
 
         expect(
@@ -256,10 +256,10 @@ describe(
 
               {
                 totalRuns:
-                  750,
+                  1050,
 
                 completedRunCount:
-                  749,
+                  1049,
 
                 unreachablePresentRunCount:
                   0,

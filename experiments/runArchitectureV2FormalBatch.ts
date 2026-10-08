@@ -17,8 +17,10 @@ import {
 } from "node:url";
 
 import {
+  ARCHITECTURE_V2_FORMAL_EXPERIMENTAL_CELLS,
   ARCHITECTURE_V2_FORMAL_INITIAL_SEED_BANK,
   ARCHITECTURE_V2_FORMAL_REPLICATION_EXTENSION_BATCH_SIZE,
+  ARCHITECTURE_V2_FORMAL_STRATEGY_IDS,
 } from "../src/experiment/architectureV2FormalExperimentDesign";
 
 import {
@@ -406,7 +408,9 @@ export function createArchitectureV2FormalBatchExecutionMetadata(
   }
 
   const expectedRuns =
-    750;
+    replicationSeeds.length *
+    ARCHITECTURE_V2_FORMAL_EXPERIMENTAL_CELLS
+      .length;
 
   if (
     summary.totalRuns !==
@@ -455,13 +459,17 @@ export function createArchitectureV2FormalBatchExecutionMetadata(
       summary.totalRuns,
 
     /**
-     * 3 occupancies
-     * × 5 conditions
-     * × 10 replication seeds
-     * = 150 paired stochastic scenarios.
+     * One paired stochastic scenario consists of the same
+     * occupancy, disruption condition, and replication seed
+     * evaluated across all routing strategies.
+     *
+     * Derive this count from the frozen formal design so
+     * condition-set changes cannot leave stale metadata.
      */
     uniqueScenarioPairs:
-      150,
+      expectedRuns /
+      ARCHITECTURE_V2_FORMAL_STRATEGY_IDS
+        .length,
 
     completedRunCount:
       summary.completedRunCount,
@@ -598,7 +606,7 @@ export function runArchitectureV2FormalBatchCli(
 ): void {
   /**
    * Preflight output collision before spending time on
-   * 750 simulations.
+   * the complete replication batch.
    */
   const outputPaths =
     prepareFormalBatchOutputPaths(
@@ -626,12 +634,17 @@ export function runArchitectureV2FormalBatchCli(
         cliArguments.batchNumber,
     });
 
+  const expectedRuns =
+    replicationSeeds.length *
+    ARCHITECTURE_V2_FORMAL_EXPERIMENTAL_CELLS
+      .length;
+
   if (
     plan.length !==
-    750
+    expectedRuns
   ) {
     throw new Error(
-      `Expected 750 runs in formal batch ${cliArguments.batchNumber}, found ${plan.length}.`,
+      `Expected ${expectedRuns} runs in formal batch ${cliArguments.batchNumber}, found ${plan.length}.`,
     );
   }
 
@@ -651,8 +664,13 @@ export function runArchitectureV2FormalBatchCli(
     `Seeds: ${replicationSeeds.join(", ")}`,
   );
 
+  const expectedScenarioPairs =
+    expectedRuns /
+    ARCHITECTURE_V2_FORMAL_STRATEGY_IDS
+      .length;
+
   console.log(
-    "Planned execution: 150 paired scenarios / 750 simulations",
+    `Planned execution: ${expectedScenarioPairs} paired scenarios / ${expectedRuns} simulations`,
   );
 
   const startedAtUtc =
