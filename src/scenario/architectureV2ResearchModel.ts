@@ -21,7 +21,7 @@ import type {
 } from "../types/navigation";
 
 /**
- * Frozen Architecture V2 D3 blockable corridor segment.
+ * D3 blockable corridor segment.
  *
  * Physical segment:
  *
@@ -35,11 +35,6 @@ import type {
  *
  * Width:
  *   4.0 m
- *
- * Rectangle:
- *
- * x = 36.0 .. 40.5
- * y = 18.0 .. 22.0
  */
 export const ARCHITECTURE_V2_D3_BLOCKABLE_ZONE:
   BuildingZone = {
@@ -87,33 +82,110 @@ export const ARCHITECTURE_V2_D3_BLOCKABLE_ZONE:
   },
 };
 
-const duplicateResearchZone =
-  layoutAArchitectureV2Environment
-    .zones
-    .some(
-      (
-        zone,
-      ) =>
-        zone.id ===
-        ARCHITECTURE_V2_D3_BLOCKABLE_ZONE
-          .id,
-    );
+/**
+ * D6 blockable corridor segment.
+ *
+ * Physical segment:
+ *
+ * main-east
+ *   (60.0, 20.0)
+ *
+ * to
+ *
+ * main-southeast
+ *   (69.0, 20.0)
+ *
+ * Width:
+ *   4.0 m
+ *
+ * D6 is spatially separate from D3 and was selected through
+ * the dedicated D5/D6 calibration and independent
+ * confirmation process.
+ */
+export const ARCHITECTURE_V2_D6_BLOCKABLE_ZONE:
+  BuildingZone = {
+  id:
+    ARCHITECTURE_V2_RESEARCH_DISRUPTION_TARGETS
+      .D6_CORRIDOR_ZONE,
 
-if (
-  duplicateResearchZone
-) {
-  throw new Error(
-    `Architecture V2 base environment already contains research zone ${ARCHITECTURE_V2_D3_BLOCKABLE_ZONE.id}.`,
-  );
+  type:
+    "CORRIDOR",
+
+  polygon: {
+    vertices: [
+      {
+        x:
+          60,
+
+        y:
+          18,
+      },
+
+      {
+        x:
+          69,
+
+        y:
+          18,
+      },
+
+      {
+        x:
+          69,
+
+        y:
+          22,
+      },
+
+      {
+        x:
+          60,
+
+        y:
+          22,
+      },
+    ],
+  },
+};
+
+function assertResearchZoneNotInBaseEnvironment(
+  zone:
+    BuildingZone,
+): void {
+  const duplicate =
+    layoutAArchitectureV2Environment
+      .zones
+      .some(
+        (
+          candidate,
+        ) =>
+          candidate.id ===
+          zone.id,
+      );
+
+  if (
+    duplicate
+  ) {
+    throw new Error(
+      `Architecture V2 base environment already contains research zone ${zone.id}.`,
+    );
+  }
 }
 
+assertResearchZoneNotInBaseEnvironment(
+  ARCHITECTURE_V2_D3_BLOCKABLE_ZONE,
+);
+
+assertResearchZoneNotInBaseEnvironment(
+  ARCHITECTURE_V2_D6_BLOCKABLE_ZONE,
+);
+
 /**
- * D3-specific research environment.
+ * D3-specific environment.
  *
- * The approved Architecture V2 environment remains unchanged.
- *
- * This environment adds only the selected blockable corridor
- * segment required by the D3 CORRIDOR_BLOCK experiment.
+ * The approved Architecture V2 base environment remains
+ * unchanged. This derived environment adds only the D3
+ * blockable segment.
  */
 export const layoutAArchitectureV2D3ResearchEnvironment:
   BuildingEnvironment = {
@@ -128,13 +200,30 @@ export const layoutAArchitectureV2D3ResearchEnvironment:
 };
 
 /**
- * Returns the correct environment for one frozen
- * Architecture V2 disruption condition.
+ * D6-specific environment.
  *
- * D0, D1, D2 and D4 use the original approved
+ * This derived environment adds only the independently
+ * calibrated D6 blockable segment.
+ */
+export const layoutAArchitectureV2D6ResearchEnvironment:
+  BuildingEnvironment = {
+  ...layoutAArchitectureV2Environment,
+
+  zones: [
+    ...layoutAArchitectureV2Environment
+      .zones,
+
+    ARCHITECTURE_V2_D6_BLOCKABLE_ZONE,
+  ],
+};
+
+/**
+ * D0, D1, D2, D4 and D5 use the approved base
  * Architecture V2 environment.
  *
- * D3 alone receives the additional blockable zone.
+ * D3 receives its dedicated corridor zone.
+ *
+ * D6 receives its separate dedicated corridor zone.
  */
 export function getArchitectureV2ResearchEnvironment(
   conditionId:
@@ -147,27 +236,126 @@ export function getArchitectureV2ResearchEnvironment(
     return layoutAArchitectureV2D3ResearchEnvironment;
   }
 
+  if (
+    conditionId ===
+    "D6_CORRIDOR_BLOCK_EAST_SOUTHEAST"
+  ) {
+    return layoutAArchitectureV2D6ResearchEnvironment;
+  }
+
   return layoutAArchitectureV2Environment;
 }
 
+interface CorridorRemapDefinition {
+  readonly edgeId:
+    string;
+
+  readonly expectedBaseZoneId:
+    string;
+
+  readonly researchZoneId:
+    string;
+
+  readonly conditionLabel:
+    string;
+}
+
+function remapResearchCorridorEdge(
+  baseGraph:
+    NavigationGraph,
+
+  definition:
+    CorridorRemapDefinition,
+): NavigationGraph {
+  const targetEdges =
+    baseGraph
+      .edges
+      .filter(
+        (
+          edge,
+        ) =>
+          edge.id ===
+          definition.edgeId,
+      );
+
+  if (
+    targetEdges.length !==
+    1
+  ) {
+    throw new Error(
+      `Expected exactly one Architecture V2 ${definition.conditionLabel} target edge ${definition.edgeId}, found ${targetEdges.length}.`,
+    );
+  }
+
+  const targetEdge =
+    targetEdges[0];
+
+  if (!targetEdge) {
+    throw new Error(
+      `Architecture V2 ${definition.conditionLabel} target edge not found: ${definition.edgeId}`,
+    );
+  }
+
+  /**
+   * Guard against unnoticed graph drift.
+   *
+   * Both currently calibrated blockable segments belong to
+   * corridor-main-spine in the approved base graph.
+   */
+  if (
+    targetEdge.zoneId !==
+    definition.expectedBaseZoneId
+  ) {
+    throw new Error(
+      `Architecture V2 ${definition.conditionLabel} target edge ${definition.edgeId} expected base zone ${definition.expectedBaseZoneId}, received ${targetEdge.zoneId}.`,
+    );
+  }
+
+  const edges:
+    readonly NavigationEdge[] =
+    baseGraph
+      .edges
+      .map(
+        (
+          edge,
+        ) => {
+          if (
+            edge.id !==
+            definition.edgeId
+          ) {
+            return edge;
+          }
+
+          return {
+            ...edge,
+
+            zoneId:
+              definition
+                .researchZoneId,
+          };
+        },
+      );
+
+  return {
+    ...baseGraph,
+
+    nodes:
+      baseGraph.nodes,
+
+    edges,
+  };
+}
+
 /**
- * Returns the correct navigation graph for one frozen
- * Architecture V2 disruption condition.
+ * Returns the condition-specific Architecture V2 graph.
  *
- * IMPORTANT:
+ * The supplied baseGraph remains authoritative and contains
+ * the full room-origin population graph.
  *
- * The supplied baseGraph must be the authoritative graph
- * returned by createArchitectureV2AuthoritativeBundle().
+ * D3 and D6 remap exactly one calibrated corridor edge each
+ * to a dedicated blockable zone.
  *
- * That graph contains the 42 private room-origin nodes
- * and room-origin -> door edges required by the calibrated
- * Medium population.
- *
- * D0, D1, D2 and D4 therefore return that authoritative
- * graph unchanged.
- *
- * D3 preserves ALL supplied nodes and edges but changes
- * the zoneId of exactly one calibrated corridor edge.
+ * All other conditions preserve the supplied graph unchanged.
  */
 export function getArchitectureV2ResearchNavigationGraph(
   conditionId:
@@ -187,100 +375,52 @@ export function getArchitectureV2ResearchNavigationGraph(
   }
 
   if (
-    conditionId !==
+    conditionId ===
     "D3_CORRIDOR_BLOCK"
   ) {
-    return baseGraph;
+    return remapResearchCorridorEdge(
+      baseGraph,
+      {
+        edgeId:
+          ARCHITECTURE_V2_RESEARCH_DISRUPTION_TARGETS
+            .CORRIDOR_EDGE,
+
+        expectedBaseZoneId:
+          "corridor-main-spine",
+
+        researchZoneId:
+          ARCHITECTURE_V2_RESEARCH_DISRUPTION_TARGETS
+            .CORRIDOR_ZONE,
+
+        conditionLabel:
+          "D3",
+      },
+    );
   }
-
-  const targetEdgeId =
-    ARCHITECTURE_V2_RESEARCH_DISRUPTION_TARGETS
-      .CORRIDOR_EDGE;
-
-  const targetEdges =
-    baseGraph
-      .edges
-      .filter(
-        (
-          edge,
-        ) =>
-          edge.id ===
-          targetEdgeId,
-      );
 
   if (
-    targetEdges.length !==
-    1
+    conditionId ===
+    "D6_CORRIDOR_BLOCK_EAST_SOUTHEAST"
   ) {
-    throw new Error(
-      `Expected exactly one Architecture V2 D3 target edge ${targetEdgeId}, found ${targetEdges.length}.`,
+    return remapResearchCorridorEdge(
+      baseGraph,
+      {
+        edgeId:
+          ARCHITECTURE_V2_RESEARCH_DISRUPTION_TARGETS
+            .D6_CORRIDOR_EDGE,
+
+        expectedBaseZoneId:
+          "corridor-main-spine",
+
+        researchZoneId:
+          ARCHITECTURE_V2_RESEARCH_DISRUPTION_TARGETS
+            .D6_CORRIDOR_ZONE,
+
+        conditionLabel:
+          "D6",
+      },
     );
   }
 
-  const targetEdge =
-    targetEdges[0];
-
-  if (!targetEdge) {
-    throw new Error(
-      `Architecture V2 D3 target edge not found: ${targetEdgeId}`,
-    );
-  }
-
-  /**
-   * Guard against unnoticed model drift.
-   *
-   * During calibration the selected physical edge belonged
-   * to corridor-main-spine before the D3-specific remapping.
-   */
-  if (
-    targetEdge.zoneId !==
-    "corridor-main-spine"
-  ) {
-    throw new Error(
-      `Architecture V2 D3 target edge ${targetEdgeId} expected base zone corridor-main-spine, received ${targetEdge.zoneId}.`,
-    );
-  }
-
-  const edges:
-    readonly NavigationEdge[] =
-    baseGraph
-      .edges
-      .map(
-        (
-          edge,
-        ) => {
-          if (
-            edge.id !==
-            targetEdgeId
-          ) {
-            return edge;
-          }
-
-          return {
-            ...edge,
-
-            zoneId:
-              ARCHITECTURE_V2_RESEARCH_DISRUPTION_TARGETS
-                .CORRIDOR_ZONE,
-          };
-        },
-      );
-
-  return {
-    ...baseGraph,
-
-    /**
-     * Preserve every room-origin and architectural node.
-     */
-    nodes:
-      baseGraph.nodes,
-
-    /**
-     * Preserve every room-origin edge.
-     *
-     * Only the selected D3 corridor edge receives
-     * different zone metadata.
-     */
-    edges,
-  };
+  return baseGraph;
 }

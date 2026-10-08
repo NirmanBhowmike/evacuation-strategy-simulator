@@ -60,7 +60,7 @@ import type {
 } from "./architectureV2FormalCliSupport";
 
 export const ARCHITECTURE_V2_DIAGNOSTIC_MATRIX_VERSION =
-  "architecture-v2-diagnostic-matrix-v1";
+  "architecture-v2-diagnostic-matrix-v2";
 
 export const ARCHITECTURE_V2_DIAGNOSTIC_SEEDS =
   Object.freeze([
@@ -385,10 +385,10 @@ export function createArchitectureV2DiagnosticMatrixPlan():
 
   if (
     requests.length !==
-    25
+    35
   ) {
     throw new Error(
-      `Expected 25 diagnostic scenario pairs, found ${requests.length}.`,
+      `Expected 35 diagnostic scenario pairs, found ${requests.length}.`,
     );
   }
 
@@ -521,7 +521,7 @@ function validateDiagnosticRecords(
 ): void {
   if (
     records.length !==
-    125
+    175
   ) {
     throw new Error(
       `Architecture V2 diagnostic matrix requires exactly 125 runs, found ${records.length}.`,
@@ -537,7 +537,7 @@ function validateDiagnosticRecords(
           record.runId,
       ),
     ).size !==
-    125
+    175
   ) {
     throw new Error(
       "Architecture V2 diagnostic matrix contains duplicate run IDs.",
@@ -1060,7 +1060,7 @@ export function createArchitectureV2DiagnosticSummary(
       ],
 
     totalPairs:
-      25,
+      35,
 
     totalRuns:
       records.length,
@@ -1523,7 +1523,7 @@ function executeArchitectureV2DiagnosticMatrix(
       1;
 
     console.log(
-      `Progress: ${completedPairs}/25 pairs, ${records.length}/125 runs`,
+      `Progress: ${completedPairs}/35 pairs, ${records.length}/175 runs`,
     );
   }
 
@@ -1626,7 +1626,7 @@ function main():
 
   /**
    * Verify output collision before spending time on the
-   * 125 simulations.
+   * 175 simulations.
    */
   const outputPaths =
     prepareOutputPaths(
@@ -1660,7 +1660,7 @@ function main():
   );
 
   console.log(
-    "Planned execution: 25 paired scenarios / 125 simulations",
+    "Planned execution: 25 paired scenarios / 175 simulations",
   );
 
   const records =

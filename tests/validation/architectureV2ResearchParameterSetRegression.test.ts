@@ -177,7 +177,7 @@ describe(
       expect(
         ARCHITECTURE_V2_RESEARCH_PARAMETER_SET_VERSION,
       ).toBe(
-        "architecture-v2-research-v1.1-frozen",
+        "architecture-v2-research-v1.2-frozen",
       );
 
       expect(
@@ -250,12 +250,21 @@ describe(
 
         CORRIDOR_EDGE:
           "edge-main-central-central-01",
+
+        D5_EXIT:
+          "exit-west",
+
+        D6_CORRIDOR_ZONE:
+          "corridor-main-east-southeast-blockable",
+
+        D6_CORRIDOR_EDGE:
+          "edge-main-east-main-southeast",
       });
 
       expect(
         ARCHITECTURE_V2_RESEARCH_DISRUPTION_CONDITIONS,
       ).toHaveLength(
-        5,
+        7,
       );
     });
 

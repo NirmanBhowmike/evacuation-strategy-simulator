@@ -23,24 +23,18 @@ import type {
  * Frozen identifier for the primary Architecture V2
  * factorial experiment design.
  *
- * Any methodological change after formal execution begins
- * must receive a new design version.
+ * v3 expands the disruption factor from five to seven
+ * conditions by adding calibrated D5 and D6.
  */
 export const ARCHITECTURE_V2_FORMAL_EXPERIMENT_DESIGN_VERSION =
-  "architecture-v2-formal-factorial-v2";
+  "architecture-v2-formal-factorial-v3";
 
 /**
  * Frozen identifier for the replication-seed policy.
- *
- * Formal seeds are intentionally separated from earlier
- * development and calibration seeds.
  */
 export const ARCHITECTURE_V2_FORMAL_SEED_BANK_VERSION =
   "architecture-v2-formal-seed-bank-v1";
 
-/**
- * Primary factorial routing strategies.
- */
 export const ARCHITECTURE_V2_FORMAL_STRATEGY_IDS:
   readonly RoutingStrategyId[] =
 Object.freeze([
@@ -51,9 +45,6 @@ Object.freeze([
   "ADAPTIVE_HYBRID",
 ]);
 
-/**
- * Frozen Architecture V2 occupancy factor.
- */
 export const ARCHITECTURE_V2_FORMAL_POPULATION_LEVELS:
   readonly ArchitectureV2FormalPopulationLevel[] =
 Object.freeze([
@@ -63,10 +54,11 @@ Object.freeze([
 ]);
 
 /**
- * Frozen Architecture V2 disruption factor.
+ * Formal Architecture V2 disruption factor.
  *
- * Deriving this list from the frozen research parameter
- * set prevents a duplicate condition definition here.
+ * The condition IDs are derived directly from the frozen
+ * research parameter set so the experiment design cannot
+ * silently diverge from the authoritative condition set.
  */
 export const ARCHITECTURE_V2_FORMAL_CONDITION_IDS:
   readonly ArchitectureV2ResearchDisruptionConditionId[] =
@@ -80,31 +72,12 @@ Object.freeze(
     ),
 );
 
-/**
- * Formal replication policy.
- *
- * Primary execution begins with 40 replications per
- * experimental cell.
- *
- * If convergence criteria require more observations,
- * replication count increases only in complete batches
- * of 10.
- */
 export const ARCHITECTURE_V2_FORMAL_MINIMUM_REPLICATIONS_PER_CELL =
   40;
 
 export const ARCHITECTURE_V2_FORMAL_REPLICATION_EXTENSION_BATCH_SIZE =
   10;
 
-/**
- * First seed in the formal-research namespace.
- *
- * 100001 was selected simply to keep formal execution
- * visibly separate from calibration/development seeds.
- *
- * Scientific interpretation must not depend on the
- * numeric magnitude of a seed.
- */
 export const ARCHITECTURE_V2_FORMAL_FIRST_REPLICATION_SEED =
   100001;
 
@@ -129,17 +102,9 @@ export interface ArchitectureV2FormalExperimentalCell {
 }
 
 export interface ArchitectureV2FormalRunSpecification {
-  /**
-   * Unique identifier for one strategy-specific simulation
-   * run.
-   */
   readonly runId:
     string;
 
-  /**
-   * Pairing key shared by all five strategies evaluating
-   * exactly the same stochastic ScenarioInstance.
-   */
   readonly pairKey:
     string;
 
@@ -167,12 +132,6 @@ export interface ArchitectureV2FormalRunSpecification {
   readonly replicationSeed:
     number;
 
-  /**
-   * Strategy-independent scenario request.
-   *
-   * All five competing strategies receive equivalent
-   * requests for one pairKey.
-   */
   readonly scenarioRequest:
     ArchitectureV2FormalScenarioRequest;
 }
@@ -208,20 +167,9 @@ export interface ArchitectureV2FormalExperimentDesign {
   readonly totalCells:
     number;
 
-  /**
-   * Number of distinct ScenarioInstances required before
-   * strategy expansion.
-   *
-   * occupancy × disruption × replication
-   */
   readonly totalUniqueScenarios:
     number;
 
-  /**
-   * Total headless simulation executions.
-   *
-   * strategy × occupancy × disruption × replication
-   */
   readonly totalPlannedRuns:
     number;
 }
@@ -310,20 +258,6 @@ function createRunId(
   );
 }
 
-/**
- * Creates a stable prefix seed bank.
- *
- * Examples:
- *
- * 40 replications:
- *   100001 ... 100040
- *
- * 50 replications:
- *   100001 ... 100050
- *
- * Extending the bank therefore never changes an earlier
- * stochastic realization.
- */
 export function createArchitectureV2FormalSeedBank(
   replicationCount:
     number =
@@ -383,17 +317,13 @@ export const ARCHITECTURE_V2_FORMAL_INITIAL_SEED_BANK =
   createArchitectureV2FormalSeedBank();
 
 /**
- * Creates the frozen:
+ * Formal design:
  *
- * 5 strategies
- * ×
- * 3 occupancy levels
- * ×
- * 5 disruption conditions
+ * 5 routing strategies
+ * × 3 occupancy levels
+ * × 7 disruption conditions
  *
- * = 75 experimental cells.
- *
- * Cell construction contains no stochastic realization.
+ * = 105 experimental cells.
  */
 export function createArchitectureV2FormalExperimentalCells():
   readonly ArchitectureV2FormalExperimentalCell[] {
@@ -401,10 +331,6 @@ export function createArchitectureV2FormalExperimentalCells():
     ArchitectureV2FormalExperimentalCell[] =
   [];
 
-  /**
-   * Ordering deliberately groups the five competing
-   * strategies inside each occupancy × disruption pair.
-   */
   for (
     const populationLevel of
       ARCHITECTURE_V2_FORMAL_POPULATION_LEVELS
@@ -449,18 +375,6 @@ export function createArchitectureV2FormalExperimentalCells():
 export const ARCHITECTURE_V2_FORMAL_EXPERIMENTAL_CELLS =
   createArchitectureV2FormalExperimentalCells();
 
-/**
- * Creates descriptors for formal simulation execution.
- *
- * This function DOES NOT run the simulator.
- *
- * It also does not construct thousands of full
- * ScenarioInstances in memory.
- *
- * Instead, each run specification records the exact
- * strategy-independent scenario request that the future
- * formal runner will construct when needed.
- */
 export function createArchitectureV2FormalRunPlan(
   replicationCount:
     number =
@@ -500,15 +414,6 @@ export function createArchitectureV2FormalRunPlan(
     ArchitectureV2FormalRunSpecification[] =
   [];
 
-  /**
-   * Run-plan ordering groups the five strategy runs for
-   * one stochastic scenario together:
-   *
-   * population
-   *   -> disruption
-   *     -> replication seed
-   *       -> five strategies
-   */
   for (
     const populationLevel of
       ARCHITECTURE_V2_FORMAL_POPULATION_LEVELS
@@ -604,10 +509,6 @@ export function createArchitectureV2FormalRunPlan(
   );
 }
 
-/**
- * Creates experiment-level metadata without executing any
- * simulations.
- */
 export function createArchitectureV2FormalExperimentDesign(
   replicationCount:
     number =

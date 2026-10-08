@@ -184,7 +184,7 @@ describe(
     );
 
     it(
-      "creates a 750-run first replication batch using exactly the first 10 formal seeds",
+      "creates a 1050-run first replication batch using exactly the first 10 formal seeds",
       () => {
         const plan =
           createArchitectureV2FormalReplicationBatchPlan({
@@ -202,7 +202,7 @@ describe(
         expect(
           plan,
         ).toHaveLength(
-          750,
+          1050,
         );
 
         expect(
@@ -230,7 +230,7 @@ describe(
             ),
           ).size,
         ).toBe(
-          150,
+          210,
         );
 
         expect(
@@ -243,7 +243,7 @@ describe(
             ),
           ).size,
         ).toBe(
-          75,
+          105,
         );
 
         const pairCounts =
@@ -271,7 +271,7 @@ describe(
         expect(
           pairCounts.size,
         ).toBe(
-          150,
+          210,
         );
 
         for (
@@ -288,7 +288,7 @@ describe(
     );
 
     it(
-      "creates a 750-run fourth replication batch using exactly seeds 31 through 40",
+      "creates a 1050-run fourth replication batch using exactly seeds 31 through 40",
       () => {
         const plan =
           createArchitectureV2FormalReplicationBatchPlan({
@@ -306,7 +306,7 @@ describe(
         expect(
           plan,
         ).toHaveLength(
-          750,
+          1050,
         );
 
         expect(
@@ -341,7 +341,7 @@ describe(
     );
 
     it(
-      "creates the complete 3000-run initial execution plan without running simulations",
+      "creates the complete 4200-run initial execution plan without running simulations",
       () => {
         const plan =
           createArchitectureV2FormalInitialExecutionPlan();
@@ -349,7 +349,7 @@ describe(
         expect(
           plan,
         ).toHaveLength(
-          3000,
+          4200,
         );
 
         expect(
@@ -362,7 +362,7 @@ describe(
             ),
           ).size,
         ).toBe(
-          3000,
+          4200,
         );
 
         expect(
@@ -375,7 +375,7 @@ describe(
             ),
           ).size,
         ).toBe(
-          600,
+          840,
         );
 
         expect(
@@ -388,7 +388,7 @@ describe(
             ),
           ).size,
         ).toBe(
-          75,
+          105,
         );
 
         expect(

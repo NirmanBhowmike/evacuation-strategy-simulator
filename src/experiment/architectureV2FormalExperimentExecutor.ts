@@ -1,4 +1,5 @@
 import {
+  ARCHITECTURE_V2_FORMAL_EXPERIMENTAL_CELLS,
   ARCHITECTURE_V2_FORMAL_INITIAL_SEED_BANK,
   ARCHITECTURE_V2_FORMAL_REPLICATION_EXTENSION_BATCH_SIZE,
   ARCHITECTURE_V2_FORMAL_STRATEGY_IDS,
@@ -447,9 +448,6 @@ export function executeArchitectureV2FormalSpecifications(
     });
   }
 
-  /**
-   * Restore exact input run-plan ordering.
-   */
   const orderedResults =
     specifications.map(
       (
@@ -591,12 +589,14 @@ export function executeArchitectureV2FormalCell(
 }
 
 /**
- * Creates one 10-seed replication batch across the entire
- * 75-cell factorial design.
+ * Creates one 10-seed replication batch across the
+ * complete formal factorial design.
  *
- * One batch therefore contains:
+ * Architecture V2 research v1.2 contains 105 cells.
  *
- * 10 seeds × 75 cells = 750 simulation runs.
+ * One initial batch therefore contains:
+ *
+ * 10 seeds × 105 cells = 1,050 simulation runs.
  */
 export function createArchitectureV2FormalReplicationBatchPlan(
   request:
@@ -664,7 +664,8 @@ export function createArchitectureV2FormalReplicationBatchPlan(
 
   const expectedRunCount =
     batchSize *
-    75;
+    ARCHITECTURE_V2_FORMAL_EXPERIMENTAL_CELLS
+      .length;
 
   if (
     specifications.length !==
@@ -696,19 +697,29 @@ export function executeArchitectureV2FormalReplicationBatch(
 }
 
 /**
- * Returns the complete frozen initial 3,000-run plan.
+ * Returns the complete frozen initial formal run plan.
+ *
+ * Research v1.2:
+ *
+ * 105 cells × 40 replications = 4,200 runs.
  */
 export function createArchitectureV2FormalInitialExecutionPlan():
   readonly ArchitectureV2FormalRunSpecification[] {
   const specifications =
     createArchitectureV2FormalRunPlan();
 
+  const expectedRunCount =
+    ARCHITECTURE_V2_FORMAL_EXPERIMENTAL_CELLS
+      .length *
+    ARCHITECTURE_V2_FORMAL_INITIAL_SEED_BANK
+      .length;
+
   if (
     specifications.length !==
-    3000
+    expectedRunCount
   ) {
     throw new Error(
-      `Expected 3000 initial Architecture V2 formal runs, found ${specifications.length}.`,
+      `Expected ${expectedRunCount} initial Architecture V2 formal runs, found ${specifications.length}.`,
     );
   }
 
@@ -716,8 +727,11 @@ export function createArchitectureV2FormalInitialExecutionPlan():
 }
 
 /**
- * Executes the complete 3,000-run initial formal
- * experiment.
+ * Executes the complete initial formal experiment.
+ *
+ * Current Architecture V2 research v1.2 design:
+ *
+ * 4,200 simulation runs.
  *
  * Do not invoke this until the controlled executor has
  * passed validation and the exact formal code revision has

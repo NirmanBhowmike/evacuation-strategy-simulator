@@ -33,7 +33,7 @@ describe(
   "Architecture V2 formal experiment design",
   () => {
     it(
-      "defines the complete frozen 5 x 3 x 5 factorial structure",
+      "defines the complete frozen 5 x 3 x 7 factorial structure",
       () => {
         expect(
           ARCHITECTURE_V2_FORMAL_STRATEGY_IDS,
@@ -61,6 +61,8 @@ describe(
           "D2_EXIT_BLOCK",
           "D3_CORRIDOR_BLOCK",
           "D4_COMBINED",
+          "D5_EXIT_BLOCK_WEST",
+          "D6_CORRIDOR_BLOCK_EAST_SOUTHEAST",
         ]);
 
         expect(
@@ -71,13 +73,13 @@ describe(
             ARCHITECTURE_V2_FORMAL_CONDITION_IDS
               .length,
         ).toBe(
-          75,
+          105,
         );
       },
     );
 
     it(
-      "creates exactly 75 unique experimental cells",
+      "creates exactly 105 unique experimental cells",
       () => {
         const cells =
           createArchitectureV2FormalExperimentalCells();
@@ -85,13 +87,13 @@ describe(
         expect(
           cells,
         ).toHaveLength(
-          75,
+          105,
         );
 
         expect(
           ARCHITECTURE_V2_FORMAL_EXPERIMENTAL_CELLS,
         ).toHaveLength(
-          75,
+          105,
         );
 
         expect(
@@ -104,7 +106,7 @@ describe(
             ),
           ).size,
         ).toBe(
-          75,
+          105,
         );
 
         const factorKeys =
@@ -126,7 +128,7 @@ describe(
             factorKeys,
           ).size,
         ).toBe(
-          75,
+          105,
         );
 
         for (
@@ -286,7 +288,7 @@ describe(
     );
 
     it(
-      "reports 75 cells, 600 unique scenarios, and 3000 initial formal runs",
+      "reports 105 cells, 840 unique scenarios, and 4200 initial formal runs",
       () => {
         const design =
           createArchitectureV2FormalExperimentDesign();
@@ -318,19 +320,19 @@ describe(
         expect(
           design.totalCells,
         ).toBe(
-          75,
+          105,
         );
 
         expect(
           design.totalUniqueScenarios,
         ).toBe(
-          600,
+          840,
         );
 
         expect(
           design.totalPlannedRuns,
         ).toBe(
-          3000,
+          4200,
         );
 
         expect(
@@ -342,7 +344,7 @@ describe(
     );
 
     it(
-      "creates exactly 3000 unique initial run specifications",
+      "creates exactly 4200 unique initial run specifications",
       () => {
         const runs =
           createArchitectureV2FormalRunPlan();
@@ -350,7 +352,7 @@ describe(
         expect(
           runs,
         ).toHaveLength(
-          3000,
+          4200,
         );
 
         expect(
@@ -363,7 +365,7 @@ describe(
             ),
           ).size,
         ).toBe(
-          3000,
+          4200,
         );
 
         expect(
@@ -376,7 +378,7 @@ describe(
             ),
           ).size,
         ).toBe(
-          600,
+          840,
         );
 
         expect(
@@ -389,7 +391,7 @@ describe(
             ),
           ).size,
         ).toBe(
-          75,
+          105,
         );
       },
     );
@@ -470,7 +472,7 @@ describe(
         expect(
           runsByPair.size,
         ).toBe(
-          600,
+          840,
         );
 
         for (
@@ -614,7 +616,7 @@ describe(
     );
 
     it(
-      "extends to 50 replications without changing the original 3000-run prefix design",
+      "extends to 50 replications without changing the original 4200-run prefix design",
       () => {
         const initial =
           createArchitectureV2FormalRunPlan(
@@ -634,25 +636,25 @@ describe(
         expect(
           extended,
         ).toHaveLength(
-          3750,
+          5250,
         );
 
         expect(
           design.totalCells,
         ).toBe(
-          75,
+          105,
         );
 
         expect(
           design.totalUniqueScenarios,
         ).toBe(
-          750,
+          1050,
         );
 
         expect(
           design.totalPlannedRuns,
         ).toBe(
-          3750,
+          5250,
         );
 
         /**

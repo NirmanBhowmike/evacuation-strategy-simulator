@@ -79,7 +79,7 @@ function createSyntheticRecords():
        * D0 deliberately makes Adaptive Hybrid identical
        * to Hazard-Aware.
        *
-       * D1-D4 deliberately make them different.
+       * D1-D6 deliberately make them different.
        */
       const effectiveIndex =
         strategyId ===
@@ -232,7 +232,7 @@ describe(
   "Architecture V2 diagnostic matrix",
   () => {
     it(
-      "creates exactly 25 diagnostic scenario pairs and keeps diagnostic seeds outside the formal seed bank",
+      "creates exactly 35 diagnostic scenario pairs and keeps diagnostic seeds outside the formal seed bank",
       () => {
         const plan =
           createArchitectureV2DiagnosticMatrixPlan();
@@ -240,7 +240,7 @@ describe(
         expect(
           plan,
         ).toHaveLength(
-          25,
+          35,
         );
 
         expect(
@@ -253,7 +253,7 @@ describe(
             ),
           ).size,
         ).toBe(
-          25,
+          35,
         );
 
         expect(
@@ -266,7 +266,7 @@ describe(
             ),
           ).size,
         ).toBe(
-          5,
+          7,
         );
 
         expect(
@@ -299,7 +299,7 @@ describe(
     );
 
     it(
-      "summarizes 125 synthetic runs into 25 condition-strategy aggregates",
+      "summarizes 175 synthetic runs into 35 condition-strategy aggregates",
       () => {
         const records =
           createSyntheticRecords();
@@ -307,7 +307,7 @@ describe(
         expect(
           records,
         ).toHaveLength(
-          125,
+          175,
         );
 
         const summary =
@@ -319,25 +319,25 @@ describe(
         expect(
           summary.totalPairs,
         ).toBe(
-          25,
+          35,
         );
 
         expect(
           summary.totalRuns,
         ).toBe(
-          125,
+          175,
         );
 
         expect(
           summary.completedRunCount,
         ).toBe(
-          125,
+          175,
         );
 
         expect(
           summary.strategyAggregates,
         ).toHaveLength(
-          25,
+          35,
         );
 
         for (
@@ -407,6 +407,8 @@ describe(
               "D2_EXIT_BLOCK",
               "D3_CORRIDOR_BLOCK",
               "D4_COMBINED",
+              "D5_EXIT_BLOCK_WEST",
+              "D6_CORRIDOR_BLOCK_EAST_SOUTHEAST",
             ] as const
         ) {
           const comparison =
@@ -445,7 +447,7 @@ describe(
     );
 
     it(
-      "creates one combined run CSV and one 25-row strategy summary CSV",
+      "creates one combined run CSV and one 35-row strategy summary CSV",
       () => {
         const records =
           createSyntheticRecords();
@@ -475,13 +477,13 @@ describe(
         expect(
           runLines,
         ).toHaveLength(
-          126,
+          176,
         );
 
         expect(
           summaryLines,
         ).toHaveLength(
-          26,
+          36,
         );
 
         expect(
