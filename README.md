@@ -252,3 +252,37 @@ No open-source license is granted. The package is marked `UNLICENSED`, and publi
 **Nirman Bhowmike**
 
 Research-oriented software project developed for graduate-level study in AI, software research, simulation, and industrial engineering.
+# 3D Emergency Evacuation Strategy Simulator
+
+A research-oriented simulation platform for experimentally evaluating fixed and adaptive evacuation-routing strategies under dynamic building conditions.
+
+The project combines a deterministic research engine, seeded stochastic scenario generation, multiple routing policies, dynamic disruption events, automated experiments, and an interactive 3D replay interface. The quantitative simulation engine is the authoritative research artifact. The 3D environment visualizes simulation state and results but does not independently determine research outcomes.
+
+## Research Objective
+
+**Central research question:** How do fixed and adaptive evacuation-routing strategies differ in performance when congestion, hazards, exit availability, occupancy, and route conditions change during an evacuation?
+
+The simulator is designed for controlled and reproducible comparison rather than visual demonstration alone.
+
+## Current Research Configuration
+
+The current environment uses **Architecture V2**, a fictional first-floor institutional / academic building with multiple wings, four exterior exits, alternative circulation paths, bottlenecks, tactical decision points, configurable hazards, corridor blocks, and exit failures.
+
+Occupants originate from room locations and move through an explicit navigation network toward available exits.
+
+The building is intentionally fictional and is not presented as a digital twin of a real facility.
+
+## Routing Strategies
+
+Five routing strategies are implemented:
+
+- **Nearest Exit** — geometric nearest-exit baseline.
+- **Static Shortest Path** — shortest feasible network route with recovery when the route becomes physically infeasible.
+- **Congestion-Aware** — uses current density, queueing, and estimated travel-time effects.
+- **Hazard-Aware** — safety-first routing that treats blocked infrastructure as infeasible and traversable hazard regions as exposure-bearing `RISK` areas.
+- **Adaptive Hybrid** — combines feasibility, hazard state, congestion-adjusted travel time, bottleneck delay, exit availability, route history, and rerouting inertia.
+
+The frozen Adaptive Hybrid voluntary rerouting threshold is:
+
+```text
+theta = 0.10
