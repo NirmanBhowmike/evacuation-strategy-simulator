@@ -1,4 +1,4 @@
-import {
+﻿import {
   useCallback,
   useEffect,
   useRef,
@@ -46,6 +46,10 @@ import {
 import {
   SelectedAgentRouteLayer,
 } from "./SelectedAgentRouteLayer";
+
+import {
+  WebGLGuard,
+} from "./WebGLGuard";
 
 export type ResearchCameraPreset =
   | "HOME"
@@ -1219,7 +1223,8 @@ export function ResearchScene({
     "light";
 
   return (
-    <Canvas
+    <WebGLGuard>
+      <Canvas
       shadows
       dpr={[
         1,
@@ -1332,5 +1337,6 @@ export function ResearchScene({
         }
       />
     </Canvas>
+    </WebGLGuard>
   );
 }
