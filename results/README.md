@@ -1,95 +1,67 @@
-# Research Results Directory
+﻿# Research Results
 
-This directory is reserved for reproducible research outputs produced by the evacuation simulation and experiment infrastructure. It should not be used as a general temporary-output folder.
+This directory contains curated research outputs from the 3D Emergency Evacuation Strategy Simulator.
 
-## Intended Contents
+## Current Formal Experiment
 
-Research artifacts may include:
+The current formal results are stored in:
 
-- experiment summaries
-- CSV result tables
-- configuration snapshots
-- parameter-set metadata
-- seed records
-- aggregated metrics
-- formal comparison outputs
-- sensitivity-analysis outputs
-- diagnostic experiment outputs
+`results/formal-v1.2/`
 
-Each retained result should be traceable to the configuration that generated it.
+The Architecture V2 v1.2 formal design contains:
 
-## Minimum Provenance
+- 5 routing strategies
+- 3 occupancy levels
+- 7 disruption conditions
+- 40 paired stochastic replications
+- 105 factorial cells
+- 840 paired stochastic scenarios
+- 4,200 total simulation runs
 
-Formal outputs should preserve, where applicable:
+All 4,200 formal simulations completed successfully with no timeout or unreachable-present outcomes.
 
-```text
-experiment identifier
-software / Git version
-parameter-set version
-routing strategy
-occupancy level
-disruption condition
-random seed
-replication identifier
-execution configuration
-```
+Current disruption conditions:
 
-## Result Classes
+- D0 — Baseline
+- D1 — Hazard
+- D2 — Exit Block
+- D3 — Corridor Block
+- D4 — Combined Hazard + Exit Block
+- D5 — West Exit Block
+- D6 — East-Main to Southeast Corridor Block
 
-### Formal
-Outputs generated from frozen research conditions and the designated formal seed set. These may be used for the primary experimental analysis.
+Formal comparisons use common random numbers so the same stochastic scenario realization is presented to each routing strategy.
 
-### Diagnostic
-Outputs generated for debugging, calibration, profiling, model inspection, or software verification. They should not be presented as formal study findings unless incorporated into a documented protocol.
+## Historical Formal Experiment
 
-### Development
-Temporary outputs produced during implementation or debugging. These generally should not be retained unless they provide meaningful methodological evidence.
+The earlier Architecture V2 v1.1 experiment evaluated D0–D4 only:
 
-## Current Formal Design
+- 5 strategies
+- 3 occupancy levels
+- 5 conditions
+- 40 replications
+- 75 cells
+- 600 paired scenarios
+- 3,000 corrected formal runs
 
-```text
-5 routing strategies
-× 3 occupancy levels
-× 5 disruption conditions
-× 40 paired stochastic replications
-```
+Those results are historical and must not be substituted for the current D0–D6 v1.2 experiment.
 
-Routing strategies:
+## Interpretation Boundary
 
-```text
-Nearest Exit
-Static Shortest Path
-Congestion-Aware
-Hazard-Aware
-Adaptive Hybrid
-```
+Hazard exposure represents simulated time spent in regions classified as `RISK`, reported in person-seconds.
 
-Occupancy levels:
+It is not:
 
-```text
-LOW     = 14
-MEDIUM  = 42
-HIGH    = 70
-```
+- injury probability
+- smoke dose
+- mortality probability
+- physiological tenability
+- a real-world safety certification metric
 
-Frozen disruption factor:
-
-```text
-D0 = baseline
-D1 = hazard
-D2 = exit block
-D3 = corridor block
-D4 = combined hazard + exit block
-```
-
-Formal comparisons use common random numbers so the same stochastic scenario realization is presented to each strategy.
-
-## Interpretation
-
-Outputs are simulation results and should be interpreted within the model assumptions, parameterization, and validation scope documented in the repository.
-
-Hazard exposure represents simulated time spent in regions classified as `RISK`; it is not a physiological injury or mortality metric.
+The building environment is a fictional research layout rather than a digital twin of a specific real building.
 
 ## Repository Policy
 
-Large temporary run directories, redundant generated files, and untraceable outputs should not be committed. Curated research artifacts should be retained only when they contribute to reproducibility, validation, analysis, methodological transparency, or presentation of formal results.
+Curated formal results, summary tables, statistical outputs, figures, provenance metadata, and reproducibility records may be retained in this directory.
+
+Temporary run directories and redundant generated artifacts should remain outside the repository.

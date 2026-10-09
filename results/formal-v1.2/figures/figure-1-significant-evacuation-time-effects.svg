@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1250" height="968" viewBox="0 0 1250 968">
+<rect width="100%" height="100%" fill="white"/>
+<text x="50" y="48" font-family="Arial, sans-serif" font-size="28" font-weight="700">Significant Adaptive Hybrid Evacuation-Time Effects</text>
+<text x="50" y="78" font-family="Arial, sans-serif" font-size="16" fill="#444">Mean paired difference = Adaptive Hybrid − comparator; Holm-adjusted family-wise inference.</text>
+<line x1="333.46364072239095" y1="100" x2="333.46364072239095" y2="908" stroke="#222" stroke-width="1.5"/>
+<text x="330" y="946" font-family="Arial, sans-serif" font-size="15">Mean evacuation-time difference (seconds)</text><text x="318" y="135" text-anchor="end" font-family="Arial, sans-serif" font-size="13">LOW | D1 | Nearest</text>
+<rect x="333.46364072239095" y="120" width="355.3050982899153" height="20" rx="3" fill="#c92a2a"/>
+<text x="695.7687390123062" y="135" text-anchor="start" font-family="Arial, sans-serif" font-size="12">16.54</text><text x="318" y="169" text-anchor="end" font-family="Arial, sans-serif" font-size="13">LOW | D1 | Static</text>
+<rect x="333.46364072239095" y="154" width="355.3050982899153" height="20" rx="3" fill="#c92a2a"/>
+<text x="695.7687390123062" y="169" text-anchor="start" font-family="Arial, sans-serif" font-size="12">16.54</text><text x="318" y="203" text-anchor="end" font-family="Arial, sans-serif" font-size="13">LOW | D1 | Congestion</text>
+<rect x="333.46364072239095" y="188" width="355.3050982899153" height="20" rx="3" fill="#c92a2a"/>
+<text x="695.7687390123062" y="203" text-anchor="start" font-family="Arial, sans-serif" font-size="12">16.54</text><text x="318" y="237" text-anchor="end" font-family="Arial, sans-serif" font-size="13">LOW | D2 | Congestion</text>
+<rect x="330.6980981300943" y="222" width="2.76554259229664" height="20" rx="3" fill="#087f5b"/>
+<text x="323.6980981300943" y="237" text-anchor="end" font-family="Arial, sans-serif" font-size="12">-0.13</text><text x="318" y="271" text-anchor="end" font-family="Arial, sans-serif" font-size="13">LOW | D4 | Nearest</text>
+<rect x="333.46364072239095" y="256" width="740.8700655266102" height="20" rx="3" fill="#c92a2a"/>
+<text x="1081.3337062490011" y="271" text-anchor="start" font-family="Arial, sans-serif" font-size="12">34.49</text><text x="318" y="305" text-anchor="end" font-family="Arial, sans-serif" font-size="13">LOW | D4 | Static</text>
+<rect x="333.46364072239095" y="290" width="742.1051622183154" height="20" rx="3" fill="#c92a2a"/>
+<text x="1082.5688029407063" y="305" text-anchor="start" font-family="Arial, sans-serif" font-size="12">34.55</text><text x="318" y="339" text-anchor="end" font-family="Arial, sans-serif" font-size="13">LOW | D4 | Congestion</text>
+<rect x="333.46364072239095" y="324" width="739.3396196260189" height="20" rx="3" fill="#c92a2a"/>
+<text x="1079.8032603484098" y="339" text-anchor="start" font-family="Arial, sans-serif" font-size="12">34.42</text><text x="318" y="373" text-anchor="end" font-family="Arial, sans-serif" font-size="13">MEDIUM | D1 | Nearest</text>
+<rect x="333.46364072239095" y="358" width="403.7692184753076" height="20" rx="3" fill="#c92a2a"/>
+<text x="744.2328591976985" y="373" text-anchor="start" font-family="Arial, sans-serif" font-size="12">18.80</text><text x="318" y="407" text-anchor="end" font-family="Arial, sans-serif" font-size="13">MEDIUM | D1 | Static</text>
+<rect x="333.46364072239095" y="392" width="403.7692184753076" height="20" rx="3" fill="#c92a2a"/>
+<text x="744.2328591976985" y="407" text-anchor="start" font-family="Arial, sans-serif" font-size="12">18.80</text><text x="318" y="441" text-anchor="end" font-family="Arial, sans-serif" font-size="13">MEDIUM | D1 | Congestion</text>
+<rect x="333.46364072239095" y="426" width="403.7692184753076" height="20" rx="3" fill="#c92a2a"/>
+<text x="744.2328591976985" y="441" text-anchor="start" font-family="Arial, sans-serif" font-size="12">18.80</text><text x="318" y="475" text-anchor="end" font-family="Arial, sans-serif" font-size="13">MEDIUM | D4 | Nearest</text>
+<rect x="333.46364072239095" y="460" width="773.5732779287198" height="20" rx="3" fill="#c92a2a"/>
+<text x="1114.0369186511107" y="475" text-anchor="start" font-family="Arial, sans-serif" font-size="12">36.01</text><text x="318" y="509" text-anchor="end" font-family="Arial, sans-serif" font-size="13">MEDIUM | D4 | Static</text>
+<rect x="333.46364072239095" y="494" width="775.3453731820362" height="20" rx="3" fill="#c92a2a"/>
+<text x="1115.809013904427" y="509" text-anchor="start" font-family="Arial, sans-serif" font-size="12">36.10</text><text x="318" y="543" text-anchor="end" font-family="Arial, sans-serif" font-size="13">MEDIUM | D4 | Congestion</text>
+<rect x="333.46364072239095" y="528" width="773.7343774972032" height="20" rx="3" fill="#c92a2a"/>
+<text x="1114.1980182195941" y="543" text-anchor="start" font-family="Arial, sans-serif" font-size="12">36.02</text><text x="318" y="577" text-anchor="end" font-family="Arial, sans-serif" font-size="13">MEDIUM | D6 | Nearest</text>
+<rect x="330" y="562" width="3.4636407223909487" height="20" rx="3" fill="#087f5b"/>
+<text x="323" y="577" text-anchor="end" font-family="Arial, sans-serif" font-size="12">-0.16</text><text x="318" y="611" text-anchor="end" font-family="Arial, sans-serif" font-size="13">MEDIUM | D6 | Static</text>
+<rect x="330" y="596" width="3.4636407223909487" height="20" rx="3" fill="#087f5b"/>
+<text x="323" y="611" text-anchor="end" font-family="Arial, sans-serif" font-size="12">-0.16</text><text x="318" y="645" text-anchor="end" font-family="Arial, sans-serif" font-size="13">MEDIUM | D6 | Hazard</text>
+<rect x="330" y="630" width="3.4636407223909487" height="20" rx="3" fill="#087f5b"/>
+<text x="323" y="645" text-anchor="end" font-family="Arial, sans-serif" font-size="12">-0.16</text><text x="318" y="679" text-anchor="end" font-family="Arial, sans-serif" font-size="13">HIGH | D1 | Nearest</text>
+<rect x="333.46364072239095" y="664" width="365.0247722550742" height="20" rx="3" fill="#c92a2a"/>
+<text x="705.4884129774651" y="679" text-anchor="start" font-family="Arial, sans-serif" font-size="12">16.99</text><text x="318" y="713" text-anchor="end" font-family="Arial, sans-serif" font-size="13">HIGH | D1 | Static</text>
+<rect x="333.46364072239095" y="698" width="365.0247722550742" height="20" rx="3" fill="#c92a2a"/>
+<text x="705.4884129774651" y="713" text-anchor="start" font-family="Arial, sans-serif" font-size="12">16.99</text><text x="318" y="747" text-anchor="end" font-family="Arial, sans-serif" font-size="13">HIGH | D1 | Congestion</text>
+<rect x="333.46364072239095" y="732" width="360.05753556017254" height="20" rx="3" fill="#c92a2a"/>
+<text x="700.5211762825635" y="747" text-anchor="start" font-family="Arial, sans-serif" font-size="12">16.76</text><text x="318" y="781" text-anchor="end" font-family="Arial, sans-serif" font-size="13">HIGH | D4 | Nearest</text>
+<rect x="333.46364072239095" y="766" width="835.8382611475147" height="20" rx="3" fill="#c92a2a"/>
+<text x="1176.3019018699056" y="781" text-anchor="start" font-family="Arial, sans-serif" font-size="12">38.91</text><text x="318" y="815" text-anchor="end" font-family="Arial, sans-serif" font-size="13">HIGH | D4 | Static</text>
+<rect x="333.46364072239095" y="800" width="836.5363592776091" height="20" rx="3" fill="#c92a2a"/>
+<text x="1177" y="815" text-anchor="start" font-family="Arial, sans-serif" font-size="12">38.95</text><text x="318" y="849" text-anchor="end" font-family="Arial, sans-serif" font-size="13">HIGH | D4 | Congestion</text>
+<rect x="333.46364072239095" y="834" width="834.0930158222791" height="20" rx="3" fill="#c92a2a"/>
+<text x="1174.55665654467" y="849" text-anchor="start" font-family="Arial, sans-serif" font-size="12">38.83</text><text x="330" y="923" font-family="Arial, sans-serif" font-size="12" fill="#087f5b">Negative = favors Adaptive Hybrid</text>
+<text x="1170" y="923" text-anchor="end" font-family="Arial, sans-serif" font-size="12" fill="#c92a2a">Positive = favors comparator</text>
+</svg>

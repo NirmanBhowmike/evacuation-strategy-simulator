@@ -1,0 +1,188 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="760" viewBox="0 0 1100 760">
+<rect width="100%" height="100%" fill="white"/>
+<text x="45" y="48" font-family="Arial, sans-serif" font-size="28" font-weight="700">Adaptive Hybrid Evacuation-Time / Hazard-Exposure Tradeoff</text>
+<text x="45" y="78" font-family="Arial, sans-serif" font-size="15" fill="#444">Each point is one occupancy × condition × comparator paired comparison.</text>
+
+<rect x="215.8140857890545" y="125.6839935145108" width="824.1859142109455" height="534.3160064854892" fill="#fff4e6"/>
+<rect x="110" y="125.6839935145108" width="105.8140857890545" height="534.3160064854892" fill="#ebfbee"/>
+
+<line x1="110" y1="125.6839935145108" x2="1040" y2="125.6839935145108" stroke="#444"/>
+<line x1="215.8140857890545" y1="100" x2="215.8140857890545" y2="660" stroke="#444"/>
+
+<text x="550" y="725" text-anchor="middle" font-family="Arial, sans-serif" font-size="16">Evacuation-time difference (seconds): Adaptive − comparator</text>
+
+<text transform="translate(28 380) rotate(-90)" text-anchor="middle" font-family="Arial, sans-serif" font-size="16">Hazard-exposure difference (person-seconds): Adaptive − comparator</text>
+
+<text x="125" y="642" font-family="Arial, sans-serif" font-size="13" fill="#087f5b">Faster + lower exposure</text>
+
+<text x="230.8140857890545" y="642" font-family="Arial, sans-serif" font-size="13" fill="#d9480f">Slower + lower exposure</text><circle cx="215.8140857890545" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>LOW | D0 | Nearest | evacuation=0.000 s | hazard=0.000 person-s</title>
+</circle><circle cx="215.8140857890545" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>LOW | D0 | Static | evacuation=0.000 s | hazard=0.000 person-s</title>
+</circle><circle cx="215.8140857890545" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>LOW | D0 | Congestion | evacuation=0.000 s | hazard=0.000 person-s</title>
+</circle><circle cx="215.8140857890545" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>LOW | D0 | Hazard | evacuation=0.000 s | hazard=0.000 person-s</title>
+</circle><circle cx="565.8735351006941" cy="166.26689092726934" r="6" fill="#d9480f" opacity="0.9">
+<title>LOW | D1 | Nearest | evacuation=16.541 s | hazard=-15.801 person-s</title>
+</circle><circle cx="565.8735351006941" cy="166.26689092726934" r="6" fill="#d9480f" opacity="0.9">
+<title>LOW | D1 | Static | evacuation=16.541 s | hazard=-15.801 person-s</title>
+</circle><circle cx="565.8735351006941" cy="166.26689092726934" r="6" fill="#d9480f" opacity="0.9">
+<title>LOW | D1 | Congestion | evacuation=16.541 s | hazard=-15.801 person-s</title>
+</circle><circle cx="215.8140857890545" cy="125.68437784978971" r="3.5" fill="#495057" opacity="0.45">
+<title>LOW | D1 | Hazard | evacuation=0.000 s | hazard=-0.000 person-s</title>
+</circle><circle cx="214.59722380248036" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>LOW | D2 | Nearest | evacuation=-0.058 s | hazard=0.000 person-s</title>
+</circle><circle cx="215.8140857890545" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>LOW | D2 | Static | evacuation=0.000 s | hazard=0.000 person-s</title>
+</circle><circle cx="213.08937307998633" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>LOW | D2 | Congestion | evacuation=-0.129 s | hazard=0.000 person-s</title>
+</circle><circle cx="215.8140857890545" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>LOW | D2 | Hazard | evacuation=0.000 s | hazard=0.000 person-s</title>
+</circle><circle cx="215.8140857890545" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>LOW | D3 | Nearest | evacuation=0.000 s | hazard=0.000 person-s</title>
+</circle><circle cx="215.8140857890545" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>LOW | D3 | Static | evacuation=0.000 s | hazard=0.000 person-s</title>
+</circle><circle cx="215.8140857890545" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>LOW | D3 | Congestion | evacuation=0.000 s | hazard=0.000 person-s</title>
+</circle><circle cx="215.8140857890545" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>LOW | D3 | Hazard | evacuation=0.000 s | hazard=0.000 person-s</title>
+</circle><circle cx="945.7461030833997" cy="215.16895666023498" r="6" fill="#d9480f" opacity="0.9">
+<title>LOW | D4 | Nearest | evacuation=34.491 s | hazard=-34.841 person-s</title>
+</circle><circle cx="946.9629650699737" cy="214.07596211632807" r="6" fill="#d9480f" opacity="0.9">
+<title>LOW | D4 | Static | evacuation=34.549 s | hazard=-34.415 person-s</title>
+</circle><circle cx="944.2382523609057" cy="199.00733951903203" r="6" fill="#d9480f" opacity="0.9">
+<title>LOW | D4 | Congestion | evacuation=34.420 s | hazard=-28.548 person-s</title>
+</circle><circle cx="168.59455000568892" cy="128.89595646029898" r="3.5" fill="#495057" opacity="0.45">
+<title>LOW | D4 | Hazard | evacuation=-2.231 s | hazard=-1.251 person-s</title>
+</circle><circle cx="217.69228581181022" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>LOW | D5 | Nearest | evacuation=0.089 s | hazard=0.000 person-s</title>
+</circle><circle cx="217.69228581181022" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>LOW | D5 | Static | evacuation=0.089 s | hazard=0.000 person-s</title>
+</circle><circle cx="214.54431675958585" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>LOW | D5 | Congestion | evacuation=-0.060 s | hazard=0.000 person-s</title>
+</circle><circle cx="217.69228581181022" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>LOW | D5 | Hazard | evacuation=0.089 s | hazard=0.000 person-s</title>
+</circle><circle cx="215.65536466037094" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>LOW | D6 | Nearest | evacuation=-0.007 s | hazard=0.000 person-s</title>
+</circle><circle cx="215.65536466037094" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>LOW | D6 | Static | evacuation=-0.007 s | hazard=0.000 person-s</title>
+</circle><circle cx="215.8140857890545" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>LOW | D6 | Congestion | evacuation=0.000 s | hazard=0.000 person-s</title>
+</circle><circle cx="215.65536466037094" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>LOW | D6 | Hazard | evacuation=-0.007 s | hazard=0.000 person-s</title>
+</circle><circle cx="215.8140857890545" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>MEDIUM | D0 | Nearest | evacuation=0.000 s | hazard=0.000 person-s</title>
+</circle><circle cx="215.8140857890545" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>MEDIUM | D0 | Static | evacuation=0.000 s | hazard=0.000 person-s</title>
+</circle><circle cx="215.8140857890545" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>MEDIUM | D0 | Congestion | evacuation=0.000 s | hazard=0.000 person-s</title>
+</circle><circle cx="215.8140857890545" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>MEDIUM | D0 | Hazard | evacuation=0.000 s | hazard=0.000 person-s</title>
+</circle><circle cx="613.6221413130049" cy="249.75931977267004" r="6" fill="#d9480f" opacity="0.9">
+<title>MEDIUM | D1 | Nearest | evacuation=18.797 s | hazard=-48.308 person-s</title>
+</circle><circle cx="613.6221413130049" cy="249.75931977267004" r="6" fill="#d9480f" opacity="0.9">
+<title>MEDIUM | D1 | Static | evacuation=18.797 s | hazard=-48.308 person-s</title>
+</circle><circle cx="613.6221413130049" cy="249.52427565968122" r="6" fill="#d9480f" opacity="0.9">
+<title>MEDIUM | D1 | Congestion | evacuation=18.797 s | hazard=-48.217 person-s</title>
+</circle><circle cx="215.8140857890545" cy="125.79694067387038" r="3.5" fill="#495057" opacity="0.45">
+<title>MEDIUM | D1 | Hazard | evacuation=0.000 s | hazard=-0.044 person-s</title>
+</circle><circle cx="214.0681533735351" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>MEDIUM | D2 | Nearest | evacuation=-0.083 s | hazard=0.000 person-s</title>
+</circle><circle cx="215.8140857890545" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>MEDIUM | D2 | Static | evacuation=0.000 s | hazard=0.000 person-s</title>
+</circle><circle cx="214.22687450221866" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>MEDIUM | D2 | Congestion | evacuation=-0.075 s | hazard=0.000 person-s</title>
+</circle><circle cx="215.8140857890545" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>MEDIUM | D2 | Hazard | evacuation=0.000 s | hazard=0.000 person-s</title>
+</circle><circle cx="215.8140857890545" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>MEDIUM | D3 | Nearest | evacuation=0.000 s | hazard=0.000 person-s</title>
+</circle><circle cx="215.8140857890545" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>MEDIUM | D3 | Static | evacuation=0.000 s | hazard=0.000 person-s</title>
+</circle><circle cx="215.8140857890545" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>MEDIUM | D3 | Congestion | evacuation=0.000 s | hazard=0.000 person-s</title>
+</circle><circle cx="215.8140857890545" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>MEDIUM | D3 | Hazard | evacuation=0.000 s | hazard=0.000 person-s</title>
+</circle><circle cx="977.9664922061668" cy="409.9076967242215" r="6" fill="#d9480f" opacity="0.9">
+<title>MEDIUM | D4 | Nearest | evacuation=36.014 s | hazard=-110.662 person-s</title>
+</circle><circle cx="979.7124246216862" cy="400.6939782309702" r="6" fill="#d9480f" opacity="0.9">
+<title>MEDIUM | D4 | Static | evacuation=36.096 s | hazard=-107.074 person-s</title>
+</circle><circle cx="978.1252133348504" cy="346.17612388223256" r="6" fill="#d9480f" opacity="0.9">
+<title>MEDIUM | D4 | Congestion | evacuation=36.021 s | hazard=-85.848 person-s</title>
+</circle><circle cx="165.18204573899192" cy="140.28748844096856" r="3.5" fill="#495057" opacity="0.45">
+<title>MEDIUM | D4 | Hazard | evacuation=-2.393 s | hazard=-5.686 person-s</title>
+</circle><circle cx="219.2265900557515" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>MEDIUM | D5 | Nearest | evacuation=0.161 s | hazard=0.000 person-s</title>
+</circle><circle cx="219.2265900557515" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>MEDIUM | D5 | Static | evacuation=0.161 s | hazard=0.000 person-s</title>
+</circle><circle cx="219.86147457048583" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>MEDIUM | D5 | Congestion | evacuation=0.191 s | hazard=0.000 person-s</title>
+</circle><circle cx="219.2265900557515" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>MEDIUM | D5 | Hazard | evacuation=0.161 s | hazard=0.000 person-s</title>
+</circle><circle cx="212.4015815223575" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>MEDIUM | D6 | Nearest | evacuation=-0.161 s | hazard=0.000 person-s</title>
+</circle><circle cx="212.4015815223575" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>MEDIUM | D6 | Static | evacuation=-0.161 s | hazard=0.000 person-s</title>
+</circle><circle cx="215.8140857890545" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>MEDIUM | D6 | Congestion | evacuation=0.000 s | hazard=0.000 person-s</title>
+</circle><circle cx="212.4015815223575" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>MEDIUM | D6 | Hazard | evacuation=-0.161 s | hazard=0.000 person-s</title>
+</circle><circle cx="220.4699055637729" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>HIGH | D0 | Nearest | evacuation=0.220 s | hazard=0.000 person-s</title>
+</circle><circle cx="220.4699055637729" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>HIGH | D0 | Static | evacuation=0.220 s | hazard=0.000 person-s</title>
+</circle><circle cx="215.57600409602912" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>HIGH | D0 | Congestion | evacuation=-0.011 s | hazard=0.000 person-s</title>
+</circle><circle cx="220.4699055637729" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>HIGH | D0 | Hazard | evacuation=0.220 s | hazard=0.000 person-s</title>
+</circle><circle cx="575.4497098646034" cy="351.4567599091783" r="6" fill="#d9480f" opacity="0.9">
+<title>HIGH | D1 | Nearest | evacuation=16.994 s | hazard=-87.904 person-s</title>
+</circle><circle cx="575.4497098646034" cy="351.4567599091783" r="6" fill="#d9480f" opacity="0.9">
+<title>HIGH | D1 | Static | evacuation=16.994 s | hazard=-87.904 person-s</title>
+</circle><circle cx="570.5558083968597" cy="352.9984908047344" r="6" fill="#d9480f" opacity="0.9">
+<title>HIGH | D1 | Congestion | evacuation=16.762 s | hazard=-88.504 person-s</title>
+</circle><circle cx="215.8140857890545" cy="126.20426644025224" r="3.5" fill="#495057" opacity="0.45">
+<title>HIGH | D1 | Hazard | evacuation=0.000 s | hazard=-0.203 person-s</title>
+</circle><circle cx="216.6870519968142" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>HIGH | D2 | Nearest | evacuation=0.041 s | hazard=0.000 person-s</title>
+</circle><circle cx="217.37484355444306" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>HIGH | D2 | Static | evacuation=0.074 s | hazard=0.000 person-s</title>
+</circle><circle cx="214.96757310274205" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>HIGH | D2 | Congestion | evacuation=-0.040 s | hazard=0.000 person-s</title>
+</circle><circle cx="217.37484355444306" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>HIGH | D2 | Hazard | evacuation=0.074 s | hazard=0.000 person-s</title>
+</circle><circle cx="215.8140857890545" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>HIGH | D3 | Nearest | evacuation=0.000 s | hazard=0.000 person-s</title>
+</circle><circle cx="215.8140857890545" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>HIGH | D3 | Static | evacuation=0.000 s | hazard=0.000 person-s</title>
+</circle><circle cx="215.25856183866196" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>HIGH | D3 | Congestion | evacuation=-0.026 s | hazard=0.000 person-s</title>
+</circle><circle cx="215.8140857890545" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>HIGH | D3 | Hazard | evacuation=0.000 s | hazard=0.000 person-s</title>
+</circle><circle cx="1039.3122084423712" cy="660" r="6" fill="#d9480f" opacity="0.9">
+<title>HIGH | D4 | Nearest | evacuation=38.913 s | hazard=-208.035 person-s</title>
+</circle><circle cx="1040" cy="648.4020697009363" r="6" fill="#d9480f" opacity="0.9">
+<title>HIGH | D4 | Static | evacuation=38.945 s | hazard=-203.519 person-s</title>
+</circle><circle cx="1037.5927295482988" cy="544.5089205233726" r="6" fill="#d9480f" opacity="0.9">
+<title>HIGH | D4 | Congestion | evacuation=38.831 s | hazard=-163.068 person-s</title>
+</circle><circle cx="127.2476959836159" cy="164.02860416891332" r="3.5" fill="#495057" opacity="0.45">
+<title>HIGH | D4 | Hazard | evacuation=-4.185 s | hazard=-14.929 person-s</title>
+</circle><circle cx="216.5547843895779" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>HIGH | D5 | Nearest | evacuation=0.035 s | hazard=0.000 person-s</title>
+</circle><circle cx="216.5547843895779" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>HIGH | D5 | Static | evacuation=0.035 s | hazard=0.000 person-s</title>
+</circle><circle cx="216.15798156786894" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>HIGH | D5 | Congestion | evacuation=0.016 s | hazard=0.000 person-s</title>
+</circle><circle cx="216.5547843895779" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>HIGH | D5 | Hazard | evacuation=0.035 s | hazard=0.000 person-s</title>
+</circle><circle cx="212.50739560814657" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>HIGH | D6 | Nearest | evacuation=-0.156 s | hazard=0.000 person-s</title>
+</circle><circle cx="212.50739560814657" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>HIGH | D6 | Static | evacuation=-0.156 s | hazard=0.000 person-s</title>
+</circle><circle cx="215.8140857890545" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>HIGH | D6 | Congestion | evacuation=0.000 s | hazard=0.000 person-s</title>
+</circle><circle cx="212.50739560814657" cy="125.6839935145108" r="3.5" fill="#495057" opacity="0.45">
+<title>HIGH | D6 | Hazard | evacuation=-0.156 s | hazard=0.000 person-s</title>
+</circle><circle cx="810" cy="705" r="6" fill="#d9480f"/>
+<text x="825" y="710" font-family="Arial, sans-serif" font-size="13">18 significant speed/exposure tradeoffs</text>
+</svg>

@@ -1,0 +1,44 @@
+{
+  "analysisStage": "architecture-v2-formal-analysis-stage-a-v1",
+  "artifactClass": "FORMAL_ANALYSIS",
+  "source": {
+    "combinedRecords": "formal-combined-run-records.json",
+    "softwareVersion": "1.2.0",
+    "gitCommit": "1a84923664c028f3b6b15c5ec93ddaf9b7905095",
+    "designVersion": "architecture-v2-formal-factorial-v3",
+    "parameterSetVersion": "architecture-v2-research-v1.2-frozen"
+  },
+  "dataset": {
+    "totalRuns": 4200,
+    "uniqueRunIds": 4200,
+    "uniquePairs": 840,
+    "uniqueCells": 105,
+    "uniqueSeeds": 40,
+    "completedRuns": 4200,
+    "invalidEvacuationTimeValues": 0,
+    "invalidHazardExposureValues": 0
+  },
+  "primaryOutcomes": [
+    {
+      "field": "totalEvacuationTimeSeconds",
+      "interpretation": "Co-primary evacuation-performance outcome; lower is better."
+    },
+    {
+      "field": "populationHazardExposurePersonSeconds",
+      "interpretation": "Co-primary simulated RISK-region exposure outcome in person-seconds; lower is better."
+    }
+  ],
+  "pairedDifferenceConvention": "ADAPTIVE_HYBRID minus comparator; negative values favor Adaptive Hybrid.",
+  "descriptives": {
+    "quantileMethod": "linear interpolation, Type 7",
+    "cellRows": 105,
+    "pairedSeedRows": 3360,
+    "pairedComparisonSummaryRows": 84
+  },
+  "files": {
+    "cellDescriptives": "primary-cell-descriptives.csv",
+    "overallStrategyDescriptives": "primary-overall-strategy-descriptives.csv",
+    "adaptivePairedDifferences": "adaptive-paired-differences.csv",
+    "adaptivePairedDifferenceSummary": "adaptive-paired-difference-summary.csv"
+  }
+}

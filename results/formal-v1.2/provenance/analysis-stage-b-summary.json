@@ -1,0 +1,55 @@
+{
+  "analysisStage": "architecture-v2-formal-analysis-stage-b-v1",
+  "analysisStatus": "POST_EXECUTION_MULTIPLICITY_CONTROLLED",
+  "note": "This inferential plan was finalized after formal execution and is not represented as a preregistered confirmatory analysis.",
+  "source": {
+    "softwareVersion": "1.2.0",
+    "gitCommit": "1a84923664c028f3b6b15c5ec93ddaf9b7905095",
+    "designVersion": "architecture-v2-formal-factorial-v3",
+    "parameterSetVersion": "architecture-v2-research-v1.2-frozen",
+    "formalRuns": 4200,
+    "pairedScenarios": 840
+  },
+  "inference": {
+    "primaryTest": "two-sided paired t-test on common-random-number seed-level differences",
+    "robustSensitivityTest": "exact two-sided sign test excluding zero differences",
+    "effectSize": "paired Cohen's dz = mean paired difference / SD paired difference",
+    "confidenceInterval": "unadjusted 95% Student-t confidence interval for mean paired difference",
+    "confidenceIntervalMultiplicityNote": "The 95% intervals are not simultaneous family-wise confidence intervals. Multiplicity control is applied to p-values.",
+    "multipleTesting": "Holm family-wise error correction across all 168 primary tests",
+    "alpha": 0.05,
+    "pairedDifferenceConvention": "ADAPTIVE_HYBRID minus comparator",
+    "favorableDirection": "Negative differences favor Adaptive Hybrid because lower values are preferable for both outcomes."
+  },
+  "comparisonStructure": {
+    "populations": 3,
+    "conditions": 7,
+    "comparators": 4,
+    "pairedStrategyComparisons": 84,
+    "coPrimaryOutcomes": 2,
+    "totalPrimaryHypothesisTests": 168,
+    "seedsPerComparison": 40
+  },
+  "correctedInferenceCounts": {
+    "totalEvacuationTime": {
+      "adaptiveBetter": 4,
+      "adaptiveWorse": 18,
+      "noCorrectedEvidence": 33,
+      "exactTie": 29
+    },
+    "populationHazardExposure": {
+      "adaptiveBetter": 20,
+      "adaptiveWorse": 0,
+      "noCorrectedEvidence": 4,
+      "exactTie": 60
+    }
+  },
+  "jointInterpretationCounts": {
+    "MIXED_OR_INCONCLUSIVE": 66,
+    "EVACUATION_FAVORS_COMPARATOR_HAZARD_FAVORS_ADAPTIVE": 18
+  },
+  "files": {
+    "inferentialResults": "paired-inferential-results.csv",
+    "jointSummary": "paired-inferential-joint-summary.csv"
+  }
+}

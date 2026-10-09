@@ -1,0 +1,192 @@
+{
+  "combinedManifestVersion": "architecture-v2-formal-combined-v1",
+  "artifactClass": "FORMAL",
+  "softwareVersion": "1.2.0",
+  "gitCommit": "1a84923664c028f3b6b15c5ec93ddaf9b7905095",
+  "designVersion": "architecture-v2-formal-factorial-v3",
+  "parameterSetVersion": "architecture-v2-research-v1.2-frozen",
+  "seedBankVersion": "architecture-v2-formal-seed-bank-v1",
+  "sourceBatchCount": 4,
+  "totalRuns": 4200,
+  "completedRunCount": 4200,
+  "unreachablePresentRunCount": 0,
+  "timeoutRunCount": 0,
+  "uniqueRunCount": 4200,
+  "uniquePairCount": 840,
+  "uniqueScenarioCount": 840,
+  "uniqueCellCount": 105,
+  "strategies": [
+    "NEAREST_EXIT",
+    "STATIC_SHORTEST_PATH",
+    "CONGESTION_AWARE",
+    "HAZARD_AWARE",
+    "ADAPTIVE_HYBRID"
+  ],
+  "populationLevels": [
+    "LOW",
+    "MEDIUM",
+    "HIGH"
+  ],
+  "conditionIds": [
+    "D0_BASELINE",
+    "D1_HAZARD",
+    "D2_EXIT_BLOCK",
+    "D3_CORRIDOR_BLOCK",
+    "D4_COMBINED",
+    "D5_EXIT_BLOCK_WEST",
+    "D6_CORRIDOR_BLOCK_EAST_SOUTHEAST"
+  ],
+  "replicationSeeds": [
+    100001,
+    100002,
+    100003,
+    100004,
+    100005,
+    100006,
+    100007,
+    100008,
+    100009,
+    100010,
+    100011,
+    100012,
+    100013,
+    100014,
+    100015,
+    100016,
+    100017,
+    100018,
+    100019,
+    100020,
+    100021,
+    100022,
+    100023,
+    100024,
+    100025,
+    100026,
+    100027,
+    100028,
+    100029,
+    100030,
+    100031,
+    100032,
+    100033,
+    100034,
+    100035,
+    100036,
+    100037,
+    100038,
+    100039,
+    100040
+  ],
+  "replicationCountPerCell": 40,
+  "strategiesPerPair": 5,
+  "totalExecutionWallClockSeconds": 1961.4546722,
+  "sourceBatches": [
+    {
+      "batchNumber": 1,
+      "files": {
+        "recordsJson": {
+          "filename": "formal-run-records.json",
+          "sha256": "8366670B8DC5F0804F47A5B12CE2F791AC9BFFFD9D7CCDAF0EB082E04E917855"
+        },
+        "recordsCsv": {
+          "filename": "formal-run-records.csv",
+          "sha256": "254AE9F7CABFB2E3D1E34E49E6BAA209FF485CDE2A3601A8F9466F3CC96CCE05"
+        },
+        "manifestJson": {
+          "filename": "formal-experiment-manifest.json",
+          "sha256": "C543B021948A1303ADED47EEDAB07675430F42F26214A4ABAA08F0F56F112CDD"
+        },
+        "executionMetadataJson": {
+          "filename": "formal-batch-execution.json",
+          "sha256": "987ED1F39513AFF704DEC4CE6C25662F0C910F3C6A382A2245D5FE81CC618EED"
+        }
+      },
+      "startedAtUtc": "2026-10-09T20:47:05.521Z",
+      "completedAtUtc": "2026-10-09T20:55:56.642Z",
+      "wallClockDurationSeconds": 531.1180383,
+      "averageRunsPerSecond": 1.9769616625351962
+    },
+    {
+      "batchNumber": 2,
+      "files": {
+        "recordsJson": {
+          "filename": "formal-run-records.json",
+          "sha256": "C9DB64BC6724D70B374108876B2DFFF2AC2B74E7A60C2DD7C1D287866C6303DB"
+        },
+        "recordsCsv": {
+          "filename": "formal-run-records.csv",
+          "sha256": "0BFD8BBA5E9D28A84EC5653A2F6FA1DF96FE584CF8645F60555130C7EDC06B8F"
+        },
+        "manifestJson": {
+          "filename": "formal-experiment-manifest.json",
+          "sha256": "AEBFDBFB215BE28308C3766B56856858CF93B0CDDA075DC8C0AE045BA0B7953E"
+        },
+        "executionMetadataJson": {
+          "filename": "formal-batch-execution.json",
+          "sha256": "853DED9091FE8DCACEB839F785060E395BAAA806845050DD12BA2CE8E9944954"
+        }
+      },
+      "startedAtUtc": "2026-10-09T21:03:30.052Z",
+      "completedAtUtc": "2026-10-09T21:11:25.644Z",
+      "wallClockDurationSeconds": 475.58960729999995,
+      "averageRunsPerSecond": 2.2077858386372693
+    },
+    {
+      "batchNumber": 3,
+      "files": {
+        "recordsJson": {
+          "filename": "formal-run-records.json",
+          "sha256": "2D5B626D3DA48DD308A98AB9CEF61FDD87EF326AB0FDF3101BBD9E17EAE2DD2A"
+        },
+        "recordsCsv": {
+          "filename": "formal-run-records.csv",
+          "sha256": "9B275D137CFBFD5D2DF3EB77348BCE14034612F70283F98D53C97CDE91F7697B"
+        },
+        "manifestJson": {
+          "filename": "formal-experiment-manifest.json",
+          "sha256": "257D360A47901C6915A9D521EFD5E0714D2D33AB0B578FB0A7F19DEC2BEF8E4A"
+        },
+        "executionMetadataJson": {
+          "filename": "formal-batch-execution.json",
+          "sha256": "D1CB04A4A286A91D559D7BE46553AFC3A45991A6C7153ECB1BABB462374107F5"
+        }
+      },
+      "startedAtUtc": "2026-10-09T21:16:31.613Z",
+      "completedAtUtc": "2026-10-09T21:24:35.062Z",
+      "wallClockDurationSeconds": 483.4482168,
+      "averageRunsPerSecond": 2.1718975549234045
+    },
+    {
+      "batchNumber": 4,
+      "files": {
+        "recordsJson": {
+          "filename": "formal-run-records.json",
+          "sha256": "5F1B863D3D17209C590A92C26611BB43A6302E1B1ADCF9B66B032FD1A81F8D09"
+        },
+        "recordsCsv": {
+          "filename": "formal-run-records.csv",
+          "sha256": "50BF5B694F86F650F8DAFBDB93B53A4904C614AC6FC2E22C99A2732AD86B6A81"
+        },
+        "manifestJson": {
+          "filename": "formal-experiment-manifest.json",
+          "sha256": "B05A7B331781E69A8DEC812EE9D0CE58402D3B22838DFDF339D397AB9459188E"
+        },
+        "executionMetadataJson": {
+          "filename": "formal-batch-execution.json",
+          "sha256": "A4303EEE58083348421AFE1E6B76A65AD913E000C75FCB9BDF1D56EAA045265D"
+        }
+      },
+      "startedAtUtc": "2026-10-09T21:26:46.996Z",
+      "completedAtUtc": "2026-10-09T21:34:38.295Z",
+      "wallClockDurationSeconds": 471.2988098,
+      "averageRunsPerSecond": 2.227885957203196
+    }
+  ],
+  "files": {
+    "recordsJson": "formal-combined-run-records.json",
+    "recordsCsv": "formal-combined-run-records.csv",
+    "manifestJson": "formal-combined-manifest.json",
+    "sha256": "formal-combined-sha256.txt"
+  }
+}

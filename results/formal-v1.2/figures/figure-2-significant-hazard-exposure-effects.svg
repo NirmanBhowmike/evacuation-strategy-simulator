@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1250" height="900" viewBox="0 0 1250 900">
+<rect width="100%" height="100%" fill="white"/>
+<text x="50" y="48" font-family="Arial, sans-serif" font-size="28" font-weight="700">Significant Adaptive Hybrid Hazard-Exposure Reductions</text>
+<text x="50" y="78" font-family="Arial, sans-serif" font-size="16" fill="#444">Simulated RISK-region exposure; negative differences indicate lower exposure with Adaptive Hybrid.</text>
+<line x1="1170" y1="100" x2="1170" y2="840" stroke="#222" stroke-width="1.5"/>
+<text x="330" y="878" font-family="Arial, sans-serif" font-size="15">Mean hazard-exposure difference (person-seconds)</text><text x="318" y="135" text-anchor="end" font-family="Arial, sans-serif" font-size="13">LOW | D1 | Nearest</text>
+<rect x="1106.1994897907985" y="120" width="63.80051020920155" height="20" rx="3" fill="#087f5b"/>
+<text x="1099.1994897907985" y="135" text-anchor="end" font-family="Arial, sans-serif" font-size="12">-15.80</text><text x="318" y="169" text-anchor="end" font-family="Arial, sans-serif" font-size="13">LOW | D1 | Static</text>
+<rect x="1106.1994897907985" y="154" width="63.80051020920155" height="20" rx="3" fill="#087f5b"/>
+<text x="1099.1994897907985" y="169" text-anchor="end" font-family="Arial, sans-serif" font-size="12">-15.80</text><text x="318" y="203" text-anchor="end" font-family="Arial, sans-serif" font-size="13">LOW | D1 | Congestion</text>
+<rect x="1106.1994897907985" y="188" width="63.80051020920155" height="20" rx="3" fill="#087f5b"/>
+<text x="1099.1994897907985" y="203" text-anchor="end" font-family="Arial, sans-serif" font-size="12">-15.80</text><text x="318" y="237" text-anchor="end" font-family="Arial, sans-serif" font-size="13">LOW | D4 | Nearest</text>
+<rect x="1029.3203869432468" y="222" width="140.67961305675317" height="20" rx="3" fill="#087f5b"/>
+<text x="1022.3203869432468" y="237" text-anchor="end" font-family="Arial, sans-serif" font-size="12">-34.84</text><text x="318" y="271" text-anchor="end" font-family="Arial, sans-serif" font-size="13">LOW | D4 | Static</text>
+<rect x="1031.0386873604862" y="256" width="138.96131263951384" height="20" rx="3" fill="#087f5b"/>
+<text x="1024.0386873604862" y="271" text-anchor="end" font-family="Arial, sans-serif" font-size="12">-34.42</text><text x="318" y="305" text-anchor="end" font-family="Arial, sans-serif" font-size="13">LOW | D4 | Congestion</text>
+<rect x="1054.728119883733" y="290" width="115.27188011626708" height="20" rx="3" fill="#087f5b"/>
+<text x="1047.728119883733" y="305" text-anchor="end" font-family="Arial, sans-serif" font-size="12">-28.55</text><text x="318" y="339" text-anchor="end" font-family="Arial, sans-serif" font-size="13">MEDIUM | D1 | Nearest</text>
+<rect x="974.940760164773" y="324" width="195.059239835227" height="20" rx="3" fill="#087f5b"/>
+<text x="967.940760164773" y="339" text-anchor="end" font-family="Arial, sans-serif" font-size="12">-48.31</text><text x="318" y="373" text-anchor="end" font-family="Arial, sans-serif" font-size="13">MEDIUM | D1 | Static</text>
+<rect x="974.940760164773" y="358" width="195.059239835227" height="20" rx="3" fill="#087f5b"/>
+<text x="967.940760164773" y="373" text-anchor="end" font-family="Arial, sans-serif" font-size="12">-48.31</text><text x="318" y="407" text-anchor="end" font-family="Arial, sans-serif" font-size="13">MEDIUM | D1 | Congestion</text>
+<rect x="975.3102738093468" y="392" width="194.68972619065323" height="20" rx="3" fill="#087f5b"/>
+<text x="968.3102738093468" y="407" text-anchor="end" font-family="Arial, sans-serif" font-size="12">-48.22</text><text x="318" y="441" text-anchor="end" font-family="Arial, sans-serif" font-size="13">MEDIUM | D4 | Nearest</text>
+<rect x="723.1709553929659" y="426" width="446.8290446070341" height="20" rx="3" fill="#087f5b"/>
+<text x="716.1709553929659" y="441" text-anchor="end" font-family="Arial, sans-serif" font-size="12">-110.66</text><text x="318" y="475" text-anchor="end" font-family="Arial, sans-serif" font-size="13">MEDIUM | D4 | Static</text>
+<rect x="737.6558733823005" y="460" width="432.34412661769954" height="20" rx="3" fill="#087f5b"/>
+<text x="730.6558733823005" y="475" text-anchor="end" font-family="Arial, sans-serif" font-size="12">-107.07</text><text x="318" y="509" text-anchor="end" font-family="Arial, sans-serif" font-size="13">MEDIUM | D4 | Congestion</text>
+<rect x="823.3635764963437" y="494" width="346.63642350365626" height="20" rx="3" fill="#087f5b"/>
+<text x="816.3635764963437" y="509" text-anchor="end" font-family="Arial, sans-serif" font-size="12">-85.85</text><text x="318" y="543" text-anchor="end" font-family="Arial, sans-serif" font-size="13">MEDIUM | D4 | Hazard</text>
+<rect x="1147.0417962603976" y="528" width="22.958203739602368" height="20" rx="3" fill="#087f5b"/>
+<text x="1140.0417962603976" y="543" text-anchor="end" font-family="Arial, sans-serif" font-size="12">-5.69</text><text x="318" y="577" text-anchor="end" font-family="Arial, sans-serif" font-size="13">HIGH | D1 | Nearest</text>
+<rect x="815.0618707476975" y="562" width="354.9381292523025" height="20" rx="3" fill="#087f5b"/>
+<text x="808.0618707476975" y="577" text-anchor="end" font-family="Arial, sans-serif" font-size="12">-87.90</text><text x="318" y="611" text-anchor="end" font-family="Arial, sans-serif" font-size="13">HIGH | D1 | Static</text>
+<rect x="815.0618707476975" y="596" width="354.9381292523025" height="20" rx="3" fill="#087f5b"/>
+<text x="808.0618707476975" y="611" text-anchor="end" font-family="Arial, sans-serif" font-size="12">-87.90</text><text x="318" y="645" text-anchor="end" font-family="Arial, sans-serif" font-size="13">HIGH | D1 | Congestion</text>
+<rect x="812.6381103951198" y="630" width="357.36188960488016" height="20" rx="3" fill="#087f5b"/>
+<text x="805.6381103951198" y="645" text-anchor="end" font-family="Arial, sans-serif" font-size="12">-88.50</text><text x="318" y="679" text-anchor="end" font-family="Arial, sans-serif" font-size="13">HIGH | D4 | Nearest</text>
+<rect x="330" y="664" width="840" height="20" rx="3" fill="#087f5b"/>
+<text x="323" y="679" text-anchor="end" font-family="Arial, sans-serif" font-size="12">-208.03</text><text x="318" y="713" text-anchor="end" font-family="Arial, sans-serif" font-size="13">HIGH | D4 | Static</text>
+<rect x="348.23314542885237" y="698" width="821.7668545711476" height="20" rx="3" fill="#087f5b"/>
+<text x="341.23314542885237" y="713" text-anchor="end" font-family="Arial, sans-serif" font-size="12">-203.52</text><text x="318" y="747" text-anchor="end" font-family="Arial, sans-serif" font-size="13">HIGH | D4 | Congestion</text>
+<rect x="511.56391645175563" y="732" width="658.4360835482444" height="20" rx="3" fill="#087f5b"/>
+<text x="504.56391645175563" y="747" text-anchor="end" font-family="Arial, sans-serif" font-size="12">-163.07</text><text x="318" y="781" text-anchor="end" font-family="Arial, sans-serif" font-size="13">HIGH | D4 | Hazard</text>
+<rect x="1109.7183079699244" y="766" width="60.28169203007565" height="20" rx="3" fill="#087f5b"/>
+<text x="1102.7183079699244" y="781" text-anchor="end" font-family="Arial, sans-serif" font-size="12">-14.93</text><text x="330" y="855" font-family="Arial, sans-serif" font-size="12" fill="#087f5b">Negative = favors Adaptive Hybrid</text>
+<text x="1170" y="855" text-anchor="end" font-family="Arial, sans-serif" font-size="12" fill="#c92a2a">Positive = favors comparator</text>
+</svg>
