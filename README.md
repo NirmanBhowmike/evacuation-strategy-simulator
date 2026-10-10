@@ -7,6 +7,8 @@ The quantitative engine runs independently from the 3D interface. Formal experim
 **Live application:**
 https://evacuation-strategy-simulator.nirman-bhowmike.workers.dev
 
+![Emergency Evacuation Strategy Simulator - Research Mode](docs/assets/evacuation-simulator-research-mode.png)
+
 ## Research question
 
 How do fixed and adaptive evacuation-routing strategies differ when congestion, hazards, blocked exits, blocked corridors, and occupancy change during an evacuation?
