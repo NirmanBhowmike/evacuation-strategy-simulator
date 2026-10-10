@@ -321,7 +321,7 @@ The selected primary occupancy conditions are:
 
 All three selected conditions achieved 100% completion under the baseline calibration case while showing progressively greater local density and queue exposure.
 
-At 60 occupants, maximum local density exceeded the 5.4 persons/m² jam-density reference and completion dropped below 100%.
+At 60 occupants, maximum local density exceeded the 5.4 persons/mÂ² jam-density reference and completion dropped below 100%.
 
 Decision:
 
@@ -525,3 +525,69 @@ Validation status at freeze:
 
 Date:
 October 2, 2026
+
+## Architecture V2 and v1.2 closure decisions
+
+### D-048
+Adopt Architecture V2 as the current fictional research environment and move the formal occupancy levels to LOW = 14, MEDIUM = 42, and HIGH = 70.
+
+Reason: Architecture V2 replaced the earlier Layout A configuration and required its own calibrated occupancy regimes.
+
+### D-049
+Freeze the Architecture V2 disruption timing at 12 s for hazard/corridor events and 18 s for exit blocks.
+
+Reason: These values are the calibrated experimental event times used by the current formal model.
+
+### D-050
+Extend the formal disruption factor from D0-D4 to D0-D6.
+
+Added conditions:
+
+- D5 = West exit block at 18 s
+- D6 = East-main to southeast corridor block at 12 s
+
+Reason: The additional conditions broaden route-availability challenges while retaining complete formal execution.
+
+### D-051
+Retain the downstream receiving/jam-release correction after the pre-correction HIGH-occupancy gridlock investigation.
+
+Reason: The earlier timeout behavior was an absorbing numerical/movement state rather than legitimate slow evacuation. The correction resolves the identified gridlock without imposing an arbitrary minimum walking speed.
+
+### D-052
+Freeze the v1.2 formal execution at Git commit `1a84923664c028f3b6b15c5ec93ddaf9b7905095`.
+
+Formal design:
+
+```text
+5 strategies
+3 occupancy levels
+7 conditions
+40 paired seeds per cell
+105 cells
+840 paired scenarios
+4,200 runs
+```
+
+All 4,200 runs completed with 0 timeout and 0 unreachable-present outcomes.
+
+### D-053
+Analyze Adaptive Hybrid against the four comparator strategies using paired common-seed comparisons.
+
+Co-primary outcomes:
+
+- total evacuation time
+- population simulated hazard exposure
+
+The analysis uses paired two-sided t-tests, Cohen's `dz`, exact sign tests as a sensitivity check, and Holm correction across 168 tests.
+
+The analysis plan was finalized after execution and is therefore reported as post-execution multiplicity-controlled analysis.
+
+### D-054
+Keep Interactive Demo Mode separate from Research Mode.
+
+Reason: Manual demonstration disruptions are useful for presentation and exploration but must not be confused with the frozen D0-D6 research design.
+
+### D-055
+Deploy the application publicly with graceful WebGL failure handling and responsive phone support while preserving the validated desktop experience.
+
+The accepted phone limitation is visual only: extreme manual zoom-out in portrait can expose a large dark area around the finite scene ground.

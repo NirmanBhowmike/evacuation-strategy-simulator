@@ -210,3 +210,15 @@ These tasks do not block the software release.
 - [x] Do not merge historical v1.1 statistics into the current D0-D6 result set.
 - [x] Do not claim Adaptive Hybrid is universally superior.
 - [x] Keep the formal execution Git provenance fixed even when the application receives later UI or documentation commits.
+
+## Repository closure
+
+- [x] Review remaining documentation after public README synchronization.
+- [x] Replace incomplete project charter.
+- [x] Mark developmental research-basis and assumption files as historical where appropriate.
+- [x] Extend the decision and development records through formal v1.2, deployment, and responsive UI.
+- [x] Register the completed v1.2 formal experiment.
+- [x] Populate previously empty experiment and research directory READMEs.
+- [x] Remove redundant `.gitkeep` placeholders from populated research folders.
+- [x] Finalize the results index.
+- [x] Freeze software and repository documentation for the current academic release.

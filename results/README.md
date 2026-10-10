@@ -1,67 +1,44 @@
-﻿# Research Results
+# Research Results
 
-This directory contains curated research outputs from the 3D Emergency Evacuation Strategy Simulator.
+The current formal result package is under [`formal-v1.2/`](formal-v1.2/).
 
-## Current Formal Experiment
+## Current experiment
 
-The current formal results are stored in:
+```text
+Strategies:            5
+Occupancy levels:      3
+Disruption conditions: 7
+Replications per cell: 40
+Factorial cells:       105
+Paired scenarios:      840
+Total runs:            4,200
+Completed:             4,200
+Timeout:               0
+Unreachable present:   0
+```
 
-`results/formal-v1.2/`
+The formal comparison uses common random numbers so each routing strategy receives the same stochastic scenario realization for a given pair key.
 
-The Architecture V2 v1.2 formal design contains:
+Conditions are D0 Baseline, D1 Hazard, D2 Exit Block, D3 Corridor Block, D4 Hazard + Exit Block, D5 West Exit Block, and D6 East-Main to Southeast Corridor Block.
 
-- 5 routing strategies
-- 3 occupancy levels
-- 7 disruption conditions
-- 40 paired stochastic replications
-- 105 factorial cells
-- 840 paired stochastic scenarios
-- 4,200 total simulation runs
+## Historical dataset
 
-All 4,200 formal simulations completed successfully with no timeout or unreachable-present outcomes.
+The corrected v1.1 experiment used D0-D4 only:
 
-Current disruption conditions:
+```text
+75 cells
+600 paired scenarios
+3,000 runs
+```
 
-- D0 — Baseline
-- D1 — Hazard
-- D2 — Exit Block
-- D3 — Corridor Block
-- D4 — Combined Hazard + Exit Block
-- D5 — West Exit Block
-- D6 — East-Main to Southeast Corridor Block
+It remains historical evidence and must not be substituted for the current D0-D6 v1.2 dataset.
 
-Formal comparisons use common random numbers so the same stochastic scenario realization is presented to each routing strategy.
+## Interpretation boundary
 
-## Historical Formal Experiment
+Hazard exposure is simulated time in `RISK` regions, reported in person-seconds. It is not injury probability, smoke dose, mortality probability, FED, physiological tenability, or a certification metric.
 
-The earlier Architecture V2 v1.1 experiment evaluated D0–D4 only:
+The building is fictional.
 
-- 5 strategies
-- 3 occupancy levels
-- 5 conditions
-- 40 replications
-- 75 cells
-- 600 paired scenarios
-- 3,000 corrected formal runs
+## Repository policy
 
-Those results are historical and must not be substituted for the current D0–D6 v1.2 experiment.
-
-## Interpretation Boundary
-
-Hazard exposure represents simulated time spent in regions classified as `RISK`, reported in person-seconds.
-
-It is not:
-
-- injury probability
-- smoke dose
-- mortality probability
-- physiological tenability
-- a real-world safety certification metric
-
-The building environment is a fictional research layout rather than a digital twin of a specific real building.
-
-## Repository Policy
-
-Curated formal results, summary tables, statistical outputs, figures, provenance metadata, and reproducibility records may be retained in this directory.
-
-Temporary run directories and redundant generated artifacts should remain outside the repository.
+The repository retains curated formal data, summaries, statistical outputs, figures, provenance, and integrity records. Raw batch directories and redundant generated artifacts remain outside the public repository.

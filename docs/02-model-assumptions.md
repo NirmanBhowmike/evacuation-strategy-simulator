@@ -1,3 +1,9 @@
+> **Historical assumption record**
+>
+> This file preserves assumptions recorded during Research Model v1.0 and Layout A development. Values such as 12/36/48 occupancy, the five-condition D0-D4 design, early provisional timing, and holdout-layout planning are historical where they differ from the completed Architecture V2 v1.2 study.
+>
+> Current formal values are 14/42/70 occupants, D0-D6, 40 paired seeds per cell, and 4,200 runs. Current versioned code, regression tests, formal manifests, and `results/formal-v1.2/` take precedence.
+
 # Model Assumptions
 
 ## Purpose
@@ -470,15 +476,15 @@ Occupancy candidates of 12, 24, 36, 48, 60, 72, 96, and 120 occupants were evalu
 
 Observed maximum local density:
 
-- 12 occupants: 2.286 persons/m²
-- 24 occupants: 2.667 persons/m²
-- 36 occupants: 3.429 persons/m²
-- 48 occupants: 4.571 persons/m²
-- 60 occupants: 6.857 persons/m²
+- 12 occupants: 2.286 persons/mÂ²
+- 24 occupants: 2.667 persons/mÂ²
+- 36 occupants: 3.429 persons/mÂ²
+- 48 occupants: 4.571 persons/mÂ²
+- 60 occupants: 6.857 persons/mÂ²
 
 Completion remained 100% through 48 occupants.
 
-At 60 occupants, local density exceeded the 5.4 persons/m² jam-density reference and completion fell to 90% because six agents reached the defensive runtime ceiling.
+At 60 occupants, local density exceeded the 5.4 persons/mÂ² jam-density reference and completion fell to 90% because six agents reached the defensive runtime ceiling.
 
 Reason for selected levels:
 
@@ -565,7 +571,7 @@ theta = 0.10
 
 Selection rule:
 
-First, exclude calibration cases that violate the development validity criteria, including incomplete evacuation, timeout occupants, or maximum local density at or above the 5.4 persons/m² jam-density reference.
+First, exclude calibration cases that violate the development validity criteria, including incomplete evacuation, timeout occupants, or maximum local density at or above the 5.4 persons/mÂ² jam-density reference.
 
 Second, identify threshold values that suppress demonstrated harmful low-benefit voluntary reroutes.
 

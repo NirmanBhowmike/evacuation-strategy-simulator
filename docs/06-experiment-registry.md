@@ -116,3 +116,30 @@ A formal experiment must contain enough information to reproduce:
 - model parameters
 - software version
 - random seed
+
+## Registered formal experiment: Architecture V2 v1.2
+
+```text
+Experiment Type:       FORMAL
+Design ID:             architecture-v2-formal-factorial-v3
+Software Git Commit:   1a84923664c028f3b6b15c5ec93ddaf9b7905095
+Software Version:      1.2.0
+Parameter Set:         architecture-v2-research-v1.2-frozen
+Seed Bank:             architecture-v2-formal-seed-bank-v1
+Seeds:                 100001-100040
+Strategies:            5
+Occupancy Conditions:  3
+Disruption Conditions: 7
+Replications/Cell:     40
+Factorial Cells:       105
+Paired Scenarios:      840
+Runs:                  4,200
+Run Status:            4,200 COMPLETED
+Timeout:               0
+Unreachable Present:   0
+Public Results:        results/formal-v1.2/
+```
+
+The dataset was executed in four batches of 1,050 runs and merged only after batch-level validation.
+
+Formal comparisons preserve common random numbers across strategies.

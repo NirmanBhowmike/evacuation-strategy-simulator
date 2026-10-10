@@ -1,3 +1,9 @@
+> **Development research record**
+>
+> This file preserves the literature review and parameter-development passes used while the model was being built. Some sections intentionally retain future tense, provisional values, and superseded Layout A assumptions.
+>
+> For the current Architecture V2 v1.2 configuration, use `README.md`, `docs/05-validation-log.md`, `docs/09-master-task-checklist.md`, and `results/formal-v1.2/README.md`.
+
 # Research Basis
 
 ## Purpose
@@ -159,7 +165,7 @@ The model should be evaluated component by component rather than accepted becaus
 
 ## Key Sources
 
-1. Ulrich Weidmann. Transporttechnik der Fussgänger. ETH Zürich. DOI: 10.3929/ethz-a-000687810.
+1. Ulrich Weidmann. Transporttechnik der FussgÃ¤nger. ETH ZÃ¼rich. DOI: 10.3929/ethz-a-000687810.
 
 2. Ronchi, E., Kuligowski, E., Reneke, P., Peacock, R., and Nilsson, D. The Process of Verification and Validation of Building Fire Evacuation Models. NIST Technical Note 1822. DOI: 10.6028/NIST.TN.1822.
 

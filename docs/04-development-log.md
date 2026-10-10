@@ -122,4 +122,55 @@ The implementation checkpoint was committed as:
 df2d7aa feat: add interactive demo mode and disruption scenario builder
 ```
 
-The full planned Architecture V2 formal experiment remains separate from this checkpoint. The planned 4,200-run formal experiment has not yet been executed.
+The Interactive Demo checkpoint preceded formal v1.2 execution. The completed formal study is recorded below.
+
+## Formal v1.2 execution
+
+The Architecture V2 v1.2 factorial study was executed from the frozen simulation checkpoint:
+
+```text
+Git commit:        1a84923664c028f3b6b15c5ec93ddaf9b7905095
+Software version:  1.2.0
+Design:            architecture-v2-formal-factorial-v3
+Parameter set:     architecture-v2-research-v1.2-frozen
+Seed bank:         architecture-v2-formal-seed-bank-v1
+```
+
+Four 1,050-run batches produced the final 4,200-run dataset. All runs completed without timeout or unreachable-present outcomes.
+
+## Analysis and results package
+
+Stage A verified dataset structure, pairing, and descriptive summaries. Stage B compared Adaptive Hybrid with the four comparator strategies using paired common-seed analysis.
+
+The public curated package under `results/formal-v1.2/` contains the canonical CSV, descriptive tables, inferential outputs, figures, provenance records, and integrity hashes.
+
+The main result is a speed-exposure tradeoff rather than universal dominance by Adaptive Hybrid.
+
+## Production deployment
+
+The browser application was deployed to Cloudflare Workers from GitHub `main`.
+
+Production URL:
+
+https://evacuation-strategy-simulator.nirman-bhowmike.workers.dev
+
+A WebGL capability guard was added after a restricted browser environment exposed blank-screen behavior when WebGL could not initialize. The deployed application now presents a visible fallback instead.
+
+## Responsive interface
+
+A responsive phone layer was developed separately and merged only after regression checks confirmed that the validated desktop application code remained protected.
+
+Landscape is the preferred mobile viewing mode. Portrait retains route tracing while suppressing the detailed Agent Inspector. Present mode is not exposed on phone layouts, and Reset Views is hidden in phone portrait.
+
+The remaining extreme portrait zoom-out behavior is recorded as a non-blocking visualization limitation.
+
+## Final software checkpoint
+
+```text
+66 test files passed
+455 tests passed
+TypeScript validation passed
+Production build passed
+```
+
+Software implementation and public-facing repository documentation are considered closed for the current academic release. Later work should focus on figures, report writing, presentation material, and clearly versioned research extensions.
