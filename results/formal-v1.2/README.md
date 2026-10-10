@@ -1,115 +1,156 @@
-# Formal Results — Architecture V2 v1.2
+# Architecture V2 v1.2 Formal Results
 
-## Experiment
+This directory contains the curated result package for the completed D0-D6 formal experiment.
 
-This directory contains the curated formal results for the Architecture V2 evacuation-strategy experiment.
+## Dataset
 
-Formal design:
+```text
+5 routing strategies
+3 occupancy levels
+7 disruption conditions
+40 paired replications per cell
 
-- 5 routing strategies
-- 3 occupancy levels
-- 7 disruption conditions
-- 40 paired stochastic replications per factorial cell
-- 105 factorial cells
-- 840 common-random-number paired scenarios
-- 4,200 simulation runs
+105 factorial cells
+840 common-random-number scenario pairs
+4,200 simulation runs
+```
 
-All 4,200 formal runs completed successfully.
+Execution status:
 
-- COMPLETED: 4,200
-- UNREACHABLE_PRESENT: 0
-- TIMEOUT: 0
+```text
+COMPLETED:             4,200
+UNREACHABLE_PRESENT:   0
+TIMEOUT:               0
+```
 
-Software provenance:
+Formal provenance:
 
-- Software version: 1.2.0
-- Git commit: `1a84923664c028f3b6b15c5ec93ddaf9b7905095`
-- Design: `architecture-v2-formal-factorial-v3`
-- Parameter set: `architecture-v2-research-v1.2-frozen`
+```text
+Software version:  1.2.0
+Git commit:        1a84923664c028f3b6b15c5ec93ddaf9b7905095
+Design:            architecture-v2-formal-factorial-v3
+Parameter set:     architecture-v2-research-v1.2-frozen
+Seed bank:         architecture-v2-formal-seed-bank-v1
+```
+
+The formal execution commit is the provenance point for the dataset. Later repository commits do not change that provenance.
 
 ## Conditions
 
-- D0 — Baseline
-- D1 — Hazard
-- D2 — Exit Block
-- D3 — Corridor Block
-- D4 — Combined Hazard + Exit Block
-- D5 — West Exit Block
-- D6 — East-Main to Southeast Corridor Block
+| ID | Condition |
+|---|---|
+| D0 | Baseline |
+| D1 | Hazard |
+| D2 | Exit Block |
+| D3 | Corridor Block |
+| D4 | Hazard + Exit Block |
+| D5 | West Exit Block |
+| D6 | East-Main to Southeast Corridor Block |
 
-## Primary Outcomes
+## Primary outcomes
 
-1. Total evacuation time in seconds
-2. Population simulated hazard exposure in person-seconds
+Two outcomes were treated as co-primary:
 
-Hazard exposure represents simulated time spent in regions classified as `RISK`. It is not a physiological dose, injury probability, mortality measure, or tenability metric.
+1. total evacuation time, seconds
+2. population simulated hazard exposure, person-seconds
 
-## Statistical Analysis
-
-Adaptive Hybrid was compared against:
-
-- Nearest Exit
-- Static Shortest Path
-- Congestion-Aware
-- Hazard-Aware
-
-Comparisons retained the common-random-number pairing across seeds.
-
-The inferential analysis used:
-
-- two-sided paired t-tests
-- paired Cohen's dz effect sizes
-- exact two-sided sign tests as a robustness check
-- Holm family-wise correction across all 168 co-primary tests
-
-The inferential plan was finalized after formal execution. It is therefore described as a post-execution multiplicity-controlled analysis rather than a preregistered confirmatory analysis.
-
-## Main Findings
-
-Evacuation time:
-
-- Adaptive Hybrid significantly faster: 4 of 84 comparisons
-- Adaptive Hybrid significantly slower: 18 of 84
-- No corrected evidence: 33 of 84
-- Exact ties: 29 of 84
-
-Simulated hazard exposure:
-
-- Adaptive Hybrid significantly lower exposure: 20 of 84 comparisons
-- Adaptive Hybrid significantly higher exposure: 0
-- No corrected evidence: 4 of 84
-- Exact ties: 60 of 84
-
-The clearest result is a speed-versus-exposure tradeoff.
-
-There were 18 comparisons in which the comparator produced significantly shorter evacuation time while Adaptive Hybrid produced significantly lower simulated hazard exposure.
-
-These tradeoffs occurred systematically in D1 Hazard and D4 Combined across LOW, MEDIUM, and HIGH occupancy against Nearest Exit, Static Shortest Path, and Congestion-Aware.
-
-The magnitude of the exposure reduction generally increased with occupancy.
-
-Adaptive Hybrid should therefore be interpreted as a safety-sensitive multi-objective routing strategy rather than a universally fastest evacuation strategy.
-
-## Figures
-
-- `figures/figure-1-significant-evacuation-time-effects.svg`
-- `figures/figure-2-significant-hazard-exposure-effects.svg`
-- `figures/figure-3-evacuation-hazard-tradeoff.svg`
-
-## Data
-
-The canonical 4,200-run CSV is:
-
-`data/formal-combined-run-records.csv`
-
-Descriptive summaries are also provided under `data/`.
+`hazard exposure` is simulated time spent in regions classified as `RISK`. It is not a physiological dose, injury probability, mortality measure, smoke dose, FED, or certified tenability metric.
 
 ## Analysis
 
-Detailed paired and inferential outputs are under `analysis/`.
+Adaptive Hybrid was compared with Nearest Exit, Static Shortest Path, Congestion-Aware, and Hazard-Aware. Seed pairing was retained throughout.
 
-## Provenance
+Inferential procedure:
 
-Formal manifests, analysis metadata, and integrity hashes are under `provenance/`.
+```text
+paired two-sided t-test
+paired Cohen's dz
+exact two-sided sign test as a sensitivity check
+Holm family-wise correction across 168 co-primary tests
+```
 
-The simulation environment is a fictional research building model and is not a certified life-safety system or validated digital twin of a real building.
+The inferential plan was finalized after formal execution. The analysis is therefore described as post-execution multiplicity-controlled analysis rather than preregistered confirmatory testing.
+
+## Result summary
+
+### Evacuation time
+
+Across 84 Adaptive-versus-comparator comparisons:
+
+```text
+Adaptive significantly faster:   4
+Adaptive significantly slower:  18
+No corrected evidence:          33
+Exact ties:                     29
+```
+
+### Simulated hazard exposure
+
+```text
+Adaptive significantly lower:   20
+Adaptive significantly higher:   0
+No corrected evidence:           4
+Exact ties:                      60
+```
+
+The clearest pattern is a speed-exposure tradeoff.
+
+Eighteen comparisons show a significantly faster comparator together with significantly lower simulated hazard exposure for Adaptive Hybrid. All 18 occur in D1 or D4 across LOW, MEDIUM, and HIGH occupancy against Nearest Exit, Static Shortest Path, and Congestion-Aware.
+
+Exposure reductions generally become larger as occupancy increases.
+
+Adaptive Hybrid is best interpreted as a safety-sensitive multi-objective strategy. The results do not support describing it as the universally fastest routing policy.
+
+Some statistically significant evacuation-time differences are very small in absolute magnitude. Statistical evidence and practical magnitude should be reported separately.
+
+## Files
+
+Canonical run-level data:
+
+```text
+data/formal-combined-run-records.csv
+```
+
+Descriptive summaries:
+
+```text
+data/primary-cell-descriptives.csv
+data/primary-overall-strategy-descriptives.csv
+```
+
+Paired and inferential outputs:
+
+```text
+analysis/adaptive-paired-difference-summary.csv
+analysis/adaptive-significantly-faster.csv
+analysis/adaptive-significantly-lower-hazard.csv
+analysis/adaptive-significantly-slower.csv
+analysis/explicit-speed-hazard-tradeoffs.csv
+analysis/joint-pattern-counts.csv
+analysis/paired-inferential-joint-summary.csv
+analysis/paired-inferential-results.csv
+```
+
+Figures:
+
+```text
+figures/figure-1-significant-evacuation-time-effects.svg
+figures/figure-2-significant-hazard-exposure-effects.svg
+figures/figure-3-evacuation-hazard-tradeoff.svg
+```
+
+Provenance and integrity records:
+
+```text
+provenance/analysis-readiness.json
+provenance/analysis-stage-b-summary.json
+provenance/formal-combined-manifest.json
+provenance/formal-combined-sha256.txt
+package-sha256.txt
+```
+
+Raw batch execution folders are preserved separately from the public repository.
+
+## Scope
+
+The results belong to the implemented fictional building model and the frozen v1.2 assumptions. They are research simulation results, not certification evidence for a real building or operational life-safety system.

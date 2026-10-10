@@ -1,709 +1,159 @@
-# Validation Log
+# Validation Record
 
-This document records verification and validation activities for the 3D Emergency Evacuation Strategy Simulator.
+## Current checkpoint
 
-The research engine is developed and tested independently from the future 3D rendering layer. Validation therefore focuses first on deterministic simulation behavior, numerical behavior, movement and flow logic, routing behavior, disruption handling, reproducibility, and experimental integrity.
+```text
+Test files:        66 passed
+Tests:             455 passed
+Failed tests:      0
+TypeScript:        passed
+Production build:  passed
+```
 
-## Current Validation Status
+This checkpoint follows the v1.2 formal experiment, statistical analysis, production deployment, and responsive-interface pass.
 
-As of October 2, 2026:
+The automated suite verifies software behavior and internal model consistency. It does not establish real-world predictive validity.
 
-- 46 test files passed
-- 346 tests passed
-- 0 tests failed
-- Core simulation engine tests are passing
-- Routing-strategy tests are passing
-- Headless simulation tests are passing
-- Experiment-engine tests are passing
-- Numerical convergence tests are passing
-- Calibration regression tests are passing
-- Frozen Research Model v1.0 parameter-set regression tests are passing
-- Visualization-facing result consistency tests are passing
+## Coverage
 
-The dedicated Phase 5 validation tests are stored under:
+| Area | Examples |
+|---|---|
+| Core numerical behavior | fixed timestep, movement, density, bottleneck capacity, termination |
+| Routing | Dijkstra, Nearest Exit, Static, Congestion-Aware, Hazard-Aware, Adaptive Hybrid |
+| Dynamic scenarios | hazard activation, exit blocks, corridor blocks, D0-D6 regression |
+| Experimental integrity | seed preservation, common random numbers, run IDs, manifests, formal output |
+| Presentation consistency | replay, visual/headless agreement, Demo reproducibility |
 
-`tests/validation/`
+Small analytical cases are checked against known values, including free-flow travel time, known shortest paths, an independent path reference, Weidmann speed-density values, bottleneck capacity, and zero hazard exposure under clear conditions.
 
-Key dedicated validation files include:
+Routing tests also verify that the policies remain behaviorally distinct. Congestion-Aware responds to current delay, Hazard-Aware prefers safer routes, and Adaptive Hybrid applies the frozen `0.10` voluntary rerouting threshold while retaining its safety override.
 
-- `coreEngineValidation.test.ts`
-- `behavioralModelValidation.test.ts`
-- `finalEngineValidation.test.ts`
-- `timestepConvergence.test.ts`
-- `congestionAwareStabilityRegression.test.ts`
-- `corridorBlockSegmentValidation.test.ts`
-- `adaptiveThresholdSelectionRegression.test.ts`
-- `researchParameterSetRegression.test.ts`
-- `visualHeadlessConsistency.test.ts`
-## 1. Single-Agent Analytical Validation
+## Reproducibility
 
-### Purpose
+Identical configuration, seed, parameter set, and source state produce identical formal simulation output.
 
-Verify that a simple evacuation result agrees with an analytically calculated free-flow travel time.
+Common random numbers are preserved across strategies so each comparison uses the same randomized scenario.
 
-### Test Case
+Formal records include scenario, seed, strategy, parameter-set version, software version, and Git provenance.
 
-A single agent travels along a 5 m route at a desired speed of 1.34 m/s.
+## Architecture V2.1 jam-release correction
 
-Analytical continuous travel time:
+The first large Architecture V2 execution exposed an absorbing HIGH-occupancy gridlock case. Ten runs timed out in the pre-correction dataset, with seed `100025` providing a reproducible diagnostic case.
 
-`5 / 1.34 = approximately 3.7313 seconds`
+Extending the simulation horizon did not resolve the affected occupants. The behavior was traced to the movement/density implementation, not to legitimate slow evacuation.
 
-The validation simulation uses a fixed timestep of 0.1 s. Therefore, evacuation should be registered on the first simulation boundary at or after the analytical arrival time:
+The correction introduced downstream receiving/jam-release behavior without adding an arbitrary minimum-speed floor.
 
-`ceil(3.7313 / 0.1) × 0.1 = 3.8 seconds`
+Regression coverage confirms that the previously locked cases resolve, ordinary lower-density behavior remains stable, and the corrected v1.1 3,000-run experiment completed with 0 timeout and 0 unreachable.
 
-### Result
+Pre-correction data are retained as historical validation evidence and are not mixed with the final v1.2 dataset.
 
-Passed.
+## Formal v1.2 execution integrity
 
-The headless simulation produced the expected discrete evacuation time and a traveled distance of 5 m.
+```text
+5 strategies
+x 3 occupancies
+x 7 conditions
+x 40 paired seeds
+= 4,200 runs
+```
 
-### Interpretation
+Validated structure:
 
-The basic relationship between distance, walking speed, fixed timestep, and evacuation completion is behaving as expected.
+```text
+4,200 records
+4,200 unique run IDs
+840 pair keys
+105 cells
+40 formal seeds
+5 strategies
+7 conditions
+3 occupancy levels
+```
 
----
+Run status:
 
-## 2. Known Shortest-Path Validation
+```text
+COMPLETED:             4,200
+UNREACHABLE_PRESENT:   0
+TIMEOUT:               0
+```
 
-### Purpose
+Provenance:
 
-Verify the routing solver against graphs with known analytical shortest paths.
+```text
+Software version:  1.2.0
+Git commit:        1a84923664c028f3b6b15c5ec93ddaf9b7905095
+Design:            architecture-v2-formal-factorial-v3
+Parameter set:     architecture-v2-research-v1.2-frozen
+Seed bank:         architecture-v2-formal-seed-bank-v1
+```
 
-### Validation
+The four 1,050-run batches were checked independently before being merged into the canonical dataset.
 
-A reference graph included both a direct high-cost route and a multi-edge lower-cost route.
+## Visual and headless consistency
 
-Expected shortest path:
+The 3D interface does not maintain a second evacuation model.
 
-`a → b → c → exit`
+Regression tests compare renderer-facing replay data with authoritative headless results, including scenario, seed, strategy, simulation time, termination state, evacuation metrics, hazard exposure, disruption records, agent state, routes, exits, and environment geometry.
 
-Expected total network cost:
+## D5 and D6
 
-`4`
+```text
+D5  West exit block at 18 s
+D6  East-main to southeast corridor block at 12 s
+```
 
-### Result
+Dedicated regression tests exercise both conditions across all five routing strategies.
 
-Passed.
+Calibration runs used to select these conditions remain validation evidence. They are not substituted for the 40-seed formal dataset.
 
-The Dijkstra implementation selected the expected minimum-cost route rather than the geometrically direct but more expensive alternative.
+## Statistical-analysis checks
 
----
+Analysis Stage A verified dataset readiness, cell structure, pairing, and descriptive summaries.
 
-## 3. Independent Routing Reference Validation
+Stage B retained the common-seed pairing and evaluated Adaptive Hybrid against four comparators for:
 
-### Purpose
+- total evacuation time
+- population simulated hazard exposure
 
-Check the Dijkstra implementation against an independently implemented reference method.
+The analysis used paired two-sided t-tests, Cohen's `dz`, exact two-sided sign tests as a sensitivity check, and Holm correction across 168 tests.
 
-### Method
+Because the inferential plan was finalized after execution, it is reported as post-execution multiplicity-controlled analysis rather than preregistered confirmatory analysis.
 
-A separate exhaustive simple-path enumeration routine was implemented for a small validation graph.
+## Production smoke testing
 
-This routine does not call the project Dijkstra implementation.
+Production URL:
 
-The independently calculated minimum path cost was compared with the Dijkstra result.
+https://evacuation-strategy-simulator.nirman-bhowmike.workers.dev
 
-### Result
+The deployed application was checked separately from the repository build.
 
-Passed.
+A restricted browser environment without WebGL originally produced a blank visualization. The application now shows a visible fallback when WebGL cannot be initialized.
 
-Both methods produced a minimum path cost of 4 and selected the same minimum-cost route.
+A normal Chrome browser with WebGL available was used to verify the actual 3D application, including building and occupant rendering, playback, Research / Demo switching, camera views, themes, disruption display, agent selection, and route tracing.
 
-### Note
+Responsive phone testing covered portrait and landscape layouts. Landscape supports the detailed Agent Inspector. Portrait keeps route tracing while suppressing the full inspector. Mobile Present mode is hidden, and Reset Views is hidden in phone portrait.
 
-Python was not required for this particular validation because a separate exhaustive reference algorithm provided an independent comparison within the test environment.
+One accepted presentation limitation remains: extreme manual zoom-out in portrait can reveal a large dark area around the finite scene ground. This does not change simulation state or research output.
 
----
+## Interpretation limits
 
-## 4. Blocked-Route Validation
+Validation establishes implementation consistency for the defined model. It does not establish certified accuracy for real evacuations.
 
-### Purpose
+The model does not include fire or smoke physics, toxic gas concentration, temperature, visibility degradation, physiological tenability, injury probability, mortality probability, empirical human-subject validation, or a calibrated microscopic collision model.
 
-Verify that routes through dynamically blocked corridors are removed from feasible routing alternatives.
+Hazard exposure is simulated time in `RISK` regions, reported in person-seconds. It is not FED, injury, dose, or mortality.
 
-### Test Case
+The building is fictional and is not a validated digital twin.
 
-The shorter route to the primary exit was blocked at simulation time zero using a `CORRIDOR_BLOCK` event.
+## Verification commands
 
-### Result
+```bash
+npm run typecheck:all
+npm run build
+npm test
+git diff --check
+```
 
-Passed.
-
-The agent did not use the blocked route and evacuated through the alternative exit.
-
-### Interpretation
-
-Dynamic corridor blockage correctly changes the traversable navigation network.
-
----
-
-## 5. Unreachable-Agent Validation
-
-### Purpose
-
-Verify that agents are not falsely classified as evacuated when no feasible exit remains.
-
-### Test Case
-
-All routes from the agent's starting node to available exits were blocked at simulation time zero.
-
-### Result
-
-Passed.
-
-The agent was classified:
-
-`UNREACHABLE`
-
-The run terminated as:
-
-`ALL_RESOLVED`
-
-with:
-
-- 0 evacuated agents
-- 1 unreachable agent
-- completion rate = 0
-
-### Interpretation
-
-Unreachable occupants are explicitly represented rather than silently counted as evacuated.
-
----
-
-## 6. Same-Seed Reproducibility
-
-### Purpose
-
-Verify deterministic replay.
-
-### Method
-
-Identical scenario inputs, seed, parameters, layout, and strategy were executed more than once.
-
-### Result
-
-Passed.
-
-Repeated runs produced identical simulation results.
-
-### Interpretation
-
-The deterministic simulation architecture supports exact same-scenario replay when configuration and software state are unchanged.
-
----
-
-## 7. Density-Speed Validation
-
-### Purpose
-
-Verify qualitative and boundary behavior of the selected Weidmann speed-density relationship.
-
-### Expected Behavior
-
-- Density = 0 → free-flow speed
-- Increasing density → decreasing walking speed
-- Density approaching jam density → speed approaches zero
-- Density at or above jam density → speed = 0
-
-Baseline values currently implemented:
-
-- Free-flow reference speed = 1.34 m/s
-- Lambda = 1.913
-- Jam density = 5.4 persons/m²
-
-### Result
-
-Passed.
-
-The tested relationship decreased monotonically across the selected density values and returned zero speed at jam density.
-
----
-
-## 8. Independent Weidmann Equation Check
-
-### Purpose
-
-Verify the implementation against a separately calculated equation value.
-
-### Method
-
-For density = 2 persons/m², the reference speed was calculated directly from:
-
-`v(rho) = 1.34 × [1 - exp(-1.913 × (1/rho - 1/5.4))]`
-
-The independently evaluated value was compared with `calculateWeidmannSpeedMps()`.
-
-### Result
-
-Passed to numerical tolerance.
-
----
-
-## 9. Bottleneck-Flow Validation
-
-### Purpose
-
-Verify the width-based capacity relationship and discrete admission behavior.
-
-Current model:
-
-`Q = q_s × W`
-
-where:
-
-- `Q` = persons/s
-- `q_s` = specific flow in persons/(m·s)
-- `W` = usable width in meters
-
-### Test Case
-
-With:
-
-- specific flow = 1.3 persons/(m·s)
-- width = 2 m
-
-Expected capacity:
-
-`Q = 1.3 × 2 = 2.6 persons/s`
-
-### Result
-
-Passed.
-
-The controller produced the expected capacity, deterministic admissions, fractional carry while demand remained queued, and discarded unused service capacity after the queue cleared.
-
-An additional boundary test confirmed exact whole-person admission when the available capacity budget was exactly one person.
-
----
-
-## 10. Zero-Hazard Exposure Validation
-
-### Purpose
-
-Verify that the hazard-exposure metric remains exactly zero when no hazard is active.
-
-### Result
-
-Passed.
-
-For a complete evacuation under CLEAR conditions:
-
-- population hazard exposure = 0 person-seconds
-- mean hazard exposure = 0 seconds
-- individual agent hazard exposure = 0 seconds
-
-### Interpretation
-
-The hazard metric is not accumulating exposure in CLEAR regions.
-
----
-
-## 11. Routing-Response Validation
-
-### Purpose
-
-Verify that routing strategies respond according to their intended information and objective functions.
-
-### Congestion-Aware Validation
-
-Under uncongested conditions, the shorter route was selected.
-
-After heavy density was introduced on the shorter route, Congestion-Aware routing selected the longer but currently faster alternative.
-
-Result: Passed.
-
-### Hazard-Aware Validation
-
-When the shorter route was classified `RISK` and the longer alternative remained `CLEAR`, Hazard-Aware routing selected the longer CLEAR route.
-
-Predicted risk exposure for the selected route was zero.
-
-Result: Passed.
-
-### Interpretation
-
-The strategies respond differently to current state according to their defined routing objectives rather than behaving as duplicate shortest-path policies.
-
----
-
-## 12. Adaptive Rerouting Validation
-
-### Purpose
-
-Verify rerouting inertia and the safety override.
-
-### Relative Improvement Rule
-
-`I = (C_current - C_alternative) / C_current`
-
-### Threshold Test
-
-A candidate route provided a 20% predicted travel-time improvement.
-
-With:
-
-`theta = 0.25`
-
-the current route was retained.
-
-With:
-
-`theta = 0.20`
-
-the candidate route was accepted.
-
-### Safety Override Test
-
-The current route was then classified as RISK while the alternative remained CLEAR.
-
-Even with:
-
-`theta = 1.00`
-
-the safer alternative was accepted.
-
-### Result
-
-Passed.
-
-### Interpretation
-
-Normal route switching respects the inertia threshold, while a meaningful safety improvement can override the normal time-improvement threshold.
-
----
-
-## 13. Numerical Boundary Validation
-
-Dedicated tests were performed for important numerical boundaries.
-
-### Fixed-Step Clock
-
-A 0.025 s timestep advanced for 1,000 ticks.
-
-Expected time:
-
-`25 seconds`
-
-Result: Passed.
-
-### Exact Edge Arrival
-
-An agent traveling exactly the remaining edge distance during a timestep arrived at the destination without overshoot.
-
-Result: Passed.
-
-### Density-Cell Boundary
-
-An agent positioned exactly on a density-cell boundary was deterministically assigned to the following cell.
-
-Result: Passed.
-
-### Exact Bottleneck Admission Boundary
-
-A capacity budget equal to exactly one person admitted one person and retained the second occupant in the queue.
-
-Result: Passed.
-
----
-
-## 14. Performance and Stress Validation
-
-### Purpose
-
-Detect failures in agent accounting, termination, and simulation stability under a substantially larger population than the small analytical tests.
-
-### Test Case
-
-A headless run was executed with:
-
-- 250 agents
-- fixed timestep = 0.1 s
-- bounded simulation window = 1 s
-- high bottleneck service capacity to isolate engine execution behavior
-
-### Acceptance Criteria
-
-The test required:
-
-- no crash
-- complete preservation of the 250-agent population
-- valid simulation termination
-- consistent status accounting
-- execution within a generous 10,000 ms regression guard
-
-### Result
-
-Passed.
-
-The simulation retained all 250 agents and completed within the regression guard.
-
-### Limitation
-
-This is a regression-oriented stress test, not a formal performance benchmark. Formal computation-time comparisons should record hardware, operating environment, software version, and Git commit.
-
----
-
-## 15. Integrated Headless Simulation Validation
-
-The headless runner has been tested for:
-
-- complete single-agent evacuation
-- deterministic repeated execution
-- time-zero exit blockage
-- constrained bottleneck queues
-- timeout behavior
-- future disruptions not being used before activation
-- invalid spawn-position rejection
-- blocked-route response
-- unreachable-agent classification
-
-Result: Passed.
-
----
-
-## 16. Experiment and Reproducibility Validation
-
-The experiment engine has been tested for:
-
-- Scenario × Strategy batch execution
-- identical ScenarioInstance reuse across strategies
-- scenario IDs
-- parameter-set IDs
-- seed preservation
-- deterministic run IDs
-- software-version provenance
-- Git-commit provenance
-- experiment-registry records
-- JSON reproducibility configuration
-- CSV research output
-- automatic strategy-level metric aggregation
-- run-status recording
-
-Result: Passed.
-
----
-
-## 17. Current Test Summary
-
-Current automated test status:
-
-- Test files: 46 passed
-- Tests: 346 passed
-- Failed tests: 0
-
-The complete validation suite now includes regression coverage for:
-
-- analytical engine behavior
-- shortest-path correctness
-- independent routing reference comparison
-- density-speed behavior
-- bottleneck capacity and admission
-- hazard exposure accounting
-- routing-strategy response
-- adaptive rerouting behavior
-- safety-priority rerouting
-- numerical boundary conditions
-- blocked-route recovery
-- unavailable-exit recovery
-- unreachable-agent classification
-- timeout handling
-- same-seed reproducibility
-- experiment provenance
-- numerical timestep convergence
-- Congestion-Aware queue stability
-- occupancy calibration
-- selected corridor-block configuration
-- Adaptive Hybrid threshold selection
-- frozen disruption schedules
-- frozen Research Model v1.0 parameter set
-- visualization-facing result consistency
-
-All automated tests are passing.
-## 18. Visual vs Headless Result Consistency Validation
-
-### Purpose
-
-Verify that the data supplied to the future visualization layer are consistent with the authoritative headless research-engine result.
-
-The visualization must not maintain a second evacuation simulation or independently calculate:
-
-- occupant movement
-- route selection
-- rerouting
-- hazard exposure
-- congestion
-- exit availability
-- corridor blockage
-- evacuation status
-- performance metrics
-
-The research engine remains the authoritative source of simulation state.
-
-### Architecture Tested
-
-The validated data path is:
-
-Headless research engine
-
-→ completed HeadlessSimulationResult
-
-→ visualization-result adapter
-
-→ renderer-facing visualization state
-
-The adapter creates a detached, read-only presentation model from the authoritative simulation result and the same environment, navigation graph, and exit definitions used by the research engine.
-
-### Validation Scope
-
-The test compares visualization-facing data against the corresponding headless values for:
-
-- scenario ID
-- parameter-set ID
-- random seed
-- layout ID
-- routing strategy
-- simulation timestep
-- final simulated time
-- simulation tick count
-- termination state
-- simulation metrics
-- queue metrics
-- applied disruption events
-- occupant count
-- occupant IDs
-- occupant positions
-- occupant statuses
-- current navigation nodes
-- current navigation edges
-- planned route nodes
-- route cursor positions
-- selected exits
-- reroute counts
-- distance traveled
-- hazard exposure
-- evacuation times
-
-Static visualization geometry is also checked against the same authoritative Layout A definitions used by the simulation:
-
-- building zones
-- zone polygons
-- navigation nodes
-- navigation edges
-- exits
-- layout dimensions
-
-### Experimental Coverage
-
-Consistency was checked across all five frozen disruption conditions:
-
-- D0 - Baseline
-- D1 - Hazard
-- D2 - Exit Block
-- D3 - Corridor Block
-- D4 - Combined
-
-Each condition was evaluated across all five routing strategies:
-
-- Nearest Exit
-- Static Shortest Path
-- Congestion-Aware
-- Hazard-Aware
-- Adaptive Hybrid
-
-This produces 25 strategy-condition combinations within the consistency regression.
-
-### Read-Only Projection Validation
-
-The renderer-facing result was also verified to be detached from the authoritative headless objects.
-
-The visualization result, layout model, agent array, agent objects, agent positions, route arrays, metrics, queue metrics, termination state, and applied-disruption collection are frozen before presentation.
-
-This prevents the visualization layer from mutating research-engine results through the presentation model.
-
-### Result
-
-Passed.
-
-The visualization-facing projection matched the corresponding authoritative headless simulation results for all tested strategy-condition combinations.
-
-The complete automated test suite after this validation contained:
-
-- 46 passing test files
-- 346 passing tests
-- 0 failed tests
-
-### Interpretation
-
-The validation establishes consistency between the completed headless simulation result and the data model that will be consumed by the visualization layer.
-
-The visualization layer therefore has a validated interface for presenting research-engine outputs without reproducing simulation logic.
-
-### Limitation
-
-This test does not yet validate graphical rendering fidelity.
-
-It does not establish that a future 3D mesh, camera, animation, color state, or rendered occupant icon visually appears in the correct screen location.
-
-Those renderer-level checks can only be performed after the actual 3D presentation layer exists.
-
-The present validation establishes result and state consistency at the engine-to-visualization interface.
-
-## 19. Validation Scope and Limitations
-
-The current validation establishes internal consistency, deterministic behavior, reference agreement for selected mathematical components, and correct implementation of the defined research model.
-
-It does not establish real-world predictive validity for emergency evacuation behavior.
-
-The current model does not simulate:
-
-- fire physics
-- smoke transport
-- temperature
-- toxic gas concentrations
-- visibility degradation
-- physiological tenability
-- injury probability
-- detailed microscopic human collision forces
-- complete unaided human decision behavior
-
-Hazard exposure represents time spent in regions classified `RISK`. It must not be interpreted as injury, dose, fractional effective dose, or mortality probability.
-
-The current building environment is an original fictional research layout and is not claimed to reproduce a real building exactly.
-
----
-
-## 20. Next Validation Actions
-
-Phase 5 research-engine validation is complete.
-
-All planned research-engine validation and calibration items required before visualization development have been completed.
-
-The frozen engine now has:
-
-- validated deterministic execution
-- validated routing behavior
-- validated congestion and bottleneck behavior
-- validated hazard and blockage behavior
-- validated numerical timestep
-- calibrated occupancy levels
-- calibrated disruption schedules
-- calibrated Adaptive Hybrid rerouting threshold
-- frozen Research Model v1.0 parameter set
-- validated visualization-facing result consistency
-
-The next development phase is the 3D presentation layer.
-
-Future validation associated with that phase will include renderer-level checks such as:
-
-- correct geometric placement
-- correct visual representation of hazard states
-- correct blocked-exit representation
-- correct blocked-corridor representation
-- correct occupant animation from authoritative engine state
-- synchronization of displayed time with simulation time
-- consistency of rendered metrics with the validated visualization-result model
-
-Any renderer-level defect must be corrected in the visualization layer unless investigation identifies an actual research-engine defect.
+Formal research execution additionally requires a clean tracked worktree and captured Git/software provenance.

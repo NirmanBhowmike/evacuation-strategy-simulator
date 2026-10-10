@@ -1,130 +1,94 @@
-# Documentation Index
+# Project Documentation
 
-This directory contains the research, methodological, validation, and development documentation for the **3D Emergency Evacuation Strategy Simulator**.
+The files in this directory record how the research model was built, changed, tested, and frozen. They are not all snapshots of the same version. Older documents are retained where they help explain the development path.
 
-The quantitative simulation engine is treated as the authoritative research artifact. Documentation is maintained alongside the codebase so modeling decisions, assumptions, validation steps, and experimental conditions remain traceable.
+For current numerical results, start with [`../results/formal-v1.2/README.md`](../results/formal-v1.2/README.md).
 
-## Core Documents
+## Document map
 
-### `00-project-charter.md`
-Original project purpose, scope, research question, and design principle. Early wording reflects the initial project stage; later versioned research files take precedence where the project evolved.
+| File | Role | Status |
+|---|---|---|
+| `00-project-charter.md` | original scope and research direction | historical foundation |
+| `01-research-basis.md` | literature and parameter basis | supporting research record |
+| `02-model-assumptions.md` | assumptions and interpretation boundaries | supporting research record |
+| `03-decision-log.md` | consequential engineering and research decisions | development record |
+| `04-development-log.md` | implementation history | development record |
+| `05-validation-log.md` | verification, regression, and production validation | current |
+| `06-experiment-registry.md` | experiment definitions and provenance | research record |
+| `07-time-log.md` | recorded development-time information | project record |
+| `08-research-model-specification.md` | earlier Research Model v1.0 specification | historical |
+| `09-master-task-checklist.md` | current completion state and remaining deliverables | current |
 
-### `01-research-basis.md`
-Research basis for quantitative model choices, parameter ranges, and methodological assumptions.
-
-### `02-model-assumptions.md`
-Modeling assumptions, boundaries, and interpretation limits.
-
-### `03-decision-log.md`
-Consequential research and engineering decisions and why they were made.
-
-### `04-development-log.md`
-Development-history record. This is being converted from an initial session-log template into a milestone-oriented project history.
-
-### `05-validation-log.md`
-Verification, validation, calibration, sensitivity tests, regression checks, and model-behavior investigations.
-
-### `06-experiment-registry.md`
-Formal and diagnostic experiment definitions and execution metadata.
-
-### `07-time-log.md`
-Time-tracking structure. Only directly supported time information should be recorded; time should not be reconstructed or invented retrospectively.
-
-### `08-research-model-specification.md`
-Historical Research Model Specification v1.0 and earlier Layout A configuration. Where historical values differ from current Architecture V2, the current versioned Architecture V2 parameter files and regression definitions are authoritative.
-
-### `09-master-task-checklist.md`
-Current master implementation and research checklist.
-
-## Current Architecture V2 Research Configuration
-
-Formal occupancy levels:
+## Current formal configuration
 
 ```text
-LOW     = 14
-MEDIUM  = 42
-HIGH    = 70
+Software version:       1.2.0
+Formal execution SHA:   1a84923664c028f3b6b15c5ec93ddaf9b7905095
+Parameter set:          architecture-v2-research-v1.2-frozen
+Design:                 architecture-v2-formal-factorial-v3
+Seed bank:              architecture-v2-formal-seed-bank-v1
+
+Strategies:             5
+Occupancy levels:       3
+Conditions:             D0-D6
+Replications per cell:  40
+Factorial cells:        105
+Paired scenarios:       840
+Formal runs:            4,200
 ```
 
-Frozen disruption conditions:
+All 4,200 runs completed. No formal v1.2 run ended with timeout or an unreachable occupant present.
+
+Occupancy levels are 14, 42, and 70 occupants.
+
+The seven formal disruption conditions are:
 
 ```text
-D0 = baseline
-D1 = main-spine hazard at 12 s
-D2 = south-central exit block at 18 s
-D3 = main-central corridor block at 12 s
-D4 = main-spine hazard at 12 s + south-central exit block at 18 s
+D0  Baseline
+D1  Main-spine hazard
+D2  South-central exit block
+D3  Main-central corridor block
+D4  Hazard + south-central exit block
+D5  West exit block
+D6  East-main to southeast corridor block
 ```
 
-Baseline numerical parameters:
+Frozen event times remain 12 s for hazard/corridor events and 18 s for exit blocks.
+
+## Which source is authoritative?
+
+Where historical documents differ from the current model, use this order:
+
+1. versioned source code at the formal execution commit
+2. frozen v1.2 parameter and experiment definitions
+3. automated regression tests
+4. formal result manifests and provenance files
+5. current validation and project-status documentation
+6. older research-model documents
+
+## Research and demonstration features
+
+Research Mode is tied to the controlled D0-D6 configuration.
+
+Demo Mode permits manual disruption sequences for software demonstrations. Those events do not become formal research conditions merely because the same simulation engine executes them.
+
+## Verification checkpoint
 
 ```text
-Timestep              = 0.05 s
-Density cell baseline = 1.0 m
-Specific flow         = 1.3 persons/m/s
-Adaptive threshold    = 0.10
+66 passing test files
+455 passing tests
+TypeScript validation passed
+Production build passed
 ```
 
-These conditions should not be silently modified. Any methodological change to a frozen formal condition should be documented and versioned.
+Production application:
 
-## Research vs Demonstration Features
+https://evacuation-strategy-simulator.nirman-bhowmike.workers.dev
 
-Formal research conditions are predefined, reproducible, controlled, and versioned.
+Desktop is the reference interface. Responsive phone support is included, with landscape preferred for detailed mobile inspection.
 
-Demonstration features are exploratory and presentation-oriented. Planned Interactive Demo Mode will allow manual disruption events but will remain explicitly separate from Research Mode.
+## Documentation rule
 
-## Reproducibility Principle
+Record what was actually done. Do not reconstruct unsupported experiment dates, run times, parameter choices, or validation outcomes after the fact.
 
-Formal comparisons use common random numbers:
-
-```text
-same scenario
-+ same seed
-+ same parameter set
-→ comparable stochastic inputs
-```
-
-The routing strategy is then the experimental factor being compared.
-
-## Documentation Authority
-
-When project documents disagree because the system evolved over time, use this priority:
-
-1. current versioned Architecture V2 research parameter implementation
-2. current automated regression tests
-3. current experiment configuration
-4. current master task checklist
-5. current validation documentation
-6. historical Research Model v1.0 documents
-
-Historical documents are retained intentionally to preserve development and calibration history.
-
-## Software Verification
-
-Stable checkpoints should pass:
-
-```bash
-npm test
-npm run typecheck:all
-npm run build
-git diff --check
-```
-
-Formal execution should additionally preserve parameter-set version, seed, strategy, occupancy condition, disruption condition, experiment identifier, and software / Git provenance.
-
-## Repository Navigation
-
-```text
-src/          simulation engine and application
- tests/       automated verification and validation
- experiments/ formal and diagnostic experiment runners
- research/    literature and parameter evidence
- results/     curated research outputs
-```
-
-## Documentation Policy
-
-1. Historical research decisions are preserved rather than silently overwritten.
-2. Current formal research conditions are versioned and reproducible.
-3. Demonstration features are separated from formal research conditions.
-4. Unsupported development-time or experimental claims are not reconstructed after the fact.
+Historical material can remain in the repository, but current status pages should state clearly when a value or design has been superseded.
