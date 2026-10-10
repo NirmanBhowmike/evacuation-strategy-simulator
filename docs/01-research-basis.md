@@ -165,7 +165,7 @@ The model should be evaluated component by component rather than accepted becaus
 
 ## Key Sources
 
-1. Ulrich Weidmann. Transporttechnik der FussgÃ¤nger. ETH ZÃ¼rich. DOI: 10.3929/ethz-a-000687810.
+1. Ulrich Weidmann. Transporttechnik der Fussgänger. ETH Zürich. DOI: 10.3929/ethz-a-000687810.
 
 2. Ronchi, E., Kuligowski, E., Reneke, P., Peacock, R., and Nilsson, D. The Process of Verification and Validation of Building Fire Evacuation Models. NIST Technical Note 1822. DOI: 10.6028/NIST.TN.1822.
 

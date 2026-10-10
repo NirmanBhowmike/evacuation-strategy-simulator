@@ -321,7 +321,7 @@ The selected primary occupancy conditions are:
 
 All three selected conditions achieved 100% completion under the baseline calibration case while showing progressively greater local density and queue exposure.
 
-At 60 occupants, maximum local density exceeded the 5.4 persons/mÂ² jam-density reference and completion dropped below 100%.
+At 60 occupants, maximum local density exceeded the 5.4 persons/m² jam-density reference and completion dropped below 100%.
 
 Decision:
 
